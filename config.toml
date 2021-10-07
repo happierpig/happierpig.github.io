@@ -21,7 +21,7 @@ googleAnalytics = "G-KGF6W04P5B"
 [params]
 subtitle = "Happypig :)"
 enableGitalk = false
-disqusShortname = "Pigpen"
+disqusShortname = "pigpen"
 #enableTwikoo = true
 favicon = "favicon.ico"
 googleSearchCode = "90d44f4cba853cf8a"
