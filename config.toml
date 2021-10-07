@@ -20,8 +20,7 @@ googleAnalytics = "G-KGF6W04P5B"
 
 [params]
 subtitle = "Happypig :)"
-enableGitalk = false
-
+enableGitalk = true
 favicon = "favicon.ico"
 googleSearchCode = "90d44f4cba853cf8a"
 enableReadingTime=true
