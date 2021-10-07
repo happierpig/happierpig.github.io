@@ -20,9 +20,12 @@ googleAnalytics = "G-KGF6W04P5B"
 
 [params]
 subtitle = "Happypig :)"
-enableGitalk = true
+enableGitalk = false
+disqusShortname = "jenlky"
 favicon = "favicon.ico"
 googleSearchCode = "90d44f4cba853cf8a"
+enableReadingTime=true
+
 
 # Twitter Card and Open Graph settings
 enableOpenGraph = true
@@ -30,11 +33,6 @@ enableTwitterCards = true
 title = "My Blog" # will set 'og:site_name'
 description = "My HomePage Description"  # will set 'og:description'
 
-[params.gitalk]
-  owner = "happierpig"
-  repo = "repo name"
-  client_id = "your client id"
-  client_secret = "your client secret"
 
 [taxonomies]
    tag = "tags"
