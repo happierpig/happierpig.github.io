@@ -19,7 +19,7 @@ theme = "diary"
     tabWidth = 4
 
 [params]
-subtitle = "Happypig"
+subtitle = "Happypig :)"
 enableGitalk = true
 favicon = "favicon.ico"
 
