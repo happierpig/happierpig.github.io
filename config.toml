@@ -32,6 +32,11 @@ enableTwitterCards = true
 title = "My Blog" # will set 'og:site_name'
 description = "My HomePage Description"  # will set 'og:description'
 
+[params.gitalk]
+  owner = "happierpig"
+  repo = "happierpig.github.io"
+  client_id = "1cf9da28d6d7ec7699b5"
+  client_secret = "5ab57244af505ebe6a8fb535aae5e3d635cbcdab"
 
 [taxonomies]
    tag = "tags"
