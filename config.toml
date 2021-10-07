@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "https://happierpig.github.io/"
 DefaultContentLanguage = "zh" # Theme's display language, supports: en, fr, zh, zh-hant
 languageCode = "en-us"
 title = "Pigpen Park"
