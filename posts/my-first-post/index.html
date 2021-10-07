@@ -26,10 +26,7 @@
 <script src=/vendor/js/loadCSS.js></script>
 <script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script>
 <script src=/js/toc.js></script>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css>
-<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js></script>
-<script src=/vendor/js/md5.min.js></script>
-<script>var gitalk=new Gitalk({clientID:'your client id',clientSecret:'your client secret',repo:'repo name',owner:'happierpig',admin:['happierpig'],id:md5(location.pathname),distractionFreeMode:'false'});window.onload=function(){gitalk.render('gitalk-container')}</script>
+<script src=https://cdn.jsdelivr.net/npm/vue-disqus@3/dist/vue-disqus.js></script>
 </head>
 <body>
 <div id=app><div id=sideContainer class=side-container>
@@ -168,6 +165,9 @@ dark_mode
 <time itemprop=datePublished>
 2021-10-07 17:36
 </time>
+<i class=material-icons>schedule</i>
+1 min
+30 s.
 </div>
 </div>
 </div>
@@ -189,9 +189,11 @@ dark_mode
 </a>
 </nav>
 <div class=post-comment-wrapper>
-<p style=opacity:.6 align=center>
-<small>此篇文章的评论功能已经停用。</small>
-</p>
+<div class=comments>
+<vue-disqus shortname=jenlky></vue-disqus>
+</div>
+<noscript><noscript>请开启 JavaScript 以便使用评论服务。</noscript></noscript>
+<a href=https://disqus.com/ class=dsq-brlink>Comments powered by <span class=logo-disqus>Disqus</span></a>
 </div>
 </div>
 </div>
