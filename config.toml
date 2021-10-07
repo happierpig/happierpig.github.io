@@ -21,7 +21,7 @@ theme = "diary"
 [params]
 subtitle = "Happypig"
 enableGitalk = true
-favicon = "../static/favicon.ico"
+favicon = "favicon.ico"
 
 # Twitter Card and Open Graph settings
 enableOpenGraph = true
