@@ -22,6 +22,7 @@ googleAnalytics = "G-KGF6W04P5B"
 subtitle = "Happypig :)"
 enableGitalk = true
 favicon = "favicon.ico"
+googleSearchCode = "90d44f4cba853cf8a"
 
 # Twitter Card and Open Graph settings
 enableOpenGraph = true
