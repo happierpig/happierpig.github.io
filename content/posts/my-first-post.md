@@ -1,7 +1,7 @@
 ---
 title: "山日比说：要有光"
 date: 2021-10-07T17:36:57+08:00
-draft: true
+draft: false
 featured_image: "/images/Backgrounds/test1.jpeg"
 description: "于是，有了这方世界。"
 comment: true
