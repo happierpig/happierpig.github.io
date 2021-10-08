@@ -4,7 +4,7 @@ languageCode = "en-us"
 title = "Pigpen Park"
 copyright = "2021 happypig"
 theme = "diary"
-googleAnalytics = "G-KGF6W04P5B"
+GoogleAnalytics = "G-KGF6W04P5B"
 
 [markup]
   [markup.highlight]

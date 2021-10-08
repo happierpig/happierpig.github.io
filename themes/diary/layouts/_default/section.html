@@ -19,10 +19,28 @@
                     <div class="post-item post-item-no-gaps">
                         <div class="post-item-info-wrapper">
                             <div class="post-item-title">
-                                {{.Title}}
+                                {{.Title}} 
+                            </div>
+                            <div class="post-item-summary">
+                                {{.Description}}
                             </div>
                             {{ partial "post-item-meta.html" . }}
                         </div>
+                        {{ $featured_image := .Params.featured_image }}
+                        {{ if $featured_image }}
+                            {{ $image := .Resources.GetMatch (.Params.featured_image) }}
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                            {{ if $image }}
+                                {{ $thumbnail := $image.Resize "690x360" }}
+                                 style="background-image: url('{{ $thumbnail.Permalink }}')"
+                            {{ else }}
+                            
+                                style="background-image: url('{{ $featured_image | absURL}}')"
+                            {{ end }}
+                            ></div>
+                            </div>
+                        {{ end }}
                     </div>
                 </div>
             </a>
