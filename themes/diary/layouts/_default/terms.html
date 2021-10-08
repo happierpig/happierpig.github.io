@@ -12,8 +12,20 @@
                 </div>
             </div>
         </a>
-        
-        {{ range .Paginator.Pages }}
+        {{$a:="Tags"}}
+        {{if (eq $a .Title)}}
+            <div style="margin:40px">
+                {{ range .Paginator.Pages }}
+                    <span class="post-item-wrapper"> 
+                        <a href="{{.Permalink}}">
+                            {{.Title}}
+                            <sup>{{len .Pages }}</sup>
+                        </a>
+                    </span>
+                {{end}}
+            </div>
+        {{else}}
+            {{ range .Paginator.Pages }}
                 <a href="{{.Permalink}}" class="a-block">
                     <div class="post-item-wrapper">
                         <div class="post-item post-item-no-gaps">
@@ -25,7 +37,8 @@
                         </div>
                     </div>
                 </a>
-        {{ end }}
+            {{ end }}
+        {{end}}
     </div>
 
 
