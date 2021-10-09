@@ -22,7 +22,7 @@ GoogleAnalytics = "G-KGF6W04P5B"
 subtitle = "Happypig :)"
 enableGitalk = false
 enableUtterances = true
-favicon = "favicon.ico"
+favicon = "/favicon.ico"
 googleSearchCode = "90d44f4cba853cf8a"
 enableReadingTime=true
 
