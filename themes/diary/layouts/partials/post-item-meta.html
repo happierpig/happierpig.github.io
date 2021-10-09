@@ -19,4 +19,7 @@
     {{ if .Draft }}
     <span class="draft-label">{{ i18n "draft" }}</span>
     {{ end }}
+    {{if .Params.comment}}
+        <i class="fa fa-commenting-o"> </i>
+    {{end}}
 </div>

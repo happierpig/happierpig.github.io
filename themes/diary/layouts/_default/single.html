@@ -38,13 +38,6 @@
                                 &nbsp;
                         {{ end }}
 
-                        {{ if gt .Params.tags 0 }}
-                            <i class="material-icons" style="">label</i>
-                            {{ range .Params.tags }}
-                                <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
-                                &nbsp;
-                            {{ end }}
-                        {{ end }}
                         {{ if .Site.Params.enableReadingTime }}
                             <i class="material-icons" style="">schedule</i>
                             {{ $readTime := mul (div (countwords .Content) 220.0) 60 }}
@@ -67,12 +60,36 @@
                 {{ else }}
                 <div class="post-body" v-pre>
                 {{ end }}
-                    {{.Content}}
-                    {{ if not .Lastmod.IsZero }}
+                {{.Content}}
+                {{ if not .Lastmod.IsZero }}
                     <HR width="100%" id="EOF">
-		    <p style="color:#777;">{{ i18n "last_mod_on" .Page.Lastmod }}</p>
-                    {{ end }}
+		            <p style="color:#777;">{{ i18n "last_mod_on" .Page.Lastmod }}</p>
+                {{ end }}
+
+                {{ if gt .Params.tags 0 }}
+                <i class="fa fa-tags"> </i>
+                {{ range .Params.tags }}
+                    <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" style="color:#777;">{{ . }}</a>
+                    &nbsp;
+                {{ end }}
+                {{ end }}
+                
                 </div>
+
+                {{ $related := .Site.RegularPages.Related . | first 5 }}
+                {{if $related}}
+                <div class="post-related">
+                    <h3>相关内容</h3>
+                    {{ with $related }}
+                    <ul>
+	                {{ range . }}
+	                <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+	                {{ end }}
+                    </ul>
+                </div>
+                {{end}}
+                {{end}}
+
             </div>
             
             
@@ -94,10 +111,11 @@
                 </a>
                 {{else}}
                 <a class="older-posts">
-			{{ i18n "prev_link" }}<br>{{ i18n "no_older_posts" }}
+			    {{ i18n "prev_link" }}<br>{{ i18n "no_older_posts" }}
                 </a>
                 {{end}}
             </nav>
+
             <div class="post-comment-wrapper">
                 {{ if eq .Params.comment false }}
                 <p style="opacity: 0.6" align="center">
