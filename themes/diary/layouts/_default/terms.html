@@ -6,7 +6,7 @@
                 <div class="post-item post-item-no-gaps">
                     <div class="post-item-info-wrapper">
                         <div class="post-item-title post-item-title-small">
-                            {{.Title}}
+                            {{i18n .Title}}
                         </div>
                     </div>
                 </div>
@@ -15,7 +15,7 @@
         {{$a:="Tags"}}
         {{if (eq $a .Title)}}
             <div style="margin:40px">
-                {{ range .Paginator.Pages }}
+                {{ range sort .Paginator.Pages "Title"}}
                     <span class="post-item-wrapper"> 
                         <a href="{{.Permalink}}">
                             {{.Title}}
@@ -25,7 +25,7 @@
                 {{end}}
             </div>
         {{else}}
-            {{ range .Paginator.Pages }}
+            {{ range sort .Paginator.Pages "Title"}}
                 <a href="{{.Permalink}}" class="a-block">
                     <div class="post-item-wrapper">
                         <div class="post-item post-item-no-gaps">

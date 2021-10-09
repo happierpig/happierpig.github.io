@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    {{- partial "head.html" . -}}
+    <body>
+    	<div id="app">
+            {{- partial "sidebar.html" . -}}
+            {{- partial "extrabar.html" . -}}
+            <!-- PC view -->
+
+            {{- partial "mobile-header.html" . -}}
+            <!-- mobile header -->
+            
+            <div id="content">
+                <div id="streamContainer" class="stream-container">
+                    <div class="post-list-container post-list-container-shadow">
+                        <div class="post">
+                            {{ $post_class := "post-head-wrapper-text-only"}}
+                            {{ $featured_image := .Params.featured_image }}
+                            {{ if $featured_image }}
+                                {{ $post_class = "post-head-wrapper"}}
+                            {{ end }}
+                
+                            <div class="{{$post_class}}">
+                                <div class="post-title">
+                                    {{ .Title }}
+                                    {{ if .Params.description }}
+                                    <div class="post-subtitle">
+                                        {{ .Params.description }}
+                                    </div>
+                                    {{ end }}
+                                    <div class="post-meta">
+                                        {{ if .Params.date}}
+                                        <time itemprop="datePublished">
+                                            {{ i18n "format_date_tosec" .PublishDate }}
+                                        </time>
+                                        {{ end }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="post-body-wrapper">
+                                {{ if .Params.enableVue }}
+                                <div class="post-body">
+                                {{ else }}
+                                <div class="post-body" v-pre>
+                                {{ end }}
+                                {{.Content}}
+                                {{ if .Params.Lastmod}}
+                                    <HR width="100%" id="EOF">
+                                    <p style="color:#777;">{{ i18n "last_mod_on" .Params.Lastmod }}</p>
+                                {{ end }}
+                                </div>
+                            </div>
+                            
+                            <div class="post-comment-wrapper">
+                                <p style="opacity: 0.6" align="center">
+                                    <small>{{ i18n "comments_disabled" }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            {{- partial "mobile-footer.html" . -}}
+            <!-- mobile footer -->
+            </div>
+    {{ partial "journal.html" .}}
+    <script src="{{"/js/journal.js" | relURL}}"></script>
+    </body>
+</html>

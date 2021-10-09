@@ -55,3 +55,7 @@ weight = 2
 url = "/tags"
 name = "标签"
 weight = 3
+[[menu.main]]
+url = "/about"
+name = "关于"
+weight = 4

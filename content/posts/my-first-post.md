@@ -1,4 +1,5 @@
 ---
+type: "post"
 title: "山日比说：要有光"
 date: 2021-10-07T17:36:57+08:00
 draft: false
