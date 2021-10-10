@@ -9,6 +9,18 @@ comment: true
 tags: [编译器,笔记]
 categories: 计算机科学
 ---
+# 环境
+
+> 采用Mac os + IntelliJ IDEA
+
+1. IDE:Preference->Plugins->下载安装ANTLR v4
+
+2. 从[官网](https://www.antlr.org/download.html)下载`Complete ANTLR 4.9.2 Java binaries jar`
+
+   IDE: File->Project Structure->Libraries->`+` 选定刚刚下载的jar包
+
+
+
 # 正则表达式
 
 ## What
@@ -141,7 +153,7 @@ categories: 计算机科学
 
 
 
-# Antlr v4
+# Antlr4
 
 - Lexer(词法分析器)和Parser(语法分析器)：
 
