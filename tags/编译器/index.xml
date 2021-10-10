@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>编译器 on Pigpen Park</title><link>https://happierpig.github.io/tags/%E7%BC%96%E8%AF%91%E5%99%A8/</link><description>Recent content in 编译器 on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/tags/%E7%BC%96%E8%AF%91%E5%99%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>正则表达式 What 正则表达式是用来描述一定数量字符文本的模式串，用于匹配字符串中符合描述的串。
+规则 正则表达式是大小写敏感的
+特殊保留字符[ ] \ ^ $ . | ? * + ( )
+想在正则表达式中将这些字符用作文本字符，需要用反斜杠\对其进行换码 。例如想匹配“1+1=2”，正确的表达式1\+1=2.
+而在字符集中只剩下部分字符有特殊含义
+Invisible char
+可以使用特殊字符序列来代表某些不可显示字符：
+\t代表Tab(0x09)
+\r代表回车符(0x0D)
+\n代表换行符(0x0A)
+要注意的是Windows中文本文件使用“\r\n”来结束一行而Unix使用“\n”。
+两种正则导向引擎
+文本导向：引擎在移动到输入的下一个字符之前尝试正则表达式的所有路径，它将返回最长的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“SetValue”。 正则导向：如果引擎在某个位置出现故障，它会回溯以尝试替代路径。路径按从左到右的顺序尝试。因此，即使稍后在另一条路径中有更长的匹配项，它也会返回最左边的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“Set”。 字符集 字符集：是由一对方括号“[]”括起来的字符集合。
+使用字符集时正则表达式引擎仅仅匹配字符集中多个字符中的一个。
+使用&amp;laquo;gr[ae]y&amp;raquo;匹配gray或grey(不会匹配graay或graey)
+[A-Za-z_][A-Za-z_0-9]* 匹配Identifier
+0[xX][A-Fa-f0-9]* 匹配十六进制数字
+字符集中的字符无顺序，无优先级
+取反字符集：将会对字符集取反。结果是将匹配任何不在字符集中的字符
+取反字符集必须要匹配一个字符。包括空格以及回车换行符
+q[^u]意味着：匹配一个q，后面跟着一个不是u的字符。所以它不会匹配“Iraq”中的q，而会匹配“Iraq is a country”中的q和一个空格符。事实上，空格符是匹配中的一部分，因为它是一个“不是u的字符”。
+字符集中的元字符</description></item></channel></rss>
