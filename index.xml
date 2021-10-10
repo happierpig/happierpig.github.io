@@ -1,4 +1,17 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id="正则表达式">正则表达式&lt;/h1>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id="环境">环境&lt;/h1>
+&lt;blockquote>
+&lt;p>采用Mac os + IntelliJ IDEA&lt;/p>
+&lt;/blockquote>
+&lt;ol>
+&lt;li>
+&lt;p>IDE:Preference-&amp;gt;Plugins-&amp;gt;下载安装ANTLR v4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从&lt;a href="https://www.antlr.org/download.html">官网&lt;/a>下载&lt;code>Complete ANTLR 4.9.2 Java binaries jar&lt;/code>&lt;/p>
+&lt;p>IDE: File-&amp;gt;Project Structure-&amp;gt;Libraries-&amp;gt;&lt;code>+&lt;/code> 选定刚刚下载的jar包&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h1 id="正则表达式">正则表达式&lt;/h1>
 &lt;h2 id="what">What&lt;/h2>
 &lt;p>正则表达式是用来&lt;strong>描述&lt;/strong>一定数量字符文本的&lt;strong>模式串&lt;/strong>，用于&lt;strong>匹配&lt;/strong>字符串中符合描述的串。&lt;/p>
 &lt;h2 id="规则">规则&lt;/h2>
@@ -125,7 +138,7 @@
 &lt;blockquote>
 &lt;p>要注意的是，只有圆括号“()”才能用于形成组。“[]”用于定义字符集。“{}”用于定义重复操作。&lt;/p>
 &lt;/blockquote>
-&lt;h1 id="antlr-v4">Antlr v4&lt;/h1>
+&lt;h1 id="antlr4">Antlr4&lt;/h1>
 &lt;ul>
 &lt;li>
 &lt;p>Lexer(词法分析器)和Parser(语法分析器)：&lt;/p>

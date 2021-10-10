@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Pigpen Park</title><link>https://happierpig.github.io/posts/</link><description>Recent content in Posts on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>正则表达式 What 正则表达式是用来描述一定数量字符文本的模式串，用于匹配字符串中符合描述的串。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Pigpen Park</title><link>https://happierpig.github.io/posts/</link><description>Recent content in Posts on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>环境 采用Mac os + IntelliJ IDEA
+IDE:Preference-&amp;gt;Plugins-&amp;gt;下载安装ANTLR v4
+从官网下载Complete ANTLR 4.9.2 Java binaries jar
+IDE: File-&amp;gt;Project Structure-&amp;gt;Libraries-&amp;gt;+ 选定刚刚下载的jar包
+正则表达式 What 正则表达式是用来描述一定数量字符文本的模式串，用于匹配字符串中符合描述的串。
 规则 正则表达式是大小写敏感的
 特殊保留字符[ ] \ ^ $ . | ? * + ( )
 想在正则表达式中将这些字符用作文本字符，需要用反斜杠\对其进行换码 。例如想匹配“1+1=2”，正确的表达式1\+1=2.
@@ -10,14 +14,5 @@ Invisible char
 \n代表换行符(0x0A)
 要注意的是Windows中文本文件使用“\r\n”来结束一行而Unix使用“\n”。
 两种正则导向引擎
-文本导向：引擎在移动到输入的下一个字符之前尝试正则表达式的所有路径，它将返回最长的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“SetValue”。 正则导向：如果引擎在某个位置出现故障，它会回溯以尝试替代路径。路径按从左到右的顺序尝试。因此，即使稍后在另一条路径中有更长的匹配项，它也会返回最左边的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“Set”。 字符集 字符集：是由一对方括号“[]”括起来的字符集合。
-使用字符集时正则表达式引擎仅仅匹配字符集中多个字符中的一个。
-使用&amp;laquo;gr[ae]y&amp;raquo;匹配gray或grey(不会匹配graay或graey)
-[A-Za-z_][A-Za-z_0-9]* 匹配Identifier
-0[xX][A-Fa-f0-9]* 匹配十六进制数字
-字符集中的字符无顺序，无优先级
-取反字符集：将会对字符集取反。结果是将匹配任何不在字符集中的字符
-取反字符集必须要匹配一个字符。包括空格以及回车换行符
-q[^u]意味着：匹配一个q，后面跟着一个不是u的字符。所以它不会匹配“Iraq”中的q，而会匹配“Iraq is a country”中的q和一个空格符。事实上，空格符是匹配中的一部分，因为它是一个“不是u的字符”。
-字符集中的元字符</description></item><item><title>山日比说：要有光</title><link>https://happierpig.github.io/posts/my-first-post/</link><pubDate>Thu, 07 Oct 2021 17:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/my-first-post/</guid><description>苁蓉法半夏 朋友，你能体会到吗，那流星划落天空的雨，天才妙想不断涌现，那剔透如水晶般的思维，一切都有迹可循。仿佛到达了巅峰，无限的快感，无限的智慧，没有什么是我学不会的，没有什么是我做不到的，我是世界的中心，我是主宰，我必将改变一切。所有的所有都那么有趣，我投入了全部的热情，各处涉猎，却又都能专精，我一日千里。我不需要睡眠，我亢奋，我想把一切都做好。同时，我过度热情，哪怕陌生人，我也能和他聊上半天，不对，不是聊，是我单方面的灌输。我妙语连珠，我汪洋恣肆，虽然，别人并听不懂，可我也不怎么沮丧。可突然，莫名的黏稠的黑色混沌了我的大脑，我的思维凝滞，热情退却，精力萎靡，一切，都是那么虚无。我不想学习，不想继续之前的爱好，之前的一切，都是那么那么无趣。
+文本导向：引擎在移动到输入的下一个字符之前尝试正则表达式的所有路径，它将返回最长的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“SetValue”。 正则导向：如果引擎在某个位置出现故障，它会回溯以尝试替代路径。路径按从左到右的顺序尝试。因此，即使稍后在另一条路径中有更长的匹配项，它也会返回最左边的匹配项。例如，(Set|SetValue)输入“SetValue”将匹配“Set”。 字符集 字符集：是由一对方括号“[]”括起来的字符集合。</description></item><item><title>山日比说：要有光</title><link>https://happierpig.github.io/posts/my-first-post/</link><pubDate>Thu, 07 Oct 2021 17:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/my-first-post/</guid><description>苁蓉法半夏 朋友，你能体会到吗，那流星划落天空的雨，天才妙想不断涌现，那剔透如水晶般的思维，一切都有迹可循。仿佛到达了巅峰，无限的快感，无限的智慧，没有什么是我学不会的，没有什么是我做不到的，我是世界的中心，我是主宰，我必将改变一切。所有的所有都那么有趣，我投入了全部的热情，各处涉猎，却又都能专精，我一日千里。我不需要睡眠，我亢奋，我想把一切都做好。同时，我过度热情，哪怕陌生人，我也能和他聊上半天，不对，不是聊，是我单方面的灌输。我妙语连珠，我汪洋恣肆，虽然，别人并听不懂，可我也不怎么沮丧。可突然，莫名的黏稠的黑色混沌了我的大脑，我的思维凝滞，热情退却，精力萎靡，一切，都是那么虚无。我不想学习，不想继续之前的爱好，之前的一切，都是那么那么无趣。
 那是未来的我们</description></item></channel></rss>
