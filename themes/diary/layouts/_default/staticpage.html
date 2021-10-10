@@ -23,17 +23,19 @@
                             <div class="{{$post_class}}">
                                 <div class="post-title">
                                     {{ .Title }}
-                                    {{ if .Params.description }}
-                                    <div class="post-subtitle">
-                                        {{ .Params.description }}
-                                    </div>
-                                    {{ end }}
                                     <div class="post-meta">
                                         {{ if .Params.date}}
                                         <time itemprop="datePublished">
                                             {{ i18n "format_date_tosec" .PublishDate }}
                                         </time>
                                         {{ end }}
+                                        <span class="views">
+                                            &nbsp;
+                                            <i class="fa fa-eye"></i>
+                                            <span id="busuanzi_container_site_uv">
+                                                <span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>
+                                            </span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
