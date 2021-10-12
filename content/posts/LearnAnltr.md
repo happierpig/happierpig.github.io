@@ -9,6 +9,7 @@ comment: true
 tags: [编译器,笔记]
 categories: 计算机科学
 ---
+
 # 环境
 
 > 采用Mac os + IntelliJ IDEA
@@ -18,8 +19,6 @@ categories: 计算机科学
 2. 从[官网](https://www.antlr.org/download.html)下载`Complete ANTLR 4.9.2 Java binaries jar`
 
    IDE: File->Project Structure->Libraries->`+` 选定刚刚下载的jar包
-
-
 
 # 正则表达式
 
@@ -157,26 +156,39 @@ categories: 计算机科学
 
 - Lexer(词法分析器)和Parser(语法分析器)：
 
-  词法分析器通过输入的字节流(01二进制流)按照词法规则来识别语言结构，语法分析器通过输入的词法+符号流按照文法规则来识别语言结构。
+  Lexer通过输入的字节流(01二进制流)按照词法规则来把字节流划分成一块一块的`token`。
 
-  区分词法规则和语法规则->词法规则以大写字母开头，文法规则以小写字母开头
+  Parser通过`词素+符号`按照文法规则来识别语言结构，生成对应的`RuleNode`结点。
 
-- Antlr 可识别的语法模式
+  > 区分词法规则和文法规则->词法规则以大写字母开头，文法规则以小写字母开头
 
-  - 序列模式
+- Antlr 可识别的语法模式(文法规则)
 
-  - 选择模式
+  - 序列模式:`ifStmt: If '(' expression ')' trueStmt=statement`
 
-    `#`打标签。如果备选分支上面没有标签，ANTLR就只为每条规则生成一个方法。打上了标签每个备选分支都有不同的访问器方法
+  - 选择模式:`loopStmt: forStmt | whileStmt;`
 
-  - 词法符号依赖模式
+    `#`为分支打标签
+
+    >  如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过父规则的成员函数和成员变量。
+    >
+    > 打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并**无**通向分支的成员函数和成员变量，由此形成多态。
+
+  - 词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：`'(' xxx ')'`
 
   - 嵌套模式
 
     - 直接递归与间接递归
-    - 优先级问题：位置靠前的分支优先级越高
-    - v4处理直接左递归：不能处理**间接左递归**
-    - `<assoc=right>`指定右结合方式
+
+    - **优先级问题：位置靠前的分支优先级越高**
+
+      > 运算符优先级依靠Expression语句的定义顺序规定
+
+    - Antlr4能够处理直接左递归，但不能处理**间接左递归**
+
+    - `<assoc=right>`指定右结合方式：实际上就是优先递归生成右边的子树
+
+      
 
 - 可以在文法规则当中打标签
 
@@ -241,19 +253,13 @@ categories: 计算机科学
 
     `WS:[ \t\r\n]+ -> skip;` 匹配一个或多个空白字符并舍弃
 
+- <img src="../../images/Antlr/基础语法规则.png" alt="基础语法规则" style="zoom:40%;" />
+
 - Boundary between Lexer and Parser
   - 并非很清晰，需要明确程序的需求
   - Lexer 处理 raw char string 丢弃不需要Parser知道的东西，并将词**抽象更高一级**。
 
-- `'()'`与`'(' ')'`不等价，若`'()'`注册在前面，**优先级会更高**，`'()'`就不能被识别为`'('`了
-
-  ```java
-  allocFormat:baseType ('()')?；
-  functionDecl: functionType? IDENTIFIER '(' parameterList? ')' block;
-  无法识别 int foo();//识别不到'('
-  ```
-
-  
+- `'()'`与`'(' ')'`不等价，若`'()'`注册在前面，优先级会更高，`'()'`就不能被识别为`'('`了
 
 ## Vistor/Listener
 
@@ -261,7 +267,84 @@ categories: 计算机科学
 
 - ANLTR会生成Vistor和Listener的接口`xxLisner`和一个默认实现`xxBaseListener`，我们可以选择继承`xxBaseListener`并覆盖我们需要修改的方法。
 
-  
+
+
+## Parser
+
+- `ProgramContext`:
+
+  -  用MxParser.program()可接到 ProgramContext(Derived from parse tree)
+
+  - `public List<SubProgramContext> subProgram()` 返回子节点形成的`ArrayList<Sub..>`
+
+    源于` program: subProgram *`
+
+  - 覆写了`public <T> T accept(ParseTreeVisitor<? extends T> visitor)`函数
+
+    在`AbstractParseTreeVistor`实现的**visit函数**即`ParseTree.accept(this)`实际上调用了该accept函数
+
+    而该accept函数的实现又调用了`ParseTreeVistor.visitProgram`也即实际调用`ASTBuilder`中**覆写的函数**
+
+    > => visit(Type ctx) 调用 ASTBuilder. visitType(ctx) 返回一个自定义的ASTNode
+
+- `SubProgramContext`
+
+  ```java
+  subProgram
+      :   functionDecl    #functionDeclaration
+      |   classDecl       #classDeclaration
+      |   variableDecl    #variableDeclaration
+      ;
+  ```
+
+  - 实际上是作为`父类`发挥作用 提高代码复用率
+
+    `FunctionDeclarationContext`、`ClassDeclarationContext`、`VariableDeclarationContext`均extends `subProgramCtx`
+
+  - 其子类均实现了`accept`函数(等价于ASTBuilder.visit(子类ctx)返回子类节点)
+
+    由于向上转型 传一个父类的引用进入函数当中是可以调用其`accept`函数的 (由此实现多态)
+
+  - Usage：
+
+    ```java
+    ArrayList<ASTNode(or other father node)> _List;
+    ProgramCtx.subProgram.forEach(ptr->_List.add((ASTNode) visit(ptr)));
+    ```
+
+- `FunctionDeclarationContext`、`ClassDeclarationContext`、`VariableDeclarationContext`
+
+  - 类似于`ProgramContext`覆写`accept`需要实现visitxxx(xxx ctx);
+  - 其成员函数即为返回对应的`functionDeclCtx` 、`classDeclCtx`、 `variableDeclCtx`
+
+  - **！这样打标签实在是多此一举！** (进行一个modify
+
+    - 打标签的实质是：告诉ANTLR不要为`subProgram`生成实际的`accept`而是把其当作父类，其各种组件打上标签及都要生成对应的`ParseRuleContext && accept && extends subProgram`。也即这个文法实际上由其他文法定义而成，只不过分类在一起。
+
+      ```java
+      //After modificatin
+      subProgram
+          :   functionDecl
+          |   classDecl
+          |   variableDecl
+          ;
+      public static class SubProgramContext extends ParserRuleContext {
+      		public FunctionDeclContext functionDecl();
+      		public ClassDeclContext classDecl();
+      		public VariableDeclContext variableDecl();
+      		public SubProgramContext(ParserRuleContext parent, int invokingState);
+      		@Override public <T> T accept(ParseTreeVisitor<? extends T> visitor);
+      }
+      //既有accept 又能向下到子节点 实为文法
+      ```
+
+    - **Necessity** for tag Expressions :
+
+      给每一种分支都覆写一个`accept`函数，而`expression`本身当作父类起到多态作用。
+
+      即abstract class ExprNode: BinaryExprNode/NoaryExprNode extends ExprNode.
+
+
 
 **参考资料:**
 
