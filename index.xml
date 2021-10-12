@@ -285,12 +285,8 @@ ExprNode ls = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand1&lt;/s
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>&amp;lt;assoc=right&amp;gt;&lt;/code>指定右结合方式：&lt;strong>实际上就是优先递归生成右边的子树&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">2 ^ 3 ^ 4
-&lt;span style="color:#228b22">// ParseTree
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> ^ ^
-^ 4 -&amp;gt; 2 ^
-2 3 3 4
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;p>&lt;img src="https://happierpig.github.io/images/Antlr/assoc-right.png" alt="右结合">&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
