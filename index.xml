@@ -156,11 +156,7 @@
 &lt;/li>
 &lt;li>
 &lt;p>选择模式:&lt;code>loopStmt: forStmt | whileStmt;&lt;/code>&lt;/p>
-&lt;p>&lt;code>#&lt;/code>为分支打标签&lt;/p>
-&lt;blockquote>
-&lt;p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过父规则的成员函数和成员变量。&lt;/p>
-&lt;p>打标签=&amp;gt;必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并&lt;strong>无&lt;/strong>通向分支的成员函数和成员变量，由此形成多态。&lt;/p>
-&lt;/blockquote>
+&lt;p>！ &lt;code>#&lt;/code>为分支打标签&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：&lt;code>'(' xxx ')'&lt;/code>&lt;/p>
@@ -181,18 +177,49 @@
 &lt;p>Antlr4能够处理直接左递归，但不能处理&lt;strong>间接左递归&lt;/strong>&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;code>&amp;lt;assoc=right&amp;gt;&lt;/code>指定右结合方式：实际上就是优先递归生成右边的子树&lt;/p>
-&lt;/li>
+&lt;p>&lt;code>&amp;lt;assoc=right&amp;gt;&lt;/code>指定右结合方式：&lt;strong>实际上就是优先递归生成右边的子树&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">2 ^ 3 ^ 4
+&lt;span style="color:#228b22">// ParseTree
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> ^ ^
+^ 4 -&amp;gt; 2 ^
+2 3 3 4
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
-&lt;p>可以在文法规则当中打标签&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ifStmt: If &lt;span style="color:#cd5555">&amp;#39;(&amp;#39;&lt;/span> expression &lt;span style="color:#cd5555">&amp;#39;)&amp;#39;&lt;/span> trueStmt=statement
-(Else falseStmt=statement)? &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>ifStmt
-------------------------------------------------------------------
-则会生成对应函数
+&lt;p>可以在文法规则当中为分支打标签 &lt;code>#&lt;/code>&lt;/p>
+&lt;p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过&lt;strong>父规则的成员函数和成员变量。&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">subProgram
+: functionDecl
+| classDecl
+| variableDecl &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span>
+;
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java"> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">SubProgramContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FunctionDeclContext &lt;span style="color:#008b45">functionDecl&lt;/span>();
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ClassDeclContext &lt;span style="color:#008b45">classDecl&lt;/span>();
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> VariableDeclContext &lt;span style="color:#008b45">variableDecl&lt;/span>();
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">SubProgramContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
+&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>打标签=&amp;gt;必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并&lt;strong>无&lt;/strong>通向分支的成员函数和成员变量，由此形成多态。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">jumpStmt
+: RETURN expression? &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>returnStmt
+| BREAK &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>breakStmt
+| CONTINUE &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>continueStmt
+;
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java"> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">JumpStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
+&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">getRuleIndex&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> RULE_jumpStmt; }
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>() { }
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">copyFrom&lt;/span>(JumpStmtContext ctx);
+}
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">BreakStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> JumpStmtContext {
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> TerminalNode &lt;span style="color:#008b45">BREAK&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> getToken(MxParser.&lt;span style="color:#658b00">BREAK&lt;/span>, 0); }
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">BreakStmtContext&lt;/span>(JumpStmtContext ctx) { copyFrom(ctx); }
+&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
+}
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h2 id="lexer">Lexer&lt;/h2>
@@ -207,7 +234,7 @@ ID: [a-zA-Z][a-zA-Z0-9_]*
 &lt;p>antlr为隐式生成的字符串常量词法规则放在显示定义的词法规则之前，所以他们总有最高的优先级。&lt;/p>
 &lt;/blockquote>
 &lt;ul>
-&lt;li>同一优先级的运算符摆在同一个位置的候选分支 如('*' | &amp;lsquo;/&amp;rsquo; | &amp;lsquo;%')&lt;/li>
+&lt;li>ps: 同一优先级的运算符摆在同一个位置的候选分支 如('*' | &amp;lsquo;/&amp;rsquo; | &amp;lsquo;%')&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
@@ -215,13 +242,12 @@ ID: [a-zA-Z][a-zA-Z0-9_]*
 &lt;p>表示该规则本身不是一个词法符号，它只会被其他词法规则使用而不会在文法规则里使用。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">Float: Digit + &lt;span style="color:#cd5555">&amp;#39;.&amp;#39;&lt;/span> + Digit;
 fragment
-Digit: [1-9][0-9]*
-| 0 ;
+Digit: [1-9][0-9]* | 0 ;
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
-&lt;p>非贪婪匹配&lt;/p>
+&lt;p>非贪婪匹配(懒惰)&lt;/p>
 &lt;p>&lt;code>String: '&amp;quot;'.*?'&amp;quot;'&lt;/code>&lt;/p>
-&lt;p>Update=&amp;gt;&lt;/p>
+&lt;p>识别转义字符&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">String: &lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>(ESC|.)*?&lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>
 fragment
 ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34;&amp;#39;&lt;/span> | &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\\\&amp;#39;&lt;/span>; &lt;span style="color:#228b22">//antlr语法本身需要用\对\进行转义
@@ -246,9 +272,6 @@ ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34
 &lt;/ul>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
-&lt;/li>
-&lt;li>
 &lt;p>Boundary between Lexer and Parser&lt;/p>
 &lt;ul>
 &lt;li>并非很清晰，需要明确程序的需求&lt;/li>
@@ -257,15 +280,53 @@ ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>'()'&lt;/code>与&lt;code>'(' ')'&lt;/code>不等价，若&lt;code>'()'&lt;/code>注册在前面，优先级会更高，&lt;code>'()'&lt;/code>就不能被识别为&lt;code>'('&lt;/code>了&lt;/p>
-&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">allocFormat:baseType (&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>()&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>)?&lt;span style="color:#a61717;background-color:#e3d2d2">；&lt;/span>
+functionDecl: functionType? IDENTIFIER &lt;span style="color:#cd5555">&amp;#39;(&amp;#39;&lt;/span> parameterList? &lt;span style="color:#cd5555">&amp;#39;)&amp;#39;&lt;/span> block;
+无法识别 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">foo&lt;/span>();&lt;span style="color:#228b22">//ANTLR会因为优先识别为&amp;#39;()&amp;#39;而识别不到&amp;#39;(&amp;#39;，无法识别为functionDecl语法
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
-&lt;h2 id="vistorlistener">Vistor/Listener&lt;/h2>
+&lt;h2 id="vistor">Vistor&lt;/h2>
 &lt;ul>
 &lt;li>
-&lt;p>监听器的方法会被ANTLR提供的遍历器对象自动调用，即当进入和离开对应节点时会调用对应方法。而访问器必须显式调用visit方法来访问子节点，否则子节点将不会被访问。&lt;/p>
+&lt;p>继承关系：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">MxBaseVisitor -&amp;gt; AbstractParseTreeVisitor
+| |
+v v
+接口 MxVistor -&amp;gt; 接口 ParseTreeVisitor
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>&lt;code>ParseTreeVisitor&lt;/code>：定义了&lt;code>T visit(ParseTree var1);&lt;/code>、&lt;code>T visitChildren(RuleNode var1);&lt;/code>等&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>ANLTR会生成Vistor和Listener的接口&lt;code>xxLisner&lt;/code>和一个默认实现&lt;code>xxBaseListener&lt;/code>，我们可以选择继承&lt;code>xxBaseListener&lt;/code>并覆盖我们需要修改的方法。&lt;/p>
+&lt;p>&lt;code>MxVisitor:&lt;/code>继承以上接口并新增&lt;code>T visitProgram(MxParser.ProgramContext ctx);&lt;/code>等根据.g4生成的parsetree结点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>AbstractParseTreeVisitor&lt;/code>:实现&lt;code>visit(ParseTree tree)&lt;/code>:tree.accept(this);&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>MxBaseVisitor&lt;/code>:实现并继承以上&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ParserRuleContext -&amp;gt; RuleContext
+|
+v
+接口 RuleNode -&amp;gt; 接口 ParseTree
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>&lt;code>ParseTree&lt;/code>:定义了接口&lt;code>&amp;lt;T&amp;gt; T accept(ParseTreeVisitor&amp;lt;? extends T&amp;gt; var1);&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>RuleContext&lt;/code>:实现了函数&lt;code>getText()&lt;/code>转树结点内容为字符串、&lt;code>getChildCount()&lt;/code>获得子结点的个数、&lt;code>accept&lt;/code>(实际上无用，被覆写)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>ParserRuleContext&lt;/code>: 为&lt;code>MxParser&lt;/code>文件中各&lt;code>xxxxContext&lt;/code>的父类，&lt;code>xxxContext&lt;/code>都各自覆写了对应的&lt;code>accept&lt;/code>函数为调用对应的&lt;code>visitXXXContext&lt;/code>，也即调用&lt;code>MxBaseVisitor.visit(xxxContext)&lt;/code> =&amp;gt; &lt;code>xxxContext.accept(MxBaseVisitor)&lt;/code>=&amp;gt;&lt;code>MxBaseVisitor.visitxxxContext(xxxContext)&lt;/code>&lt;/p>
+&lt;p>而&lt;code>MxBaseVisitor.visitxxxContext(xxxContext)&lt;/code>实际上被其子类(如ASTBuilder)所覆写。所以调用visit(xxx)等于调用我们自己实现的visitxxxContext(xxxContext);&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>注意&lt;strong>向上转型&lt;/strong>&lt;/p>
+&lt;p>调用的是实际所指向的对象的成员函数，借此实现多态&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="parser">Parser&lt;/h2>
@@ -300,6 +361,7 @@ ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>
 &lt;p>实际上是作为&lt;code>父类&lt;/code>发挥作用 提高代码复用率&lt;/p>
+&lt;p>自然情况下不会真正的出现类似的父类对象，&lt;strong>都是父类引用对应的子类而实现多台&lt;/strong>&lt;/p>
 &lt;p>&lt;code>FunctionDeclarationContext&lt;/code>、&lt;code>ClassDeclarationContext&lt;/code>、&lt;code>VariableDeclarationContext&lt;/code>均extends &lt;code>subProgramCtx&lt;/code>&lt;/p>
 &lt;/li>
 &lt;li>
@@ -351,6 +413,28 @@ ProgramCtx.&lt;span style="color:#658b00">subProgram&lt;/span>.&lt;span style="c
 &lt;/li>
 &lt;/ul>
 &lt;/li>
+&lt;/ul>
+&lt;h1 id="一些语法">一些语法：&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;p>java 泛型的实现是：擦拭法 有许多缺点，&lt;a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1265104600263968">详见&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>&amp;lt;T&amp;gt;&lt;/code>等价于&lt;code>template &amp;lt;typename T&amp;gt;&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ArrayList&amp;lt;Int&amp;gt; 可向上转型为 List&amp;lt;Int&amp;gt;
+ArrayList&amp;lt;Int&amp;gt; 不可向上转型为 ArrayList&amp;lt;Number&amp;gt;
+但实际上Int 继承与Number 有相同的实现 &lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>理论上可以转型&lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>实现方法&lt;span style="color:#a61717;background-color:#e3d2d2">：&lt;/span>
+ArrayList&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> Number&amp;gt;
+则所有ArrayList&amp;lt;T&amp;gt; T继承与Number的都可以转型被接到
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">xxx&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> yyy;
+yyy a;
+xxx b = a;
+a &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> yyy &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>参考资料:&lt;/strong>&lt;/p>
 &lt;blockquote>

@@ -143,13 +143,19 @@ Lexer
 </a>
 </li>
 <li>
-<a href=#vistorlistener onclick="onNavClick(`#vistorlistener-nav`)" id=vistorlistener-nav>
-Vistor/Listener
+<a href=#vistor onclick="onNavClick(`#vistor-nav`)" id=vistor-nav>
+Vistor
 </a>
 </li>
 <li>
 <a href=#parser onclick="onNavClick(`#parser-nav`)" id=parser-nav>
 Parser
+</a>
+</li>
+</ul>
+<li>
+<a href=#%e4%b8%80%e4%ba%9b%e8%af%ad%e6%b3%95 onclick="onNavClick(`#一些语法-nav`)" id=一些语法-nav>
+一些语法：
 </a>
 </li>
 </ul>
@@ -253,13 +259,19 @@ Lexer
 </a>
 </li>
 <li>
-<a href=#vistorlistener onclick="onNavClick(`#vistorlistener-nav`)" id=vistorlistener-nav>
-Vistor/Listener
+<a href=#vistor onclick="onNavClick(`#vistor-nav`)" id=vistor-nav>
+Vistor
 </a>
 </li>
 <li>
 <a href=#parser onclick="onNavClick(`#parser-nav`)" id=parser-nav>
 Parser
+</a>
+</li>
+</ul>
+<li>
+<a href=#%e4%b8%80%e4%ba%9b%e8%af%ad%e6%b3%95 onclick="onNavClick(`#一些语法-nav`)" id=一些语法-nav>
+一些语法：
 </a>
 </li>
 </ul>
@@ -313,8 +325,8 @@ dark_mode
 <a href=/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6>计算机科学</a>
 &nbsp;
 <i class=material-icons>schedule</i>
-22 min
-9 s.
+25 min
+46 s.
 <span class=views>
 &nbsp;
 <i class="fa fa-eye"></i>
@@ -485,11 +497,7 @@ dark_mode
 </li>
 <li>
 <p>选择模式:<code>loopStmt: forStmt | whileStmt;</code></p>
-<p><code>#</code>为分支打标签</p>
-<blockquote>
-<p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过父规则的成员函数和成员变量。</p>
-<p>打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并<strong>无</strong>通向分支的成员函数和成员变量，由此形成多态。</p>
-</blockquote>
+<p>！ <code>#</code>为分支打标签</p>
 </li>
 <li>
 <p>词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：<code>'(' xxx ')'</code></p>
@@ -510,18 +518,49 @@ dark_mode
 <p>Antlr4能够处理直接左递归，但不能处理<strong>间接左递归</strong></p>
 </li>
 <li>
-<p><code>&lt;assoc=right></code>指定右结合方式：实际上就是优先递归生成右边的子树</p>
-</li>
+<p><code>&lt;assoc=right></code>指定右结合方式：<strong>实际上就是优先递归生成右边的子树</strong></p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>2 ^ 3 ^ 4
+<span style=color:#228b22>// ParseTree
+</span><span style=color:#228b22></span>      ^									^
+ ^ 			4	 -&gt;     2				^
+2   3										3		 4
+</code></pre></div></li>
 </ul>
 </li>
 </ul>
 </li>
 <li>
-<p>可以在文法规则当中打标签</p>
-<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>ifStmt: If <span style=color:#cd5555>&#39;(&#39;</span> expression <span style=color:#cd5555>&#39;)&#39;</span> trueStmt=statement
-        (Else falseStmt=statement)?                         <span style=color:#a61717;background-color:#e3d2d2>#</span>ifStmt
-  ------------------------------------------------------------------
-则会生成对应函数
+<p>可以在文法规则当中为分支打标签 <code>#</code></p>
+<p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过<strong>父规则的成员函数和成员变量。</strong></p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>subProgram
+    :   functionDecl
+    |   classDecl
+    |   variableDecl <span style=color:#cd5555>&#39;;&#39;</span>
+    ;
+</code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>	<span style=color:#8b008b;font-weight:700>public</span> <span style=color:#8b008b;font-weight:700>static</span> <span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>SubProgramContext</span> <span style=color:#8b008b;font-weight:700>extends</span> ParserRuleContext {
+      <span style=color:#8b008b;font-weight:700>public</span> FunctionDeclContext <span style=color:#008b45>functionDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> ClassDeclContext <span style=color:#008b45>classDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> VariableDeclContext <span style=color:#008b45>variableDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#008b45>SubProgramContext</span>(ParserRuleContext parent, <span style=color:#00688b;font-weight:700>int</span> invokingState);
+      <span style=color:#707a7c>@Override</span> <span style=color:#8b008b;font-weight:700>public</span> &lt;T&gt; T <span style=color:#008b45>accept</span>(ParseTreeVisitor&lt;? <span style=color:#8b008b;font-weight:700>extends</span> T&gt; visitor);
+	}
+</code></pre></div><p>打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并<strong>无</strong>通向分支的成员函数和成员变量，由此形成多态。</p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>jumpStmt
+    :   RETURN expression? <span style=color:#cd5555>&#39;;&#39;</span>  <span style=color:#a61717;background-color:#e3d2d2>#</span>returnStmt
+    |   BREAK <span style=color:#cd5555>&#39;;&#39;</span>               <span style=color:#a61717;background-color:#e3d2d2>#</span>breakStmt
+    |   CONTINUE <span style=color:#cd5555>&#39;;&#39;</span>            <span style=color:#a61717;background-color:#e3d2d2>#</span>continueStmt
+    ;
+</code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>	<span style=color:#8b008b;font-weight:700>public</span> <span style=color:#8b008b;font-weight:700>static</span> <span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>JumpStmtContext</span> <span style=color:#8b008b;font-weight:700>extends</span> ParserRuleContext {
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#008b45>JumpStmtContext</span>(ParserRuleContext parent, <span style=color:#00688b;font-weight:700>int</span> invokingState);
+      <span style=color:#707a7c>@Override</span> <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#00688b;font-weight:700>int</span> <span style=color:#008b45>getRuleIndex</span>() { <span style=color:#8b008b;font-weight:700>return</span> RULE_jumpStmt; }
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#008b45>JumpStmtContext</span>() { }
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>copyFrom</span>(JumpStmtContext ctx);
+	}
+	<span style=color:#8b008b;font-weight:700>public</span> <span style=color:#8b008b;font-weight:700>static</span> <span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>BreakStmtContext</span> <span style=color:#8b008b;font-weight:700>extends</span> JumpStmtContext {
+      <span style=color:#8b008b;font-weight:700>public</span> TerminalNode <span style=color:#008b45>BREAK</span>() { <span style=color:#8b008b;font-weight:700>return</span> getToken(MxParser.<span style=color:#658b00>BREAK</span>, 0); }
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#008b45>BreakStmtContext</span>(JumpStmtContext ctx) { copyFrom(ctx); }
+      <span style=color:#707a7c>@Override</span> <span style=color:#8b008b;font-weight:700>public</span> &lt;T&gt; T <span style=color:#008b45>accept</span>(ParseTreeVisitor&lt;? <span style=color:#8b008b;font-weight:700>extends</span> T&gt; visitor);
+	}
 </code></pre></div></li>
 </ul>
 <h2 id=lexer>Lexer</h2>
@@ -536,7 +575,7 @@ ID: [a-zA-Z][a-zA-Z0-9_]*
 <p>antlr为隐式生成的字符串常量词法规则放在显示定义的词法规则之前，所以他们总有最高的优先级。</p>
 </blockquote>
 <ul>
-<li>同一优先级的运算符摆在同一个位置的候选分支 如('*' | &lsquo;/&rsquo; | &lsquo;%')</li>
+<li>ps: 同一优先级的运算符摆在同一个位置的候选分支 如('*' | &lsquo;/&rsquo; | &lsquo;%')</li>
 </ul>
 </li>
 <li>
@@ -544,13 +583,12 @@ ID: [a-zA-Z][a-zA-Z0-9_]*
 <p>表示该规则本身不是一个词法符号，它只会被其他词法规则使用而不会在文法规则里使用。</p>
 <div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>Float: Digit + <span style=color:#cd5555>&#39;.&#39;</span> + Digit;
 fragment
-Digit: [1-9][0-9]*
-  | 0 ;
+Digit: [1-9][0-9]* | 0 ;
 </code></pre></div></li>
 <li>
-<p>非贪婪匹配</p>
+<p>非贪婪匹配(懒惰)</p>
 <p><code>String: '"'.*?'"'</code></p>
-<p>Update=></p>
+<p>识别转义字符</p>
 <div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>String: <span style=color:#cd5555>&#39;&#34;&#39;</span>(ESC|.)*?<span style=color:#cd5555>&#39;&#34;&#39;</span>
 fragment
 ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span> | <span style=color:#a61717;background-color:#e3d2d2>&#39;\\\\&#39;</span>; <span style=color:#228b22>//antlr语法本身需要用\对\进行转义
@@ -575,9 +613,6 @@ ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span>
 </ul>
 </li>
 <li>
-<p></p>
-</li>
-<li>
 <p>Boundary between Lexer and Parser</p>
 <ul>
 <li>并非很清晰，需要明确程序的需求</li>
@@ -586,15 +621,53 @@ ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span>
 </li>
 <li>
 <p><code>'()'</code>与<code>'(' ')'</code>不等价，若<code>'()'</code>注册在前面，优先级会更高，<code>'()'</code>就不能被识别为<code>'('</code>了</p>
-</li>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>allocFormat:baseType (<span style=color:#a61717;background-color:#e3d2d2>&#39;</span>()<span style=color:#a61717;background-color:#e3d2d2>&#39;</span>)?<span style=color:#a61717;background-color:#e3d2d2>；</span>
+functionDecl: functionType? IDENTIFIER <span style=color:#cd5555>&#39;(&#39;</span> parameterList? <span style=color:#cd5555>&#39;)&#39;</span> block;
+无法识别 <span style=color:#00688b;font-weight:700>int</span> <span style=color:#008b45>foo</span>();<span style=color:#228b22>//ANTLR会因为优先识别为&#39;()&#39;而识别不到&#39;(&#39;，无法识别为functionDecl语法
+</span></code></pre></div></li>
 </ul>
-<h2 id=vistorlistener>Vistor/Listener</h2>
+<h2 id=vistor>Vistor</h2>
 <ul>
 <li>
-<p>监听器的方法会被ANTLR提供的遍历器对象自动调用，即当进入和离开对应节点时会调用对应方法。而访问器必须显式调用visit方法来访问子节点，否则子节点将不会被访问。</p>
+<p>继承关系：</p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>MxBaseVisitor		-&gt;		AbstractParseTreeVisitor
+          |														|
+          v														v
+接口 MxVistor	 -&gt;		接口  ParseTreeVisitor
+</code></pre></div><ul>
+<li>
+<p><code>ParseTreeVisitor</code>：定义了<code>T visit(ParseTree var1);</code>、<code>T visitChildren(RuleNode var1);</code>等</p>
 </li>
 <li>
-<p>ANLTR会生成Vistor和Listener的接口<code>xxLisner</code>和一个默认实现<code>xxBaseListener</code>，我们可以选择继承<code>xxBaseListener</code>并覆盖我们需要修改的方法。</p>
+<p><code>MxVisitor:</code>继承以上接口并新增<code>T visitProgram(MxParser.ProgramContext ctx);</code>等根据.g4生成的parsetree结点</p>
+</li>
+<li>
+<p><code>AbstractParseTreeVisitor</code>:实现<code>visit(ParseTree tree)</code>:tree.accept(this);</p>
+</li>
+<li>
+<p><code>MxBaseVisitor</code>:实现并继承以上</p>
+</li>
+</ul>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>ParserRuleContext		-&gt; 		RuleContext
+                                                              |
+                                                              v
+                                              接口 RuleNode		-&gt;  接口 ParseTree
+</code></pre></div><ul>
+<li>
+<p><code>ParseTree</code>:定义了接口<code>&lt;T> T accept(ParseTreeVisitor&lt;? extends T> var1);</code></p>
+</li>
+<li>
+<p><code>RuleContext</code>:实现了函数<code>getText()</code>转树结点内容为字符串、<code>getChildCount()</code>获得子结点的个数、<code>accept</code>(实际上无用，被覆写)</p>
+</li>
+<li>
+<p><code>ParserRuleContext</code>: 为<code>MxParser</code>文件中各<code>xxxxContext</code>的父类，<code>xxxContext</code>都各自覆写了对应的<code>accept</code>函数为调用对应的<code>visitXXXContext</code>，也即调用<code>MxBaseVisitor.visit(xxxContext)</code> => <code>xxxContext.accept(MxBaseVisitor)</code>=><code>MxBaseVisitor.visitxxxContext(xxxContext)</code></p>
+<p>而<code>MxBaseVisitor.visitxxxContext(xxxContext)</code>实际上被其子类(如ASTBuilder)所覆写。所以调用visit(xxx)等于调用我们自己实现的visitxxxContext(xxxContext);</p>
+</li>
+</ul>
+</li>
+<li>
+<p>注意<strong>向上转型</strong></p>
+<p>调用的是实际所指向的对象的成员函数，借此实现多态</p>
 </li>
 </ul>
 <h2 id=parser>Parser</h2>
@@ -629,6 +702,7 @@ ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span>
 </code></pre></div><ul>
 <li>
 <p>实际上是作为<code>父类</code>发挥作用 提高代码复用率</p>
+<p>自然情况下不会真正的出现类似的父类对象，<strong>都是父类引用对应的子类而实现多台</strong></p>
 <p><code>FunctionDeclarationContext</code>、<code>ClassDeclarationContext</code>、<code>VariableDeclarationContext</code>均extends <code>subProgramCtx</code></p>
 </li>
 <li>
@@ -680,6 +754,28 @@ ProgramCtx.<span style=color:#658b00>subProgram</span>.<span style=color:#658b00
 </li>
 </ul>
 </li>
+</ul>
+<h1 id=一些语法>一些语法：</h1>
+<ul>
+<li>
+<p>java 泛型的实现是：擦拭法 有许多缺点，<a href=https://www.liaoxuefeng.com/wiki/1252599548343744/1265104600263968>详见</a></p>
+</li>
+<li>
+<p><code>&lt;T></code>等价于<code>template &lt;typename T></code></p>
+</li>
+<li>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>ArrayList&lt;Int&gt; 可向上转型为 List&lt;Int&gt;
+ArrayList&lt;Int&gt; 不可向上转型为 ArrayList&lt;Number&gt;
+但实际上Int 继承与Number 有相同的实现 <span style=color:#a61717;background-color:#e3d2d2>，</span>理论上可以转型<span style=color:#a61717;background-color:#e3d2d2>，</span>实现方法<span style=color:#a61717;background-color:#e3d2d2>：</span>
+ArrayList&lt;? <span style=color:#8b008b;font-weight:700>extends</span> Number&gt;
+则所有ArrayList&lt;T&gt; T继承与Number的都可以转型被接到
+</code></pre></div></li>
+<li>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>xxx</span> <span style=color:#8b008b;font-weight:700>extends</span> yyy;
+yyy a;
+xxx b = a;
+a <span style=color:#8b008b;font-weight:700>instanceof</span> yyy <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>true</span>;
+</code></pre></div></li>
 </ul>
 <p><strong>参考资料:</strong></p>
 <blockquote>
