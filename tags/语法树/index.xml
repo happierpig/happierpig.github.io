@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>语法树 on Pigpen Park</title><link>https://happierpig.github.io/tags/%E8%AF%AD%E6%B3%95%E6%A0%91/</link><description>Recent content in 语法树 on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Tue, 12 Oct 2021 21:50:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/tags/%E8%AF%AD%E6%B3%95%E6%A0%91/index.xml" rel="self" type="application/rss+xml"/><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>AST vs CST Abstract Vs. Concrete Syntax Tree :
+Antlr4提供的是CST，为什么要将CST转换为AST再进行Semantic检查？
+Reference Document
+CST: 将语法表示成树的形式
+A parse tree pictorially shows how the start symbol of a grammar derives a string in the language.
+CST是语言一对一到树上的映射。仅有叶子节点带有实际信息，中间节点均为Parser 解析出信息的过程。
+AST：AST are simplified syntactic representations of the source code, and they&amp;rsquo;re most often expressed by the data structures of the language used for implementation.
+Abstract syntax trees, or simply syntax trees, differ from parse trees because superficial distinctions of form, unimportant for translation, do not appear in syntax trees.</description></item></channel></rss>

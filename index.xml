@@ -1,4 +1,103 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Sun, 10 Oct 2021 21:36:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id="环境">环境&lt;/h1>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Tue, 12 Oct 2021 21:50:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id="ast-vs-cst">AST vs CST&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Abstract Vs. Concrete Syntax Tree :&lt;/p>
+&lt;p>Antlr4提供的是CST，为什么要将CST转换为AST再进行Semantic检查？&lt;/p>
+&lt;p>&lt;a href="https://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees/">Reference Document&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>CST: 将语法表示成树的形式&lt;/p>
+&lt;blockquote>
+&lt;p>A parse tree pictorially shows how the start symbol of a grammar derives a string in the language.&lt;/p>
+&lt;/blockquote>
+&lt;p>CST是语言一对一到树上的映射。仅有叶子节点带有实际信息，中间节点均为Parser 解析出信息的过程。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>AST：AST are simplified syntactic representations of the source code, and they&amp;rsquo;re most often expressed by the data structures of the language used for implementation.&lt;/p>
+&lt;blockquote>
+&lt;p>Abstract syntax trees, or simply &lt;em>syntax trees&lt;/em>, differ from parse trees because superficial distinctions of form, unimportant for translation, do not appear in syntax trees.&lt;/p>
+&lt;/blockquote>
+&lt;p>AST仅保留对&lt;strong>分析有用&lt;/strong>的信息。内部节点也存有信息(如BinaryExprNode中间节点存有操作符)，而像&lt;code>;&lt;/code>的词法符号都被抛弃，对分析没有任何帮助&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>The front-end of a compiler can be seen as a process that transforms the input from &lt;strong>its most concrete form&lt;/strong> (statements in the source language) &lt;strong>to its most abstract form&lt;/strong> - stored in internal data structures and ready for &lt;strong>analysis &amp;amp; translation.&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>CST更具体、接近于语法层面 而AST更抽象、方便于后续处理。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>CST是ANTLR根据&lt;code>.g4&lt;/code>文件语法规则分析文本得到的满足形式的树，而我们需要的是内容上保留足够信息、形式上不拘泥便于处理的树。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="from-cst-to-ast">From CST to AST&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>将&lt;strong>需要的各种信息抽象成各类结点&lt;/strong>：其中可以相互嵌套递归&lt;/p>
+&lt;p>注意多态&lt;/p>
+&lt;pre tabindex="0">&lt;code>- ASTNode
+- RootNode // 根结点 由第一个规则产生
+- StmtNode // node as a statement
+- varDefStmtNode
+- returnStmtNode
+- blockStmtNode
+- exprStmtNode
+- ifStmtNode
+- forStmtNode
+- whileStmtNode
+...
+- ExprNode // node as an expression
+- assignExprNode
+- binaryExprNode
+- noAryExprNode
+- constExprNode
+- cmpExprNode
+- varExprNode
+...
+- TypeNode
+- ArrayTypeNode
+- ClassTypeNode
+- ClassDeclNode
+- FuncDeclNode
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>
+&lt;p>从&lt;code>ParseTree parseTreeRoot = parser.program();&lt;/code>返回的CST的根节点进入开始深度优先遍历&lt;/p>
+&lt;p>实际上等价于在CST上遍历同时抽象出需要的信息建立自己的AST结点&lt;/p>
+&lt;blockquote>
+&lt;p>RootNode = astbuilder.visit(parseTreeRoot);&lt;/p>
+&lt;/blockquote>
+&lt;p>每进入一层，实际上都是对其子节点的信息进行处理（才能获取到足够的信息new出点），也即递归进入下一层的节点处理，一路到最底层获得到足够信息建出一个基本的ASTNode，由此一路向上&lt;strong>回溯&lt;/strong>时才建成每个点。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBinaryExpr&lt;/span>(MxParser.&lt;span style="color:#658b00">BinaryExprContext&lt;/span> ctx) {
+String op = ctx.&lt;span style="color:#658b00">op&lt;/span>.&lt;span style="color:#658b00">getText&lt;/span>();
+ExprNode ls = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand1&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> ExprNode rs = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand2&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#228b22">//回溯时才真正建立本点
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> .....
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BinaryExprNode(tmpOp,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx),ls,rs);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Tips:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//通过lambda表达式遍历ArrayList
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>ctx.&lt;span style="color:#658b00">expression&lt;/span>().&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;arraySize.&lt;span style="color:#658b00">add&lt;/span>((ExprNode) visit(tmp)));
+&lt;span style="color:#228b22">//通过for循环遍历ArrayList
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">SubProgramContext&lt;/span> elements : ctx.&lt;span style="color:#658b00">subProgram&lt;/span>()){...}
+&lt;span style="color:#228b22">//enhanced switch
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span> tmpOp = &lt;span style="color:#8b008b;font-weight:bold">switch&lt;/span> (op) {
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;++&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREINC&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;--&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREDEC&lt;/span>
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;!&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">LNOT&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;~&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">BITNOT&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;-&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">NEG&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;+&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">POS&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">default&lt;/span> -&amp;gt; &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> RuntimeException(&lt;span style="color:#cd5555">&amp;#34;[debug] 3&amp;#34;&lt;/span>);
+};
+&lt;span style="color:#228b22">//利用已有的visit
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBaseVariableType&lt;/span>(MxParser.&lt;span style="color:#658b00">BaseVariableTypeContext&lt;/span> ctx) {
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> visit(ctx.&lt;span style="color:#658b00">baseType&lt;/span>());
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+- https://happierpig.github.io/posts/ast/ - 2021 happypig</description></item><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id="环境">环境&lt;/h1>
 &lt;blockquote>
 &lt;p>采用Mac os + IntelliJ IDEA&lt;/p>
 &lt;/blockquote>
