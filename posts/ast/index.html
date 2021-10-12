@@ -185,8 +185,8 @@ From CST to AST
 <a href=/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6>计算机科学</a>
 &nbsp;
 <i class=material-icons>schedule</i>
-3 min
-50 s.
+4 min
+0 s.
 <span class=views>
 &nbsp;
 <i class="fa fa-eye"></i>
@@ -298,6 +298,15 @@ From CST to AST
 <span style=color:#228b22>//利用已有的visit
 </span><span style=color:#228b22></span><span style=color:#8b008b;font-weight:700>public</span> ASTNode <span style=color:#008b45>visitBaseVariableType</span>(MxParser.<span style=color:#658b00>BaseVariableTypeContext</span> ctx) {
     <span style=color:#8b008b;font-weight:700>return</span> visit(ctx.<span style=color:#658b00>baseType</span>());
+}
+
+<span style=color:#228b22>//可以通过 ctx.xx == null 判断有无该参数
+</span><span style=color:#228b22></span><span style=color:#8b008b;font-weight:700>public</span> ASTNode <span style=color:#008b45>visitFunctionType</span>(MxParser.<span style=color:#658b00>FunctionTypeContext</span> ctx) {
+    <span style=color:#8b008b;font-weight:700>if</span>(ctx.<span style=color:#658b00>VOID</span>() == <span style=color:#8b008b;font-weight:700>null</span>){ <span style=color:#228b22>//return variableType
+</span><span style=color:#228b22></span>        <span style=color:#8b008b;font-weight:700>return</span> visit(ctx.<span style=color:#658b00>variableType</span>());
+    }<span style=color:#8b008b;font-weight:700>else</span>{ <span style=color:#228b22>// void function
+</span><span style=color:#228b22></span>        <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>new</span> VoidTypeNode(<span style=color:#8b008b;font-weight:700>new</span> Position(ctx));
+    }
 }
 </code></pre></div></li>
 </ul>
