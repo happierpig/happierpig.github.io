@@ -111,6 +111,15 @@ categories: 计算机科学
   public ASTNode visitBaseVariableType(MxParser.BaseVariableTypeContext ctx) {
       return visit(ctx.baseType());
   }
+  
+  //可以通过 ctx.xx == null 判断有无该参数
+  public ASTNode visitFunctionType(MxParser.FunctionTypeContext ctx) {
+      if(ctx.VOID() == null){ //return variableType
+          return visit(ctx.variableType());
+      }else{ // void function
+          return new VoidTypeNode(new Position(ctx));
+      }
+  }
   ```
-
+  
   

@@ -305,15 +305,17 @@ categories: 计算机科学
   无法识别 int foo();//ANTLR会因为优先识别为'()'而识别不到'('，无法识别为functionDecl语法
   ```
 
+- ![一些基本词法](/images/Antlr/基础语法规则.png)
+
 ## Vistor
 
 - 继承关系：
 
   ```java
-  MxBaseVisitor		->		AbstractParseTreeVisitor
-  			|														|
-    		v														v
-  接口 MxVistor	 ->		接口  ParseTreeVisitor
+  MxBaseVisitor->AbstractParseTreeVisitor
+  			|                  |
+    		v	                 v
+  接口 MxVistor -> 接口  ParseTreeVisitor
   ```
 
   - `ParseTreeVisitor`：定义了`T visit(ParseTree var1);`、`T visitChildren(RuleNode var1);`等
@@ -325,10 +327,10 @@ categories: 计算机科学
   - `MxBaseVisitor`:实现并继承以上
 
   ```java
-  ParserRuleContext		-> 		RuleContext
-    															|
-    															v
-    											接口 RuleNode		->  接口 ParseTree
+  ParserRuleContext->RuleContext
+                          |
+                          v
+                    接口 RuleNode->接口 ParseTree
   ```
 
   - `ParseTree`:定义了接口`<T> T accept(ParseTreeVisitor<? extends T> var1);`
@@ -373,7 +375,7 @@ categories: 计算机科学
 
   - 实际上是作为`父类`发挥作用 提高代码复用率
 
-    自然情况下不会真正的出现类似的父类对象，**都是父类引用对应的子类而实现多台**
+    自然情况下**不会真正的出现类似的父类对象**，**都是父类引用对应的子类而实现多台**
 
     `FunctionDeclarationContext`、`ClassDeclarationContext`、`VariableDeclarationContext`均extends `subProgramCtx`
 
@@ -405,7 +407,7 @@ categories: 计算机科学
           |   variableDecl
           ;
       public static class SubProgramContext extends ParserRuleContext {
-      		public FunctionDeclContext functionDecl();
+      		public FunctionDeclContext functionDecl(); //访问子Context
       		public ClassDeclContext classDecl();
       		public VariableDeclContext variableDecl();
       		public SubProgramContext(ParserRuleContext parent, int invokingState);
@@ -413,6 +415,10 @@ categories: 计算机科学
       }
       //既有accept 又能向下到子节点 实为文法
       ```
+
+      不打标签的文法规则可以**通过成员函数/成员变量**访问到子Context
+
+      打了标签只能充当多态的二传手了
 
     - **Necessity** for tag Expressions :
 
