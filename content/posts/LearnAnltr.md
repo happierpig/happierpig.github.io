@@ -186,13 +186,7 @@ categories: 计算机科学
 
     - `<assoc=right>`指定右结合方式：**实际上就是优先递归生成右边的子树**
 
-      ```java
-      2 ^ 3 ^ 4
-      // ParseTree
-        	^									^
-       ^ 			4	 ->     2				^
-      2   3										3		 4
-      ```
+      ![右结合](/images/Antlr/assoc-right.png)
 
 - 可以在文法规则当中为分支打标签 `#`
 
