@@ -147,6 +147,11 @@ Lexer
 Vistor/Listener
 </a>
 </li>
+<li>
+<a href=#parser onclick="onNavClick(`#parser-nav`)" id=parser-nav>
+Parser
+</a>
+</li>
 </ul>
 </div>
 </div>
@@ -252,6 +257,11 @@ Lexer
 Vistor/Listener
 </a>
 </li>
+<li>
+<a href=#parser onclick="onNavClick(`#parser-nav`)" id=parser-nav>
+Parser
+</a>
+</li>
 </ul>
 </div>
 </div>
@@ -303,8 +313,8 @@ dark_mode
 <a href=/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6>计算机科学</a>
 &nbsp;
 <i class=material-icons>schedule</i>
-17 min
-4 s.
+22 min
+9 s.
 <span class=views>
 &nbsp;
 <i class="fa fa-eye"></i>
@@ -461,29 +471,47 @@ dark_mode
 <ul>
 <li>
 <p>Lexer(词法分析器)和Parser(语法分析器)：</p>
-<p>词法分析器通过输入的字节流(01二进制流)按照词法规则来识别语言结构，语法分析器通过输入的词法+符号流按照文法规则来识别语言结构。</p>
-<p>区分词法规则和语法规则->词法规则以大写字母开头，文法规则以小写字母开头</p>
+<p>Lexer通过输入的字节流(01二进制流)按照词法规则来把字节流划分成一块一块的<code>token</code>。</p>
+<p>Parser通过<code>词素+符号</code>按照文法规则来识别语言结构，生成对应的<code>RuleNode</code>结点。</p>
+<blockquote>
+<p>区分词法规则和文法规则->词法规则以大写字母开头，文法规则以小写字母开头</p>
+</blockquote>
 </li>
 <li>
-<p>Antlr 可识别的语法模式</p>
+<p>Antlr 可识别的语法模式(文法规则)</p>
 <ul>
 <li>
-<p>序列模式</p>
+<p>序列模式:<code>ifStmt: If '(' expression ')' trueStmt=statement</code></p>
 </li>
 <li>
-<p>选择模式</p>
-<p><code>#</code>打标签。如果备选分支上面没有标签，ANTLR就只为每条规则生成一个方法。打上了标签每个备选分支都有不同的访问器方法</p>
+<p>选择模式:<code>loopStmt: forStmt | whileStmt;</code></p>
+<p><code>#</code>为分支打标签</p>
+<blockquote>
+<p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过父规则的成员函数和成员变量。</p>
+<p>打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并<strong>无</strong>通向分支的成员函数和成员变量，由此形成多态。</p>
+</blockquote>
 </li>
 <li>
-<p>词法符号依赖模式</p>
+<p>词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：<code>'(' xxx ')'</code></p>
 </li>
 <li>
 <p>嵌套模式</p>
 <ul>
-<li>直接递归与间接递归</li>
-<li>优先级问题：位置靠前的分支优先级越高</li>
-<li>v4处理直接左递归：不能处理<strong>间接左递归</strong></li>
-<li><code>&lt;assoc=right></code>指定右结合方式</li>
+<li>
+<p>直接递归与间接递归</p>
+</li>
+<li>
+<p><strong>优先级问题：位置靠前的分支优先级越高</strong></p>
+<blockquote>
+<p>运算符优先级依靠Expression语句的定义顺序规定</p>
+</blockquote>
+</li>
+<li>
+<p>Antlr4能够处理直接左递归，但不能处理<strong>间接左递归</strong></p>
+</li>
+<li>
+<p><code>&lt;assoc=right></code>指定右结合方式：实际上就是优先递归生成右边的子树</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -547,6 +575,9 @@ ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span>
 </ul>
 </li>
 <li>
+<p></p>
+</li>
+<li>
 <p>Boundary between Lexer and Parser</p>
 <ul>
 <li>并非很清晰，需要明确程序的需求</li>
@@ -554,11 +585,8 @@ ESC: <span style=color:#a61717;background-color:#e3d2d2>&#39;\\&#34;&#39;</span>
 </ul>
 </li>
 <li>
-<p><code>'()'</code>与<code>'(' ')'</code>不等价，若<code>'()'</code>注册在前面，<strong>优先级会更高</strong>，<code>'()'</code>就不能被识别为<code>'('</code>了</p>
-<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>allocFormat:baseType (<span style=color:#a61717;background-color:#e3d2d2>&#39;</span>()<span style=color:#a61717;background-color:#e3d2d2>&#39;</span>)?<span style=color:#a61717;background-color:#e3d2d2>；</span>
-functionDecl: functionType? IDENTIFIER <span style=color:#cd5555>&#39;(&#39;</span> parameterList? <span style=color:#cd5555>&#39;)&#39;</span> block;
-无法识别 <span style=color:#00688b;font-weight:700>int</span> <span style=color:#008b45>foo</span>();<span style=color:#228b22>//识别不到&#39;(&#39;
-</span></code></pre></div></li>
+<p><code>'()'</code>与<code>'(' ')'</code>不等价，若<code>'()'</code>注册在前面，优先级会更高，<code>'()'</code>就不能被识别为<code>'('</code>了</p>
+</li>
 </ul>
 <h2 id=vistorlistener>Vistor/Listener</h2>
 <ul>
@@ -567,6 +595,90 @@ functionDecl: functionType? IDENTIFIER <span style=color:#cd5555>&#39;(&#39;</sp
 </li>
 <li>
 <p>ANLTR会生成Vistor和Listener的接口<code>xxLisner</code>和一个默认实现<code>xxBaseListener</code>，我们可以选择继承<code>xxBaseListener</code>并覆盖我们需要修改的方法。</p>
+</li>
+</ul>
+<h2 id=parser>Parser</h2>
+<ul>
+<li>
+<p><code>ProgramContext</code>:</p>
+<ul>
+<li>
+<p>用MxParser.program()可接到 ProgramContext(Derived from parse tree)</p>
+</li>
+<li>
+<p><code>public List&lt;SubProgramContext> subProgram()</code> 返回子节点形成的<code>ArrayList&lt;Sub..></code></p>
+<p>源于<code> program: subProgram *</code></p>
+</li>
+<li>
+<p>覆写了<code>public &lt;T> T accept(ParseTreeVisitor&lt;? extends T> visitor)</code>函数</p>
+<p>在<code>AbstractParseTreeVistor</code>实现的<strong>visit函数</strong>即<code>ParseTree.accept(this)</code>实际上调用了该accept函数</p>
+<p>而该accept函数的实现又调用了<code>ParseTreeVistor.visitProgram</code>也即实际调用<code>ASTBuilder</code>中<strong>覆写的函数</strong></p>
+<blockquote>
+<p>=> visit(Type ctx) 调用 ASTBuilder. visitType(ctx) 返回一个自定义的ASTNode</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p><code>SubProgramContext</code></p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>subProgram
+    :   functionDecl    <span style=color:#a61717;background-color:#e3d2d2>#</span>functionDeclaration
+    |   classDecl       <span style=color:#a61717;background-color:#e3d2d2>#</span>classDeclaration
+    |   variableDecl    <span style=color:#a61717;background-color:#e3d2d2>#</span>variableDeclaration
+    ;
+</code></pre></div><ul>
+<li>
+<p>实际上是作为<code>父类</code>发挥作用 提高代码复用率</p>
+<p><code>FunctionDeclarationContext</code>、<code>ClassDeclarationContext</code>、<code>VariableDeclarationContext</code>均extends <code>subProgramCtx</code></p>
+</li>
+<li>
+<p>其子类均实现了<code>accept</code>函数(等价于ASTBuilder.visit(子类ctx)返回子类节点)</p>
+<p>由于向上转型 传一个父类的引用进入函数当中是可以调用其<code>accept</code>函数的 (由此实现多态)</p>
+</li>
+<li>
+<p>Usage：</p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>ArrayList&lt;ASTNode(or other father node)&gt; _List;
+ProgramCtx.<span style=color:#658b00>subProgram</span>.<span style=color:#658b00>forEach</span>(ptr-&gt;_List.<span style=color:#658b00>add</span>((ASTNode) visit(ptr)));
+</code></pre></div></li>
+</ul>
+</li>
+<li>
+<p><code>FunctionDeclarationContext</code>、<code>ClassDeclarationContext</code>、<code>VariableDeclarationContext</code></p>
+<ul>
+<li>
+<p>类似于<code>ProgramContext</code>覆写<code>accept</code>需要实现visitxxx(xxx ctx);</p>
+</li>
+<li>
+<p>其成员函数即为返回对应的<code>functionDeclCtx</code> 、<code>classDeclCtx</code>、 <code>variableDeclCtx</code></p>
+</li>
+<li>
+<p><strong>！这样打标签实在是多此一举！</strong> (进行一个modify</p>
+<ul>
+<li>
+<p>打标签的实质是：告诉ANTLR不要为<code>subProgram</code>生成实际的<code>accept</code>而是把其当作父类，其各种组件打上标签及都要生成对应的<code>ParseRuleContext && accept && extends subProgram</code>。也即这个文法实际上由其他文法定义而成，只不过分类在一起。</p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#228b22>//After modificatin
+</span><span style=color:#228b22></span>subProgram
+    :   functionDecl
+    |   classDecl
+    |   variableDecl
+    ;
+<span style=color:#8b008b;font-weight:700>public</span> <span style=color:#8b008b;font-weight:700>static</span> <span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>SubProgramContext</span> <span style=color:#8b008b;font-weight:700>extends</span> ParserRuleContext {
+      <span style=color:#8b008b;font-weight:700>public</span> FunctionDeclContext <span style=color:#008b45>functionDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> ClassDeclContext <span style=color:#008b45>classDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> VariableDeclContext <span style=color:#008b45>variableDecl</span>();
+      <span style=color:#8b008b;font-weight:700>public</span> <span style=color:#008b45>SubProgramContext</span>(ParserRuleContext parent, <span style=color:#00688b;font-weight:700>int</span> invokingState);
+      <span style=color:#707a7c>@Override</span> <span style=color:#8b008b;font-weight:700>public</span> &lt;T&gt; T <span style=color:#008b45>accept</span>(ParseTreeVisitor&lt;? <span style=color:#8b008b;font-weight:700>extends</span> T&gt; visitor);
+}
+<span style=color:#228b22>//既有accept 又能向下到子节点 实为文法
+</span></code></pre></div></li>
+<li>
+<p><strong>Necessity</strong> for tag Expressions :</p>
+<p>给每一种分支都覆写一个<code>accept</code>函数，而<code>expression</code>本身当作父类起到多态作用。</p>
+<p>即abstract class ExprNode: BinaryExprNode/NoaryExprNode extends ExprNode.</p>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 <p><strong>参考资料:</strong></p>
