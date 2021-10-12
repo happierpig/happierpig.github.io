@@ -20,6 +20,8 @@ categories: 计算机科学
 
    IDE: File->Project Structure->Libraries->`+` 选定刚刚下载的jar包
 
+
+
 # 正则表达式
 
 ## What
@@ -168,11 +170,7 @@ categories: 计算机科学
 
   - 选择模式:`loopStmt: forStmt | whileStmt;`
 
-    `#`为分支打标签
-
-    >  如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过父规则的成员函数和成员变量。
-    >
-    > 打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并**无**通向分支的成员函数和成员变量，由此形成多态。
+    ！ `#`为分支打标签
 
   - 词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：`'(' xxx ')'`
 
@@ -186,19 +184,61 @@ categories: 计算机科学
 
     - Antlr4能够处理直接左递归，但不能处理**间接左递归**
 
-    - `<assoc=right>`指定右结合方式：实际上就是优先递归生成右边的子树
+    - `<assoc=right>`指定右结合方式：**实际上就是优先递归生成右边的子树**
 
-      
+      ```java
+      2 ^ 3 ^ 4
+      // ParseTree
+        	^									^
+       ^ 			4	 ->     2				^
+      2   3										3		 4
+      ```
 
-- 可以在文法规则当中打标签
+- 可以在文法规则当中为分支打标签 `#`
 
+  如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过**父规则的成员函数和成员变量。**
+  
   ```java
-  ifStmt: If '(' expression ')' trueStmt=statement
-          (Else falseStmt=statement)?                         #ifStmt
-    ------------------------------------------------------------------
-  则会生成对应函数
+  subProgram
+      :   functionDecl
+      |   classDecl
+      |   variableDecl ';'
+      ;
   ```
-
+  
+  ```java
+  	public static class SubProgramContext extends ParserRuleContext {
+  		public FunctionDeclContext functionDecl();
+  		public ClassDeclContext classDecl();
+  		public VariableDeclContext variableDecl();
+  		public SubProgramContext(ParserRuleContext parent, int invokingState);
+  		@Override public <T> T accept(ParseTreeVisitor<? extends T> visitor);
+  	}
+  ```
+  
+  打标签=>必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并**无**通向分支的成员函数和成员变量，由此形成多态。
+  
+  ```java
+  jumpStmt
+      :   RETURN expression? ';'  #returnStmt
+      |   BREAK ';'               #breakStmt
+      |   CONTINUE ';'            #continueStmt
+      ;
+  ```
+  
+  ```java
+  	public static class JumpStmtContext extends ParserRuleContext {
+  		public JumpStmtContext(ParserRuleContext parent, int invokingState);
+  		@Override public int getRuleIndex() { return RULE_jumpStmt; }
+  		public JumpStmtContext() { }
+  		public void copyFrom(JumpStmtContext ctx);
+  	}
+  	public static class BreakStmtContext extends JumpStmtContext {
+  		public TerminalNode BREAK() { return getToken(MxParser.BREAK, 0); }
+  		public BreakStmtContext(JumpStmtContext ctx) { copyFrom(ctx); }
+  		@Override public <T> T accept(ParseTreeVisitor<? extends T> visitor);
+  	}
+  ```
 
 ## Lexer
 
@@ -214,7 +254,7 @@ categories: 计算机科学
 
   > antlr为隐式生成的字符串常量词法规则放在显示定义的词法规则之前，所以他们总有最高的优先级。
 
-  - 同一优先级的运算符摆在同一个位置的候选分支 如('*' | '/' | '%')
+  - ps: 同一优先级的运算符摆在同一个位置的候选分支 如('*' | '/' | '%')
 
 - `fragment` 辅助规则
 
@@ -223,15 +263,14 @@ categories: 计算机科学
   ```java
   Float: Digit + '.' + Digit;
   fragment
-  Digit: [1-9][0-9]*
-    | 0 ;
+  Digit: [1-9][0-9]* | 0 ;
   ```
-
-- 非贪婪匹配
+  
+- 非贪婪匹配(懒惰)
 
   `String: '"'.*?'"'`
 
-  Update=>
+  识别转义字符
 
   ```java
   String: '"'(ESC|.)*?'"'
@@ -253,21 +292,56 @@ categories: 计算机科学
 
     `WS:[ \t\r\n]+ -> skip;` 匹配一个或多个空白字符并舍弃
 
-- <img src="../../images/Antlr/基础语法规则.png" alt="基础语法规则" style="zoom:40%;" />
-
 - Boundary between Lexer and Parser
+
   - 并非很清晰，需要明确程序的需求
   - Lexer 处理 raw char string 丢弃不需要Parser知道的东西，并将词**抽象更高一级**。
 
 - `'()'`与`'(' ')'`不等价，若`'()'`注册在前面，优先级会更高，`'()'`就不能被识别为`'('`了
 
-## Vistor/Listener
+  ```java
+  allocFormat:baseType ('()')?；
+  functionDecl: functionType? IDENTIFIER '(' parameterList? ')' block;
+  无法识别 int foo();//ANTLR会因为优先识别为'()'而识别不到'('，无法识别为functionDecl语法
+  ```
 
-- 监听器的方法会被ANTLR提供的遍历器对象自动调用，即当进入和离开对应节点时会调用对应方法。而访问器必须显式调用visit方法来访问子节点，否则子节点将不会被访问。
+## Vistor
 
-- ANLTR会生成Vistor和Listener的接口`xxLisner`和一个默认实现`xxBaseListener`，我们可以选择继承`xxBaseListener`并覆盖我们需要修改的方法。
+- 继承关系：
 
+  ```java
+  MxBaseVisitor		->		AbstractParseTreeVisitor
+  			|														|
+    		v														v
+  接口 MxVistor	 ->		接口  ParseTreeVisitor
+  ```
 
+  - `ParseTreeVisitor`：定义了`T visit(ParseTree var1);`、`T visitChildren(RuleNode var1);`等
+
+  - `MxVisitor:`继承以上接口并新增`T visitProgram(MxParser.ProgramContext ctx);`等根据.g4生成的parsetree结点
+
+  - `AbstractParseTreeVisitor`:实现`visit(ParseTree tree)`:tree.accept(this);
+
+  - `MxBaseVisitor`:实现并继承以上
+
+  ```java
+  ParserRuleContext		-> 		RuleContext
+    															|
+    															v
+    											接口 RuleNode		->  接口 ParseTree
+  ```
+
+  - `ParseTree`:定义了接口`<T> T accept(ParseTreeVisitor<? extends T> var1);`
+
+  - `RuleContext`:实现了函数`getText()`转树结点内容为字符串、`getChildCount()`获得子结点的个数、`accept`(实际上无用，被覆写)
+
+  - `ParserRuleContext`: 为`MxParser`文件中各`xxxxContext`的父类，`xxxContext`都各自覆写了对应的`accept`函数为调用对应的`visitXXXContext`，也即调用`MxBaseVisitor.visit(xxxContext)` => `xxxContext.accept(MxBaseVisitor)`=>`MxBaseVisitor.visitxxxContext(xxxContext)`
+
+    而`MxBaseVisitor.visitxxxContext(xxxContext)`实际上被其子类(如ASTBuilder)所覆写。所以调用visit(xxx)等于调用我们自己实现的visitxxxContext(xxxContext);
+
+- 注意**向上转型**
+
+  调用的是实际所指向的对象的成员函数，借此实现多态
 
 ## Parser
 
@@ -298,6 +372,8 @@ categories: 计算机科学
   ```
 
   - 实际上是作为`父类`发挥作用 提高代码复用率
+
+    自然情况下不会真正的出现类似的父类对象，**都是父类引用对应的子类而实现多台**
 
     `FunctionDeclarationContext`、`ClassDeclarationContext`、`VariableDeclarationContext`均extends `subProgramCtx`
 
@@ -344,7 +420,26 @@ categories: 计算机科学
 
       即abstract class ExprNode: BinaryExprNode/NoaryExprNode extends ExprNode.
 
+# 一些语法：
 
+- java 泛型的实现是：擦拭法 有许多缺点，[详见](https://www.liaoxuefeng.com/wiki/1252599548343744/1265104600263968)
+
+- `<T>`等价于`template <typename T>`
+
+- ```java
+  ArrayList<Int> 可向上转型为 List<Int>
+  ArrayList<Int> 不可向上转型为 ArrayList<Number>
+  但实际上Int 继承与Number 有相同的实现 ，理论上可以转型，实现方法：
+  ArrayList<? extends Number>
+  则所有ArrayList<T> T继承与Number的都可以转型被接到
+  ```
+
+- ```java
+  class xxx extends yyy;
+  yyy a;
+  xxx b = a;
+  a instanceof yyy return true;
+  ```
 
 **参考资料:**
 
