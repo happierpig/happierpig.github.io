@@ -436,9 +436,27 @@ categories: 计算机科学
 
 - ```java
   class xxx extends yyy;
-  yyy a;
-  xxx b = a;
-  a instanceof yyy return true;
+  xxx a;
+  yyy b = a;
+  b instanceof xxx return true;
+  ```
+
+- 父类引用子类对象实际上不改变子类对象的类型，不发生任何变化（与类型转换丢失信息不同）
+
+  ```java
+  //可以用父类作函数参数接住子类对象实现多态
+  void visit(ASTNode node);
+  
+  //可以将父类引用子类对象传入重载函数实现多态
+  void visit(ExprNode node);
+  void visit(StmtNode node);
+  void visit(TypeNode node);
+  ArrayList<ASTNode> elements;
+  elements.forEach(tmp->visit(tmp));
+  
+  // nodeA 为 ExprNode
+  ASTNode ptr = nodeA;
+  ptr instanceof ExprNode == true;
   ```
 
 **参考资料:**
