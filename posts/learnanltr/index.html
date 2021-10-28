@@ -326,7 +326,7 @@ dark_mode
 &nbsp;
 <i class=material-icons>schedule</i>
 26 min
-0 s.
+31 s.
 <span class=views>
 &nbsp;
 <i class="fa fa-eye"></i>
@@ -773,9 +773,25 @@ ArrayList&lt;? <span style=color:#8b008b;font-weight:700>extends</span> Number&g
 </code></pre></div></li>
 <li>
 <div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>xxx</span> <span style=color:#8b008b;font-weight:700>extends</span> yyy;
-yyy a;
-xxx b = a;
-a <span style=color:#8b008b;font-weight:700>instanceof</span> yyy <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>true</span>;
+xxx a;
+yyy b = a;
+b <span style=color:#8b008b;font-weight:700>instanceof</span> xxx <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>true</span>;
+</code></pre></div></li>
+<li>
+<p>父类引用子类对象实际上不改变子类对象的类型，不发生任何变化（与类型转换丢失信息不同）</p>
+<div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#228b22>//可以用父类作函数参数接住子类对象实现多态
+</span><span style=color:#228b22></span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(ASTNode node);
+
+<span style=color:#228b22>//可以将父类引用子类对象传入重载函数实现多态
+</span><span style=color:#228b22></span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(ExprNode node);
+<span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(StmtNode node);
+<span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(TypeNode node);
+ArrayList&lt;ASTNode&gt; elements;
+elements.<span style=color:#658b00>forEach</span>(tmp-&gt;visit(tmp));
+
+<span style=color:#228b22>// nodeA 为 ExprNode
+</span><span style=color:#228b22></span>ASTNode ptr = nodeA;
+ptr <span style=color:#8b008b;font-weight:700>instanceof</span> ExprNode == <span style=color:#8b008b;font-weight:700>true</span>;
 </code></pre></div></li>
 </ul>
 <p><strong>参考资料:</strong></p>

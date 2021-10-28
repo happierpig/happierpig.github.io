@@ -1,4 +1,409 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Tue, 12 Oct 2021 21:50:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id="ast-vs-cst">AST vs CST&lt;/h2>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pigpen Park</title><link>https://happierpig.github.io/</link><description>Recent content on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Thu, 28 Oct 2021 17:57:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Semantic Notes</title><link>https://happierpig.github.io/posts/semantic/</link><pubDate>Thu, 28 Oct 2021 17:57:57 +0800</pubDate><guid>https://happierpig.github.io/posts/semantic/</guid><description>Pigpen Park https://happierpig.github.io/posts/semantic/ -&lt;h1 id="ast-node-信息结构">AST Node 信息结构&lt;/h1>
+&lt;blockquote>
+&lt;p>我的ASTNode结构&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>Type Node：存储对象的类型 （Def by Induction）&lt;strong>只作为其他节点的成员变量出现而不单独作为结点出现&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>(ClassType)基本类型+面向对象：字符串&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(ArrayType)数组：存储基本类型+数组的维数信息&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>函数类型：以上类型Node+void&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Constant:：仅仅存值，类型按照ClassType存储&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>NewExprNode：是”New“表达式精简后的结点&lt;/p>
+&lt;ul>
+&lt;li>包括类型、维数和initList&lt;/li>
+&lt;li>非递归结点，一次性获取了alloc的所有信息都一个结点&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Identifier：仅存储了对象的名字，具体信息应当去Scope里寻找&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>ArrayAccess：&lt;strong>递归&lt;/strong>产生结点，生成一棵树，维数需要递归获得&lt;/p>
+&lt;p>对TypeNode的作用：维数减一，之后若为零，则转化为ClassTypeNode&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Block：存储ArrayList&amp;lt;StmtNode&amp;gt;；产生新的Scope&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>ReturnNode：返回类型从保存的Expression Node获得&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>VariableDeclaration：一个VarDefStmtNode-&amp;gt;ArrayList&amp;lt;VarDefNode&amp;gt;&lt;/p>
+&lt;p>VarDefNode: Type+String+Init&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>FunctionDeclaration：Type+String+ParameterList+codeBlock&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>ClassDeclaration：String+Func+Var&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>RootNode：类定义、函数定义、全局变量定义；&lt;/p>
+&lt;p>全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Class RootNode &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ASTNode{
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ArrayList&amp;lt;ASTNode&amp;gt; elements;&lt;span style="color:#228b22">//引用三种类型的声明语句
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h1 id="semantic-question">Semantic Question&lt;/h1>
+&lt;blockquote>
+&lt;p>需要检查的信息 (从README中提取)&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>作用域&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>类以及函数的前向引用&lt;/p>
+&lt;p>全局变量和局部变量&lt;strong>不支持&lt;/strong>前向引用，作用域为&lt;strong>声明开始的位置&lt;/strong>直到最近的一个块的结束位置&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>类内部的成员变量、函数作用域都是整个类&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>内层作用域对外层作用域的&lt;strong>覆盖&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>未定义/多重定义变量&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>Return&lt;/code>必须在函数作用域； &lt;code>break/continue&lt;/code>必须在勋在作用域内部&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>{}&lt;/code>块、&lt;code>函数入口&lt;/code>、&lt;code>类的入口&lt;/code>引入一个新的作用域&lt;/p>
+&lt;blockquote>
+&lt;p>for/if/while 即使没有{} 也会引入新的作用域&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">{
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Failed
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(flag) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>命名空间：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>在同一个作用域里，变量，函数，和类都&lt;strong>分别&lt;/strong>不能同名(即变量不能和变量同名，其余同理)，变量和函数可以&lt;strong>重名&lt;/strong>，但是类不可以和变量、函数重名。&lt;/p>
+&lt;blockquote>
+&lt;p>注意 Expression DOT IDENTIFIER 的处理 可能是类成员函数，也可能是取成员变量&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>内部作用域的命名空间可以遮掩外部作用域的命名空间&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Type匹配问题&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>各种expression语句的要求&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>return与function type&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>null&lt;/code>空值常量：引用类型 当作右值可以被任意Type接住；可以参与 &lt;code>== null&lt;/code>与&lt;code>!= null&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">A a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Failed: null不能赋值给基本类型
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>A &lt;span style="color:#008b45">foo&lt;/span>(){
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>数组type匹配：类型和维数要相等&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Expression 中对象的左右值问题&lt;/p>
+&lt;ul>
+&lt;li>所有对象都是引用类型&lt;/li>
+&lt;li>运算结果是右值&lt;/li>
+&lt;li>&lt;code>++a&lt;/code>为左值，&lt;code>a++&lt;/code>为右值&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>函数&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>内建函数&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>必须要有一个&lt;code>int main()&lt;/code>在其中&lt;/p>
+&lt;blockquote>
+&lt;p>返回值是int 参数为空&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>返回值不是void，则必须有return语句 (main除外)，必须要进行type-check&lt;/p>
+&lt;p>是void，return必须单独使用，不能出现&lt;code>return expr;&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>数组&lt;/p>
+&lt;ul>
+&lt;li>内建函数 .Size()&lt;/li>
+&lt;li>可以不初始化，声明为null&lt;/li>
+&lt;li>交错数组创建的&lt;strong>维数&lt;/strong>验证&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>类&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>基本类型有&lt;strong>内建函数&lt;/strong>；基本类型不能被赋值为null&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>构造函数的定义和C++相同，无返回值无参数(有参数的未定义)，&lt;strong>可以没有构造函数&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>this&lt;/code>指针返回某个类的引用对象，关键字仅在&lt;strong>类作用域内&lt;/strong>可以使用。&lt;/p>
+&lt;p>不在类作用域内的 this 应当视为语法错误， &lt;strong>this 指针作为左值视为语法错误&lt;/strong>。(设置为右值即可)&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>bool 类型仅可以做 == 和 != 比较，出现 &amp;lt;=, &amp;gt;=, &amp;lt;, &amp;gt; 的比较是语法错误的。&lt;/p>
+&lt;p>对象可以和 null 比较(仅限 !=, == )，但是不能运算。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>IF/FOR/WHILE语句当中的Condition&lt;strong>要求&lt;/strong>是不同的&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单目运算符除&lt;code>++ -- &lt;/code>以外对左右值没有要求 对操作对象的类型有要求&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h1 id="design">Design&lt;/h1>
+&lt;h3 id="scope">Scope&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>“并查集”结构。每个结点只记录其父亲。&lt;/p>
+&lt;blockquote>
+&lt;p>每个Scope都只需要在本地找，找不到向上找；&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(Variable_Table.&lt;span style="color:#658b00">containsKey&lt;/span>(identifier)) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> Variable_Table.&lt;span style="color:#658b00">get&lt;/span>(identifier);
+&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>.&lt;span style="color:#658b00">parent&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> parent.&lt;span style="color:#658b00">fetch_Variable_Type&lt;/span>(identifier);
+&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>HashMap&amp;lt;String,value&amp;gt;存什么value：&lt;/p>
+&lt;ul>
+&lt;li>Variables：存typenode信息即可. Semantic Check仅需要知道identifier对应数据的类型&lt;/li>
+&lt;li>Functions：将整个FuncDefNode存入 以便Check函数调用的正确性&lt;/li>
+&lt;li>Class：将类的Scope存进去(其中包括成员变量、成员函数)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>全局记录一个当前作用域&lt;code>cScope&lt;/code>&lt;/p>
+&lt;p>进入一个新作用域时 &lt;code>cScope = new Scope(cScope);&lt;/code>&lt;/p>
+&lt;p>离开当前作用域时 &lt;code>cScope = cScope.parent;&lt;/code>&lt;/p>
+&lt;p>从而模拟一个Stack的效果 ，以实现命名空间的&lt;strong>覆盖&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>全局存储变量、类和函数；类作用域存储变量和函数；局部作用域只存储局部变量&lt;/p>
+&lt;blockquote>
+&lt;p>调用变量：声明变量看当前作用域hashmap中有无value；调用变量要从当前向上回溯获取类型&lt;/p>
+&lt;p>调用类相关：从GlobalScope获取类的Scope并从其中读取信息&lt;/p>
+&lt;p>调用函数：从GlobalScope中Fetch_Funciton(String identifier)&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="前向引用">前向引用&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>实现前向引用所需要的信息：类的成员变量&lt;strong>标识符&lt;/strong>、类的成员&lt;strong>函数签名&lt;/strong>、全局函数签名&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在Semantic Check之前先&lt;strong>扫一遍&lt;/strong>，将全局函数和类(包括成员函数的&lt;strong>签名&lt;/strong>也即FuncDefNode、成员变量的&lt;strong>类型&lt;/strong>和Identifier)读入到Scope里面。&lt;/p>
+&lt;p>此时对数据的类型是否合法&lt;strong>不做检查&lt;/strong>（信息不够），但进行一些基础的语法检查，包括是否重命名、有没有main函数等等&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这之后在Semantic check时已有的信息：所有合法的类型、函数的签名、类成员变量的标识符，即实现了前向引用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>非前向引用：按照正常&lt;strong>线性顺序处理&lt;/strong>即非前向引用，不用特殊处理，但要保证根结点当存储的子节点&lt;strong>是按照线性顺序的&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="内建函数">内建函数&lt;/h3>
+&lt;p>为了提高代码复用率，我是在前向引用信息收集前，向GlobalScope当中塞对应的信息。从而达到后续处理相同。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//built-in Function print 构造一个FuncDefNode 塞入全局作用域
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>ArrayList&amp;lt;VarDefNode&amp;gt; tmp_List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
+tmp_List.&lt;span style="color:#658b00">add&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VarDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ClassTypeNode(&lt;span style="color:#cd5555">&amp;#34;string&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;str&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)));
+FuncDefNode tmp = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> FuncDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VoidTypeNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp_List,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,_pos);
+initScope.&lt;span style="color:#658b00">define_Function&lt;/span>(&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp);
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="type">Type&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>依赖于&lt;code>TypeNode&lt;/code>来对数据的类型进行区分&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>int/bool/string以及面向对象都是&lt;code>ClassTypeNode&lt;/code> 仅保存字符串&lt;/p>
+&lt;p>对于内置类型的处理，预处理阶段塞入globalScope的class当中&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>arrayType:&lt;/code> &amp;ldquo;baseTypeNode&amp;rdquo; + 维数&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>函数返回值: baseType+ArrayType+VOID&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>对于表达式的类型检查&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>TypeNode：每个表达式结点带一个TypeNode，表示运算后的类型，以便其父节点调用、检查类型匹配&lt;/p>
+&lt;p>类型的初始化：回溯时候初始化，即当前表达式结点 运算之后的类型由其&lt;strong>子节点&lt;/strong>的类型以及当前结点的&lt;strong>操作&lt;/strong>共同决定(要处理当前结点，必须先处理子节点，回溯之后子节点的类型已经确定）&lt;/p>
+&lt;p>叶子结点的类型：常量则直接确定，变量则从Scope中获取；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>isAssignable&lt;/code>: 每个表达式结点都持有，以便父节点检查语法。&lt;/p>
+&lt;p>根据当前操作来确定当前结点运算之后是左值还是右值。&lt;/p>
+&lt;blockquote>
+&lt;p>如加减乘除则将自身设置为右值，赋值操作将自身设置为左值&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>对于数组类型的处理&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>[]&lt;/code>每一个ArrayAccess结点都将自身的类型设置为&lt;code>维数=原数组维数-1&lt;/code>&lt;/p>
+&lt;p>如果维数为0，则把数组类型转换为一般数据类型&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="feature">Feature&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Semantic Check本质上是在一棵树上进行遍历，提取想要的信息并根据规则判断合法性。&lt;/p>
+&lt;p>其信息的传输分为&lt;strong>两种&lt;/strong>，一种是深度优先遍历时从上层结点带给下层结点的，另外一种是回溯时从下层结点带回上层结点的。两种信息传输都可以充分使用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于类型和左右值的处理就是采取&lt;strong>回溯时&lt;/strong>得到的信息的方法&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于&lt;code>对象取用&lt;/code>结点可以采取从上到下传入信息&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">// in ASTNode
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">ObjectMemberExprNode&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ExprNode{
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ExprNode base;
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> String member;
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">boolean&lt;/span> forFunc; &lt;span style="color:#228b22">//如果父节点是FunctionCallNode，则打标记将此值置为true，默认为false
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FuncDefNode funcInfo; &lt;span style="color:#228b22">//在处理当前结点时，发现被打了标记，则去class的scope里面找函数，并且把函数的签名赋值带回；此外都找变量
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> ...
+}
+&lt;span style="color:#228b22">// in SemanticChecker
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(FuncCallExprNode node) {
+FuncDefNode checkBase;
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">Func&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ObjectMemberExprNode){
+((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">forFunc&lt;/span> = &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>; &lt;span style="color:#228b22">//打标记
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> node.&lt;span style="color:#658b00">Func&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>); &lt;span style="color:#228b22">//向下处理对象取用结点
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> checkBase = ((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">funcInfo&lt;/span>; &lt;span style="color:#228b22">//从下面结点中获取函数签名
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> }
+...
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>对于&lt;code>Return 语句&lt;/code>的处理&lt;/p>
+&lt;p>因为Lambda表达式可以嵌套，且为了代码复用，采取了全局栈的方式&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Stack&amp;lt;ASTNode&amp;gt; FuncStation;
+&lt;span style="color:#228b22">// 处理函数或者lambda结点时将对应的包括所有信息的ASTNode压入栈中
+&lt;/span>&lt;span style="color:#228b22">// 处理return语句时很方便
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ReturnStmtNode node) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">empty&lt;/span>()) &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> SemanticError;
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">peek&lt;/span>() &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> FuncDefNode) {
+....
+}&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>{
+LambdaExprNode nowFunc = (LambdaExprNode) FuncStation.&lt;span style="color:#658b00">peek&lt;/span>();
+....
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h1 id="debug-log">Debug Log&lt;/h1>
+&lt;blockquote>
+&lt;p>细枝末节 : )&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>For&lt;/code>语句产生了两个作用域&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = 1;;){&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i;} &lt;span style="color:#228b22">//判断不出重定义
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(BlockStmtNode node){
+cScope = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Scope(cScope);
+node.&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
+}
+&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ForStmtNode node){
+...
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);&lt;span style="color:#228b22">//BlockStmt的话会产生新作用域
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> ... &lt;span style="color:#228b22">//modified
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> BlockStmtNode)
+((BlockStmtNode) node.&lt;span style="color:#658b00">loopBody&lt;/span>).&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
+&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);
+...
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>ArrayList使用前未判&lt;code>null&lt;/code>，直接forEach遍历，导致空指针调用&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单目运算符对左右值的要求考虑出错:&lt;/p>
+&lt;p>&lt;code>+5&lt;/code> &lt;code>-5&lt;/code> &lt;code>!false&lt;/code> 均允许&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>赋值运算符右边可以为&lt;code>null&lt;/code>，基本类型不能赋值为&lt;code>null&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>class 内部调用函数时，忽略了对类内部Scope中的函数进行检查，只去判断了全局作用域，导致找不到函数&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对&lt;code>{{{;};{}}};&lt;/code>的处理&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">// g4设计 保证能识别; 不出现syntax问题
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>statement
+: block &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>codeBlock
+| .......
+| ; &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>blankStmt
+;
+&lt;span style="color:#228b22">// ASTBuilder 设计添加特判 遇到blankStmt不要向stmtList里面添加元素
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBlock&lt;/span>(MxParser.&lt;span style="color:#658b00">BlockContext&lt;/span> ctx) {
+ArrayList&amp;lt;StmtNode&amp;gt; _List = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(ctx.&lt;span style="color:#658b00">statement&lt;/span>() != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>){
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">StatementContext&lt;/span> ele : ctx.&lt;span style="color:#658b00">statement&lt;/span>()){
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(!(ele &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> MxParser.&lt;span style="color:#658b00">BlankStmtContext&lt;/span>)){ &lt;span style="color:#228b22">// 处理
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(_List == &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) _List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
+_List.&lt;span style="color:#658b00">add&lt;/span>((StmtNode) visit(ele));
+}
+}
+}
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BlockStmtNode(_List,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx));
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>函数参数可以传&lt;code>null&lt;/code> ; return可以&lt;code>null&lt;/code> ; &lt;code>== !=&lt;/code>可以与&lt;code>null&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+- https://happierpig.github.io/posts/semantic/ - 2021 happypig</description></item><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id="ast-vs-cst">AST vs CST&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>Abstract Vs. Concrete Syntax Tree :&lt;/p>
@@ -539,9 +944,23 @@ ArrayList&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/s
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">xxx&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> yyy;
-yyy a;
-xxx b = a;
-a &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> yyy &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
+xxx a;
+yyy b = a;
+b &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> xxx &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>父类引用子类对象实际上不改变子类对象的类型，不发生任何变化（与类型转换丢失信息不同）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//可以用父类作函数参数接住子类对象实现多态
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ASTNode node);
+&lt;span style="color:#228b22">//可以将父类引用子类对象传入重载函数实现多态
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ExprNode node);
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(StmtNode node);
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(TypeNode node);
+ArrayList&amp;lt;ASTNode&amp;gt; elements;
+elements.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;visit(tmp));
+&lt;span style="color:#228b22">// nodeA 为 ExprNode
+&lt;/span>&lt;span style="color:#228b22">&lt;/span>ASTNode ptr = nodeA;
+ptr &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ExprNode == &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>参考资料:&lt;/strong>&lt;/p>
