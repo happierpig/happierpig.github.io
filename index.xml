@@ -402,6 +402,12 @@ _List.&lt;span style="color:#658b00">add&lt;/span>((StmtNode) visit(ele));
 &lt;li>
 &lt;p>函数参数可以传&lt;code>null&lt;/code> ; return可以&lt;code>null&lt;/code> ; &lt;code>== !=&lt;/code>可以与&lt;code>null&lt;/code>&lt;/p>
 &lt;/li>
+&lt;li>
+&lt;p>类构造函数不能有返回类型&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">A&lt;/span>{
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">A&lt;/span>(){&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> 1;}
+};
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 - https://happierpig.github.io/posts/semantic/ - 2021 happypig</description></item><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id="ast-vs-cst">AST vs CST&lt;/h2>
 &lt;ul>
