@@ -365,3 +365,11 @@ initScope.define_Function("print",tmp);
   ```
 
 - 函数参数可以传`null`  ; return可以`null` ;  `== !=`可以与`null`
+
+- 类构造函数不能有返回类型
+
+  ```java
+  class A{
+    	int A(){return 1;}
+  };
+  ```
