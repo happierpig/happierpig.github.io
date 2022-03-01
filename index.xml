@@ -53,10 +53,10 @@
 &lt;li>
 &lt;p>RootNode：类定义、函数定义、全局变量定义；&lt;/p>
 &lt;p>全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Class RootNode &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ASTNode{
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ArrayList&amp;lt;ASTNode&amp;gt; elements;&lt;span style="color:#228b22">//引用三种类型的声明语句
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Class RootNode &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ASTNode{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ArrayList&amp;lt;ASTNode&amp;gt; elements;&lt;span style="color:#228b22">//引用三种类型的声明语句
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h1 id="semantic-question">Semantic Question&lt;/h1>
 &lt;blockquote>
@@ -87,14 +87,14 @@
 &lt;blockquote>
 &lt;p>for/if/while 即使没有{} 也会引入新的作用域&lt;/p>
 &lt;/blockquote>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">{
-&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;
-&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Failed
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(flag) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a;;) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Failed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(flag) &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
@@ -122,12 +122,12 @@
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>null&lt;/code>空值常量：引用类型 当作右值可以被任意Type接住；可以参与 &lt;code>== null&lt;/code>与&lt;code>!= null&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">A a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Failed: null不能赋值给基本类型
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>A &lt;span style="color:#008b45">foo&lt;/span>(){
-&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>A a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> a = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Failed: null不能赋值给基本类型
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>A &lt;span style="color:#008b45">foo&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>; &lt;span style="color:#228b22">//Success
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>数组type匹配：类型和维数要相等&lt;/p>
 &lt;/li>
@@ -201,10 +201,10 @@
 &lt;blockquote>
 &lt;p>每个Scope都只需要在本地找，找不到向上找；&lt;/p>
 &lt;/blockquote>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(Variable_Table.&lt;span style="color:#658b00">containsKey&lt;/span>(identifier)) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> Variable_Table.&lt;span style="color:#658b00">get&lt;/span>(identifier);
-&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>.&lt;span style="color:#658b00">parent&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> parent.&lt;span style="color:#658b00">fetch_Variable_Type&lt;/span>(identifier);
-&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(Variable_Table.&lt;span style="color:#658b00">containsKey&lt;/span>(identifier)) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> Variable_Table.&lt;span style="color:#658b00">get&lt;/span>(identifier);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>.&lt;span style="color:#658b00">parent&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> parent.&lt;span style="color:#658b00">fetch_Variable_Type&lt;/span>(identifier);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>HashMap&amp;lt;String,value&amp;gt;存什么value：&lt;/p>
 &lt;ul>
@@ -246,12 +246,12 @@
 &lt;/ul>
 &lt;h3 id="内建函数">内建函数&lt;/h3>
 &lt;p>为了提高代码复用率，我是在前向引用信息收集前，向GlobalScope当中塞对应的信息。从而达到后续处理相同。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//built-in Function print 构造一个FuncDefNode 塞入全局作用域
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>ArrayList&amp;lt;VarDefNode&amp;gt; tmp_List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
-tmp_List.&lt;span style="color:#658b00">add&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VarDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ClassTypeNode(&lt;span style="color:#cd5555">&amp;#34;string&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;str&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)));
-FuncDefNode tmp = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> FuncDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VoidTypeNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp_List,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,_pos);
-initScope.&lt;span style="color:#658b00">define_Function&lt;/span>(&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp);
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="type">Type&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//built-in Function print 构造一个FuncDefNode 塞入全局作用域
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>ArrayList&amp;lt;VarDefNode&amp;gt; tmp_List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tmp_List.&lt;span style="color:#658b00">add&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VarDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ClassTypeNode(&lt;span style="color:#cd5555">&amp;#34;string&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;str&amp;#34;&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FuncDefNode tmp = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> FuncDefNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VoidTypeNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(-1,-1)),&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp_List,&lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>,_pos);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>initScope.&lt;span style="color:#658b00">define_Function&lt;/span>(&lt;span style="color:#cd5555">&amp;#34;print&amp;#34;&lt;/span>,tmp);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="type">Type&lt;/h3>
 &lt;ul>
 &lt;li>
 &lt;p>依赖于&lt;code>TypeNode&lt;/code>来对数据的类型进行区分&lt;/p>
@@ -306,41 +306,41 @@ initScope.&lt;span style="color:#658b00">define_Function&lt;/span>(&lt;span styl
 &lt;/li>
 &lt;li>
 &lt;p>对于&lt;code>对象取用&lt;/code>结点可以采取从上到下传入信息&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">// in ASTNode
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">ObjectMemberExprNode&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ExprNode{
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ExprNode base;
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> String member;
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">boolean&lt;/span> forFunc; &lt;span style="color:#228b22">//如果父节点是FunctionCallNode，则打标记将此值置为true，默认为false
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FuncDefNode funcInfo; &lt;span style="color:#228b22">//在处理当前结点时，发现被打了标记，则去class的scope里面找函数，并且把函数的签名赋值带回；此外都找变量
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> ...
-}
-&lt;span style="color:#228b22">// in SemanticChecker
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(FuncCallExprNode node) {
-FuncDefNode checkBase;
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">Func&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ObjectMemberExprNode){
-((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">forFunc&lt;/span> = &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>; &lt;span style="color:#228b22">//打标记
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> node.&lt;span style="color:#658b00">Func&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>); &lt;span style="color:#228b22">//向下处理对象取用结点
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> checkBase = ((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">funcInfo&lt;/span>; &lt;span style="color:#228b22">//从下面结点中获取函数签名
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> }
-...
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// in ASTNode
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">ObjectMemberExprNode&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ExprNode{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ExprNode base;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> String member;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">boolean&lt;/span> forFunc; &lt;span style="color:#228b22">//如果父节点是FunctionCallNode，则打标记将此值置为true，默认为false
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FuncDefNode funcInfo; &lt;span style="color:#228b22">//在处理当前结点时，发现被打了标记，则去class的scope里面找函数，并且把函数的签名赋值带回；此外都找变量
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// in SemanticChecker
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(FuncCallExprNode node) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> FuncDefNode checkBase;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">Func&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ObjectMemberExprNode){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">forFunc&lt;/span> = &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>; &lt;span style="color:#228b22">//打标记
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> node.&lt;span style="color:#658b00">Func&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>); &lt;span style="color:#228b22">//向下处理对象取用结点
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> checkBase = ((ObjectMemberExprNode) (node.&lt;span style="color:#658b00">Func&lt;/span>)).&lt;span style="color:#658b00">funcInfo&lt;/span>; &lt;span style="color:#228b22">//从下面结点中获取函数签名
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>对于&lt;code>Return 语句&lt;/code>的处理&lt;/p>
 &lt;p>因为Lambda表达式可以嵌套，且为了代码复用，采取了全局栈的方式&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Stack&amp;lt;ASTNode&amp;gt; FuncStation;
-&lt;span style="color:#228b22">// 处理函数或者lambda结点时将对应的包括所有信息的ASTNode压入栈中
-&lt;/span>&lt;span style="color:#228b22">// 处理return语句时很方便
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ReturnStmtNode node) {
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">empty&lt;/span>()) &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> SemanticError;
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">peek&lt;/span>() &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> FuncDefNode) {
-....
-}&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>{
-LambdaExprNode nowFunc = (LambdaExprNode) FuncStation.&lt;span style="color:#658b00">peek&lt;/span>();
-....
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> Stack&amp;lt;ASTNode&amp;gt; FuncStation;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// 处理函数或者lambda结点时将对应的包括所有信息的ASTNode压入栈中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// 处理return语句时很方便
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ReturnStmtNode node) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">empty&lt;/span>()) &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> SemanticError;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(FuncStation.&lt;span style="color:#658b00">peek&lt;/span>() &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> FuncDefNode) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> LambdaExprNode nowFunc = (LambdaExprNode) FuncStation.&lt;span style="color:#658b00">peek&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h1 id="debug-log">Debug Log&lt;/h1>
 &lt;blockquote>
@@ -349,21 +349,21 @@ LambdaExprNode nowFunc = (LambdaExprNode) FuncStation.&lt;span style="color:#658
 &lt;ul>
 &lt;li>
 &lt;p>&lt;code>For&lt;/code>语句产生了两个作用域&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = 1;;){&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i;} &lt;span style="color:#228b22">//判断不出重定义
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(BlockStmtNode node){
-cScope = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Scope(cScope);
-node.&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
-}
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ForStmtNode node){
-...
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);&lt;span style="color:#228b22">//BlockStmt的话会产生新作用域
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> ... &lt;span style="color:#228b22">//modified
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> BlockStmtNode)
-((BlockStmtNode) node.&lt;span style="color:#658b00">loopBody&lt;/span>).&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
-&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);
-...
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = 1;;){&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i;} &lt;span style="color:#228b22">//判断不出重定义
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(BlockStmtNode node){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cScope = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Scope(cScope);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node.&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ForStmtNode node){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);&lt;span style="color:#228b22">//BlockStmt的话会产生新作用域
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> ... &lt;span style="color:#228b22">//modified
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(node.&lt;span style="color:#658b00">loopBody&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> BlockStmtNode)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ((BlockStmtNode) node.&lt;span style="color:#658b00">loopBody&lt;/span>).&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;tmp.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">else&lt;/span> node.&lt;span style="color:#658b00">loopBody&lt;/span>.&lt;span style="color:#658b00">accept&lt;/span>(&lt;span style="color:#8b008b;font-weight:bold">this&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>ArrayList使用前未判&lt;code>null&lt;/code>，直接forEach遍历，导致空指针调用&lt;/p>
 &lt;/li>
@@ -379,35 +379,35 @@ node.&lt;span style="color:#658b00">stmtList&lt;/span>.&lt;span style="color:#65
 &lt;/li>
 &lt;li>
 &lt;p>对&lt;code>{{{;};{}}};&lt;/code>的处理&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">// g4设计 保证能识别; 不出现syntax问题
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>statement
-: block &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>codeBlock
-| .......
-| ; &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>blankStmt
-;
-&lt;span style="color:#228b22">// ASTBuilder 设计添加特判 遇到blankStmt不要向stmtList里面添加元素
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBlock&lt;/span>(MxParser.&lt;span style="color:#658b00">BlockContext&lt;/span> ctx) {
-ArrayList&amp;lt;StmtNode&amp;gt; _List = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(ctx.&lt;span style="color:#658b00">statement&lt;/span>() != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>){
-&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">StatementContext&lt;/span> ele : ctx.&lt;span style="color:#658b00">statement&lt;/span>()){
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(!(ele &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> MxParser.&lt;span style="color:#658b00">BlankStmtContext&lt;/span>)){ &lt;span style="color:#228b22">// 处理
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(_List == &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) _List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
-_List.&lt;span style="color:#658b00">add&lt;/span>((StmtNode) visit(ele));
-}
-}
-}
-&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BlockStmtNode(_List,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx));
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// g4设计 保证能识别; 不出现syntax问题
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>statement
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : block &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>codeBlock
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | .......
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | ; &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>blankStmt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// ASTBuilder 设计添加特判 遇到blankStmt不要向stmtList里面添加元素
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBlock&lt;/span>(MxParser.&lt;span style="color:#658b00">BlockContext&lt;/span> ctx) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ArrayList&amp;lt;StmtNode&amp;gt; _List = &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(ctx.&lt;span style="color:#658b00">statement&lt;/span>() != &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">StatementContext&lt;/span> ele : ctx.&lt;span style="color:#658b00">statement&lt;/span>()){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(!(ele &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> MxParser.&lt;span style="color:#658b00">BlankStmtContext&lt;/span>)){ &lt;span style="color:#228b22">// 处理
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(_List == &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>) _List = &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> ArrayList&amp;lt;&amp;gt;();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> _List.&lt;span style="color:#658b00">add&lt;/span>((StmtNode) visit(ele));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BlockStmtNode(_List,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>函数参数可以传&lt;code>null&lt;/code> ; return可以&lt;code>null&lt;/code> ; &lt;code>== !=&lt;/code>可以与&lt;code>null&lt;/code>&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>类构造函数不能有返回类型&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">A&lt;/span>{
-&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">A&lt;/span>(){&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> 1;}
-};
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">A&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">A&lt;/span>(){&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> 1;}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 - https://happierpig.github.io/posts/semantic/ - 2021 happypig</description></item><item><title>From CST to AST</title><link>https://happierpig.github.io/posts/ast/</link><pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate><guid>https://happierpig.github.io/posts/ast/</guid><description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id="ast-vs-cst">AST vs CST&lt;/h2>
 &lt;ul>
@@ -477,44 +477,48 @@ _List.&lt;span style="color:#658b00">add&lt;/span>((StmtNode) visit(ele));
 &lt;p>RootNode = astbuilder.visit(parseTreeRoot);&lt;/p>
 &lt;/blockquote>
 &lt;p>每进入一层，实际上都是对其子节点的信息进行处理（才能获取到足够的信息new出点），也即递归进入下一层的节点处理，一路到最底层获得到足够信息建出一个基本的ASTNode，由此一路向上&lt;strong>回溯&lt;/strong>时才建成每个点。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBinaryExpr&lt;/span>(MxParser.&lt;span style="color:#658b00">BinaryExprContext&lt;/span> ctx) {
-String op = ctx.&lt;span style="color:#658b00">op&lt;/span>.&lt;span style="color:#658b00">getText&lt;/span>();
-ExprNode ls = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand1&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> ExprNode rs = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand2&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#228b22">//回溯时才真正建立本点
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> .....
-&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BinaryExprNode(tmpOp,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx),ls,rs);
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBinaryExpr&lt;/span>(MxParser.&lt;span style="color:#658b00">BinaryExprContext&lt;/span> ctx) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String op = ctx.&lt;span style="color:#658b00">op&lt;/span>.&lt;span style="color:#658b00">getText&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ExprNode ls = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand1&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> ExprNode rs = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand2&lt;/span>); &lt;span style="color:#228b22">// 向下递归建点
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#228b22">//回溯时才真正建立本点
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> .....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> BinaryExprNode(tmpOp,&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx),ls,rs);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>Tips:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//通过lambda表达式遍历ArrayList
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>ctx.&lt;span style="color:#658b00">expression&lt;/span>().&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;arraySize.&lt;span style="color:#658b00">add&lt;/span>((ExprNode) visit(tmp)));
-&lt;span style="color:#228b22">//通过for循环遍历ArrayList
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">SubProgramContext&lt;/span> elements : ctx.&lt;span style="color:#658b00">subProgram&lt;/span>()){...}
-&lt;span style="color:#228b22">//enhanced switch
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span> tmpOp = &lt;span style="color:#8b008b;font-weight:bold">switch&lt;/span> (op) {
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;++&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREINC&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;--&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREDEC&lt;/span>
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;!&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">LNOT&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;~&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">BITNOT&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;-&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">NEG&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;+&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">POS&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">default&lt;/span> -&amp;gt; &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> RuntimeException(&lt;span style="color:#cd5555">&amp;#34;[debug] 3&amp;#34;&lt;/span>);
-};
-&lt;span style="color:#228b22">//利用已有的visit
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBaseVariableType&lt;/span>(MxParser.&lt;span style="color:#658b00">BaseVariableTypeContext&lt;/span> ctx) {
-&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> visit(ctx.&lt;span style="color:#658b00">baseType&lt;/span>());
-}
-&lt;span style="color:#228b22">//可以通过 ctx.xx == null 判断有无该参数
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitFunctionType&lt;/span>(MxParser.&lt;span style="color:#658b00">FunctionTypeContext&lt;/span> ctx) {
-&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(ctx.&lt;span style="color:#658b00">VOID&lt;/span>() == &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>){ &lt;span style="color:#228b22">//return variableType
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> visit(ctx.&lt;span style="color:#658b00">variableType&lt;/span>());
-}&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>{ &lt;span style="color:#228b22">// void function
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VoidTypeNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx));
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//通过lambda表达式遍历ArrayList
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>ctx.&lt;span style="color:#658b00">expression&lt;/span>().&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;arraySize.&lt;span style="color:#658b00">add&lt;/span>((ExprNode) visit(tmp)));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//通过for循环遍历ArrayList
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span>(MxParser.&lt;span style="color:#658b00">SubProgramContext&lt;/span> elements : ctx.&lt;span style="color:#658b00">subProgram&lt;/span>()){...}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//enhanced switch
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span> tmpOp = &lt;span style="color:#8b008b;font-weight:bold">switch&lt;/span> (op) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;++&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREINC&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;--&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">PREDEC&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;!&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">LNOT&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;~&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">BITNOT&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;-&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">NEG&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">case&lt;/span> &lt;span style="color:#cd5555">&amp;#34;+&amp;#34;&lt;/span> -&amp;gt; MonoExprNode.&lt;span style="color:#658b00">Op&lt;/span>.&lt;span style="color:#658b00">POS&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">default&lt;/span> -&amp;gt; &lt;span style="color:#8b008b;font-weight:bold">throw&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> RuntimeException(&lt;span style="color:#cd5555">&amp;#34;[debug] 3&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//利用已有的visit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitBaseVariableType&lt;/span>(MxParser.&lt;span style="color:#658b00">BaseVariableTypeContext&lt;/span> ctx) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> visit(ctx.&lt;span style="color:#658b00">baseType&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//可以通过 ctx.xx == null 判断有无该参数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ASTNode &lt;span style="color:#008b45">visitFunctionType&lt;/span>(MxParser.&lt;span style="color:#658b00">FunctionTypeContext&lt;/span> ctx) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(ctx.&lt;span style="color:#658b00">VOID&lt;/span>() == &lt;span style="color:#8b008b;font-weight:bold">null&lt;/span>){ &lt;span style="color:#228b22">//return variableType
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> visit(ctx.&lt;span style="color:#658b00">variableType&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>{ &lt;span style="color:#228b22">// void function
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> VoidTypeNode(&lt;span style="color:#8b008b;font-weight:bold">new&lt;/span> Position(ctx));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 - https://happierpig.github.io/posts/ast/ - 2021 happypig</description></item><item><title>学用Antlr4</title><link>https://happierpig.github.io/posts/learnanltr/</link><pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate><guid>https://happierpig.github.io/posts/learnanltr/</guid><description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id="环境">环境&lt;/h1>
 &lt;blockquote>
@@ -705,67 +709,67 @@ ExprNode ls = (ExprNode) visit(ctx.&lt;span style="color:#658b00">operand1&lt;/s
 &lt;li>
 &lt;p>可以在文法规则当中为分支打标签 &lt;code>#&lt;/code>&lt;/p>
 &lt;p>如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过&lt;strong>父规则的成员函数和成员变量。&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">subProgram
-: functionDecl
-| classDecl
-| variableDecl &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span>
-;
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java"> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">SubProgramContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FunctionDeclContext &lt;span style="color:#008b45">functionDecl&lt;/span>();
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ClassDeclContext &lt;span style="color:#008b45">classDecl&lt;/span>();
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> VariableDeclContext &lt;span style="color:#008b45">variableDecl&lt;/span>();
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">SubProgramContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
-&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>打标签=&amp;gt;必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并&lt;strong>无&lt;/strong>通向分支的成员函数和成员变量，由此形成多态。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">jumpStmt
-: RETURN expression? &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>returnStmt
-| BREAK &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>breakStmt
-| CONTINUE &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>continueStmt
-;
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java"> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">JumpStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
-&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">getRuleIndex&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> RULE_jumpStmt; }
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>() { }
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">copyFrom&lt;/span>(JumpStmtContext ctx);
-}
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">BreakStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> JumpStmtContext {
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> TerminalNode &lt;span style="color:#008b45">BREAK&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> getToken(MxParser.&lt;span style="color:#658b00">BREAK&lt;/span>, 0); }
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">BreakStmtContext&lt;/span>(JumpStmtContext ctx) { copyFrom(ctx); }
-&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>subProgram
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : functionDecl
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | classDecl
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | variableDecl &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">SubProgramContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FunctionDeclContext &lt;span style="color:#008b45">functionDecl&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ClassDeclContext &lt;span style="color:#008b45">classDecl&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> VariableDeclContext &lt;span style="color:#008b45">variableDecl&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">SubProgramContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>打标签=&amp;gt;必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并&lt;strong>无&lt;/strong>通向分支的成员函数和成员变量，由此形成多态。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>jumpStmt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : RETURN expression? &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>returnStmt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | BREAK &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>breakStmt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | CONTINUE &lt;span style="color:#cd5555">&amp;#39;;&amp;#39;&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>continueStmt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">JumpStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">getRuleIndex&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> RULE_jumpStmt; }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">JumpStmtContext&lt;/span>() { }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">copyFrom&lt;/span>(JumpStmtContext ctx);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">BreakStmtContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> JumpStmtContext {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> TerminalNode &lt;span style="color:#008b45">BREAK&lt;/span>() { &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> getToken(MxParser.&lt;span style="color:#658b00">BREAK&lt;/span>, 0); }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">BreakStmtContext&lt;/span>(JumpStmtContext ctx) { copyFrom(ctx); }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h2 id="lexer">Lexer&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>Lexer解决歧义问题的方法是&lt;strong>优先使用位置靠前的词法规则&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">Int: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>&lt;span style="color:#00688b;font-weight:bold">int&lt;/span>&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>;
-ID: [a-zA-Z][a-zA-Z0-9_]*
-;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样避免了Lexer把&lt;code>int&lt;/code>分析成为一个ID&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>Int: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>&lt;span style="color:#00688b;font-weight:bold">int&lt;/span>&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ID: [a-zA-Z][a-zA-Z0-9_]*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样避免了Lexer把&lt;code>int&lt;/code>分析成为一个ID&lt;/p>
 &lt;blockquote>
 &lt;p>antlr为隐式生成的字符串常量词法规则放在显示定义的词法规则之前，所以他们总有最高的优先级。&lt;/p>
 &lt;/blockquote>
 &lt;ul>
-&lt;li>ps: 同一优先级的运算符摆在同一个位置的候选分支 如('*' | &amp;lsquo;/&amp;rsquo; | &amp;lsquo;%')&lt;/li>
+&lt;li>ps: 同一优先级的运算符摆在同一个位置的候选分支 如(&amp;rsquo;*&amp;rsquo; | &amp;lsquo;/&amp;rsquo; | &amp;lsquo;%&amp;rsquo;)&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>fragment&lt;/code> 辅助规则&lt;/p>
 &lt;p>表示该规则本身不是一个词法符号，它只会被其他词法规则使用而不会在文法规则里使用。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">Float: Digit + &lt;span style="color:#cd5555">&amp;#39;.&amp;#39;&lt;/span> + Digit;
-fragment
-Digit: [1-9][0-9]* | 0 ;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>Float: Digit + &lt;span style="color:#cd5555">&amp;#39;.&amp;#39;&lt;/span> + Digit;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>fragment
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Digit: [1-9][0-9]* | 0 ;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>非贪婪匹配(懒惰)&lt;/p>
 &lt;p>&lt;code>String: '&amp;quot;'.*?'&amp;quot;'&lt;/code>&lt;/p>
 &lt;p>识别转义字符&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">String: &lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>(ESC|.)*?&lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>
-fragment
-ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34;&amp;#39;&lt;/span> | &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\\\&amp;#39;&lt;/span>; &lt;span style="color:#228b22">//antlr语法本身需要用\对\进行转义
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>String: &lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>(ESC|.)*?&lt;span style="color:#cd5555">&amp;#39;&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>fragment
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34;&amp;#39;&lt;/span> | &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\\\&amp;#39;&lt;/span>; &lt;span style="color:#228b22">//antlr语法本身需要用\对\进行转义
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>处理注释和空白字符&lt;/p>
 &lt;ul>
@@ -794,10 +798,10 @@ ESC: &lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;\\&amp;#34
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>'()'&lt;/code>与&lt;code>'(' ')'&lt;/code>不等价，若&lt;code>'()'&lt;/code>注册在前面，优先级会更高，&lt;code>'()'&lt;/code>就不能被识别为&lt;code>'('&lt;/code>了&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">allocFormat:baseType (&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>()&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>)?&lt;span style="color:#a61717;background-color:#e3d2d2">；&lt;/span>
-functionDecl: functionType? IDENTIFIER &lt;span style="color:#cd5555">&amp;#39;(&amp;#39;&lt;/span> parameterList? &lt;span style="color:#cd5555">&amp;#39;)&amp;#39;&lt;/span> block;
-无法识别 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">foo&lt;/span>();&lt;span style="color:#228b22">//ANTLR会因为优先识别为&amp;#39;()&amp;#39;而识别不到&amp;#39;(&amp;#39;，无法识别为functionDecl语法
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>allocFormat:baseType (&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>()&lt;span style="color:#a61717;background-color:#e3d2d2">&amp;#39;&lt;/span>)?&lt;span style="color:#a61717;background-color:#e3d2d2">；&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>functionDecl: functionType? IDENTIFIER &lt;span style="color:#cd5555">&amp;#39;(&amp;#39;&lt;/span> parameterList? &lt;span style="color:#cd5555">&amp;#39;)&amp;#39;&lt;/span> block;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>无法识别 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">foo&lt;/span>();&lt;span style="color:#228b22">//ANTLR会因为优先识别为&amp;#39;()&amp;#39;而识别不到&amp;#39;(&amp;#39;，无法识别为functionDecl语法
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>&lt;img src="https://happierpig.github.io/images/Antlr/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E8%A7%84%E5%88%99.png" alt="一些基本词法">&lt;/p>
 &lt;/li>
@@ -806,11 +810,11 @@ functionDecl: functionType? IDENTIFIER &lt;span style="color:#cd5555">&amp;#39;(
 &lt;ul>
 &lt;li>
 &lt;p>继承关系：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">MxBaseVisitor-&amp;gt;AbstractParseTreeVisitor
-| |
-v v
-接口 MxVistor -&amp;gt; 接口 ParseTreeVisitor
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>MxBaseVisitor-&amp;gt;AbstractParseTreeVisitor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> v v
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>接口 MxVistor -&amp;gt; 接口 ParseTreeVisitor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>
 &lt;p>&lt;code>ParseTreeVisitor&lt;/code>：定义了&lt;code>T visit(ParseTree var1);&lt;/code>、&lt;code>T visitChildren(RuleNode var1);&lt;/code>等&lt;/p>
 &lt;/li>
@@ -824,11 +828,11 @@ v v
 &lt;p>&lt;code>MxBaseVisitor&lt;/code>:实现并继承以上&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ParserRuleContext-&amp;gt;RuleContext
-|
-v
-接口 RuleNode-&amp;gt;接口 ParseTree
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>ParserRuleContext-&amp;gt;RuleContext
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> v
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 接口 RuleNode-&amp;gt;接口 ParseTree
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>
 &lt;p>&lt;code>ParseTree&lt;/code>:定义了接口&lt;code>&amp;lt;T&amp;gt; T accept(ParseTreeVisitor&amp;lt;? extends T&amp;gt; var1);&lt;/code>&lt;/p>
 &lt;/li>
@@ -870,12 +874,12 @@ v
 &lt;/li>
 &lt;li>
 &lt;p>&lt;code>SubProgramContext&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">subProgram
-: functionDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>functionDeclaration
-| classDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>classDeclaration
-| variableDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>variableDeclaration
-;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>subProgram
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : functionDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>functionDeclaration
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | classDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>classDeclaration
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | variableDecl &lt;span style="color:#a61717;background-color:#e3d2d2">#&lt;/span>variableDeclaration
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>
 &lt;p>实际上是作为&lt;code>父类&lt;/code>发挥作用 提高代码复用率&lt;/p>
 &lt;p>自然情况下&lt;strong>不会真正的出现类似的父类对象&lt;/strong>，&lt;strong>都是父类引用对应的子类而实现多台&lt;/strong>&lt;/p>
@@ -887,9 +891,9 @@ v
 &lt;/li>
 &lt;li>
 &lt;p>Usage：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ArrayList&amp;lt;ASTNode(or other father node)&amp;gt; _List;
-ProgramCtx.&lt;span style="color:#658b00">subProgram&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(ptr-&amp;gt;_List.&lt;span style="color:#658b00">add&lt;/span>((ASTNode) visit(ptr)));
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>ArrayList&amp;lt;ASTNode(or other father node)&amp;gt; _List;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ProgramCtx.&lt;span style="color:#658b00">subProgram&lt;/span>.&lt;span style="color:#658b00">forEach&lt;/span>(ptr-&amp;gt;_List.&lt;span style="color:#658b00">add&lt;/span>((ASTNode) visit(ptr)));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
@@ -906,21 +910,21 @@ ProgramCtx.&lt;span style="color:#658b00">subProgram&lt;/span>.&lt;span style="c
 &lt;ul>
 &lt;li>
 &lt;p>打标签的实质是：告诉ANTLR不要为&lt;code>subProgram&lt;/code>生成实际的&lt;code>accept&lt;/code>而是把其当作父类，其各种组件打上标签及都要生成对应的&lt;code>ParseRuleContext &amp;amp;&amp;amp; accept &amp;amp;&amp;amp; extends subProgram&lt;/code>。也即这个文法实际上由其他文法定义而成，只不过分类在一起。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//After modificatin
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>subProgram
-: functionDecl
-| classDecl
-| variableDecl
-;
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">SubProgramContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FunctionDeclContext &lt;span style="color:#008b45">functionDecl&lt;/span>(); &lt;span style="color:#228b22">//访问子Context
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ClassDeclContext &lt;span style="color:#008b45">classDecl&lt;/span>();
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> VariableDeclContext &lt;span style="color:#008b45">variableDecl&lt;/span>();
-&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">SubProgramContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
-&lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
-}
-&lt;span style="color:#228b22">//既有accept 又能向下到子节点 实为文法
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>不打标签的文法规则可以&lt;strong>通过成员函数/成员变量&lt;/strong>访问到子Context&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//After modificatin
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>subProgram
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : functionDecl
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | classDecl
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | variableDecl
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">static&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">SubProgramContext&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> ParserRuleContext {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> FunctionDeclContext &lt;span style="color:#008b45">functionDecl&lt;/span>(); &lt;span style="color:#228b22">//访问子Context
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> ClassDeclContext &lt;span style="color:#008b45">classDecl&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> VariableDeclContext &lt;span style="color:#008b45">variableDecl&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &lt;span style="color:#008b45">SubProgramContext&lt;/span>(ParserRuleContext parent, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> invokingState);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#707a7c">@Override&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">public&lt;/span> &amp;lt;T&amp;gt; T &lt;span style="color:#008b45">accept&lt;/span>(ParseTreeVisitor&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> T&amp;gt; visitor);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//既有accept 又能向下到子节点 实为文法
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>不打标签的文法规则可以&lt;strong>通过成员函数/成员变量&lt;/strong>访问到子Context&lt;/p>
 &lt;p>打了标签只能充当多态的二传手了&lt;/p>
 &lt;/li>
 &lt;li>
@@ -942,32 +946,34 @@ ProgramCtx.&lt;span style="color:#658b00">subProgram&lt;/span>.&lt;span style="c
 &lt;p>&lt;code>&amp;lt;T&amp;gt;&lt;/code>等价于&lt;code>template &amp;lt;typename T&amp;gt;&lt;/code>&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">ArrayList&amp;lt;Int&amp;gt; 可向上转型为 List&amp;lt;Int&amp;gt;
-ArrayList&amp;lt;Int&amp;gt; 不可向上转型为 ArrayList&amp;lt;Number&amp;gt;
-但实际上Int 继承与Number 有相同的实现 &lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>理论上可以转型&lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>实现方法&lt;span style="color:#a61717;background-color:#e3d2d2">：&lt;/span>
-ArrayList&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> Number&amp;gt;
-则所有ArrayList&amp;lt;T&amp;gt; T继承与Number的都可以转型被接到
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>ArrayList&amp;lt;Int&amp;gt; 可向上转型为 List&amp;lt;Int&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ArrayList&amp;lt;Int&amp;gt; 不可向上转型为 ArrayList&amp;lt;Number&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>但实际上Int 继承与Number 有相同的实现 &lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>理论上可以转型&lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span>实现方法&lt;span style="color:#a61717;background-color:#e3d2d2">：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ArrayList&amp;lt;? &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> Number&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>则所有ArrayList&amp;lt;T&amp;gt; T继承与Number的都可以转型被接到
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">xxx&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> yyy;
-xxx a;
-yyy b = a;
-b &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> xxx &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">xxx&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">extends&lt;/span> yyy;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xxx a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>yyy b = a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>b &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> xxx &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>父类引用子类对象实际上不改变子类对象的类型，不发生任何变化（与类型转换丢失信息不同）&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#228b22">//可以用父类作函数参数接住子类对象实现多态
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ASTNode node);
-&lt;span style="color:#228b22">//可以将父类引用子类对象传入重载函数实现多态
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ExprNode node);
-&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(StmtNode node);
-&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(TypeNode node);
-ArrayList&amp;lt;ASTNode&amp;gt; elements;
-elements.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;visit(tmp));
-&lt;span style="color:#228b22">// nodeA 为 ExprNode
-&lt;/span>&lt;span style="color:#228b22">&lt;/span>ASTNode ptr = nodeA;
-ptr &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ExprNode == &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//可以用父类作函数参数接住子类对象实现多态
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ASTNode node);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">//可以将父类引用子类对象传入重载函数实现多态
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(ExprNode node);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(StmtNode node);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">visit&lt;/span>(TypeNode node);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ArrayList&amp;lt;ASTNode&amp;gt; elements;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>elements.&lt;span style="color:#658b00">forEach&lt;/span>(tmp-&amp;gt;visit(tmp));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">// nodeA 为 ExprNode
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span>ASTNode ptr = nodeA;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ptr &lt;span style="color:#8b008b;font-weight:bold">instanceof&lt;/span> ExprNode == &lt;span style="color:#8b008b;font-weight:bold">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>参考资料:&lt;/strong>&lt;/p>
 &lt;blockquote>
