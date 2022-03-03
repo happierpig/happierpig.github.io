@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>图论 on Pigpen Park</title><link>https://happierpig.github.io/tags/%E5%9B%BE%E8%AE%BA/</link><description>Recent content in 图论 on Pigpen Park</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2021 happypig</copyright><lastBuildDate>Thu, 03 Mar 2022 21:00:00 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/tags/%E5%9B%BE%E8%AE%BA/index.xml" rel="self" type="application/rss+xml"/><item><title>Basic Graph Algorithms</title><link>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</link><pubDate>Thu, 03 Mar 2022 21:00:00 +0800</pubDate><guid>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</guid><description>图的基本知识 见oi-wiki
+图的存储 选择哪种储存方式主要看主要操作
+遍历出度 遍历入度 静态/动态 查询某个边是否存在 等待补充 ~邻接矩阵 实现： 用一个二维数组，数组下标表示节点的序号，值表示边权 可以考虑离散化节点序号 复杂度： 查询是否存在某条边：O(1)。
+遍历一个点的所有出边：O(N)。
+遍历整张图：O(N^2)。// 不连续
+空间复杂度：O(N^2)。
+适用： 邻接矩阵只适用于没有重边（或重边可以忽略）的情况。
+其最显著的优点是可以 查询一条边是否存在。
+由于邻接矩阵在稀疏图上效率很低（尤其是在点数较多的图上，空间无法承受），所以一般只会在稠密图上使用邻接矩阵。
+出度、入度都可O(E)的查询
+~邻接表:高空间利用率邻接矩阵 实现： 使用一个支持动态增加元素的数据结构构成的数组(vector / list)，如 vector&amp;lt;int&amp;gt; adj[n + 1] 来存边，其中 adj[u] 存储的是点u 的所有出边的相关信息（终点、边权等）。 用链表的话方便删除 复杂度： 查询是否存在u到v的边：O(d(u))（如果事先进行了排序就可以使用 二分查找 做到O(log(d(u)))）。
+遍历点u的所有出边：O(d(u))。
+遍历整张图：O(n+m)。// 连续
+空间复杂度：O(n+m)。
+适用： 存各种图都很适合，除非有特殊需求（如需要快速查询一条边是否存在，且点数较少，可以使用邻接矩阵）。</description></item></channel></rss>
