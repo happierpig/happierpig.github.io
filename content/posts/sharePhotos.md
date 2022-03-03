@@ -6,7 +6,7 @@ draft: false
 featured_image: "/images/SJTUPhoto/1.jpeg"
 description: "分享开学以来的一些照片。"
 comment: true
-tags: [照片,随笔，学校]
+tags: [照片,随笔,学校]
 categories: 随笔
 ---
 
