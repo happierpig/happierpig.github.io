@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>语法树 on Pigpen Park</title>
+    <link>https://happierpig.github.io/tags/%E8%AF%AD%E6%B3%95%E6%A0%91/</link>
+    <description>Recent content in 语法树 on Pigpen Park</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>2021 happypig</copyright>
+    <lastBuildDate>Thu, 28 Oct 2021 17:57:57 +0800</lastBuildDate><atom:link href="https://happierpig.github.io/tags/%E8%AF%AD%E6%B3%95%E6%A0%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Semantic Notes</title>
+      <link>https://happierpig.github.io/posts/semantic/</link>
+      <pubDate>Thu, 28 Oct 2021 17:57:57 +0800</pubDate>
+      
+      <guid>https://happierpig.github.io/posts/semantic/</guid>
+      <description>AST Node 信息结构  我的ASTNode结构
+   Type Node：存储对象的类型 （Def by Induction）只作为其他节点的成员变量出现而不单独作为结点出现
+  (ClassType)基本类型+面向对象：字符串
+  (ArrayType)数组：存储基本类型+数组的维数信息
+  函数类型：以上类型Node+void
+    Constant:：仅仅存值，类型按照ClassType存储
+  NewExprNode：是”New“表达式精简后的结点
+ 包括类型、维数和initList 非递归结点，一次性获取了alloc的所有信息都一个结点    Identifier：仅存储了对象的名字，具体信息应当去Scope里寻找
+  ArrayAccess：递归产生结点，生成一棵树，维数需要递归获得
+对TypeNode的作用：维数减一，之后若为零，则转化为ClassTypeNode
+  Block：存储ArrayList&amp;lt;StmtNode&amp;gt;；产生新的Scope
+  ReturnNode：返回类型从保存的Expression Node获得
+  VariableDeclaration：一个VarDefStmtNode-&amp;gt;ArrayList&amp;lt;VarDefNode&amp;gt;
+VarDefNode: Type+String+Init
+  FunctionDeclaration：Type+String+ParameterList+codeBlock
+  ClassDeclaration：String+Func+Var
+  RootNode：类定义、函数定义、全局变量定义；
+全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束
+public Class RootNode extends ASTNode{ public ArrayList&amp;lt;ASTNode&amp;gt; elements;//引用三种类型的声明语句 }   Semantic Question  需要检查的信息 (从README中提取)</description>
+    </item>
+    
+    <item>
+      <title>From CST to AST</title>
+      <link>https://happierpig.github.io/posts/ast/</link>
+      <pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate>
+      
+      <guid>https://happierpig.github.io/posts/ast/</guid>
+      <description>AST vs CST   Abstract Vs. Concrete Syntax Tree :
+Antlr4提供的是CST，为什么要将CST转换为AST再进行Semantic检查？
+Reference Document
+  CST: 将语法表示成树的形式
+ A parse tree pictorially shows how the start symbol of a grammar derives a string in the language.
+ CST是语言一对一到树上的映射。仅有叶子节点带有实际信息，中间节点均为Parser 解析出信息的过程。
+  AST：AST are simplified syntactic representations of the source code, and they&amp;rsquo;re most often expressed by the data structures of the language used for implementation.
+ Abstract syntax trees, or simply syntax trees, differ from parse trees because superficial distinctions of form, unimportant for translation, do not appear in syntax trees.</description>
+    </item>
+    
+  </channel>
+</rss>

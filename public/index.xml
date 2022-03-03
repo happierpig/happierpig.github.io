@@ -6,9 +6,1707 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2021 happypig</copyright>
-    <lastBuildDate>Thu, 07 Oct 2021 17:36:57 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 03 Mar 2022 21:00:00 +0800</lastBuildDate>
     
         <atom:link href="https://happierpig.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Basic Graph Algorithms</title>
+        <link>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</link>
+        <pubDate>Thu, 03 Mar 2022 21:00:00 +0800</pubDate>
+        
+        <guid>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</guid>
+        <description>Pigpen Park https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/ -&lt;h2 id=&#34;图的基本知识&#34;&gt;图的基本知识&lt;/h2&gt;
+&lt;p&gt;见&lt;a href=&#34;https://oi-wiki.org/graph/concept/&#34;&gt;oi-wiki&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;图的存储&#34;&gt;图的存储&lt;/h2&gt;
+&lt;p&gt;选择哪种储存方式主要看主要操作&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;遍历出度&lt;/li&gt;
+&lt;li&gt;遍历入度&lt;/li&gt;
+&lt;li&gt;静态/动态&lt;/li&gt;
+&lt;li&gt;查询某个边是否存在&lt;/li&gt;
+&lt;li&gt;等待补充&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;邻接矩阵&#34;&gt;~邻接矩阵&lt;/h3&gt;
+&lt;h4 id=&#34;实现&#34;&gt;实现：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;用一个二维数组，数组下标表示节点的序号，值表示边权&lt;/li&gt;
+&lt;li&gt;可以考虑离散化节点序号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;复杂度&#34;&gt;复杂度：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;查询是否存在某条边：O(1)。&lt;/p&gt;
+&lt;p&gt;遍历一个点的所有出边：&lt;strong&gt;O(N)&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;遍历整张图：O(N^2)。// 不连续&lt;/p&gt;
+&lt;p&gt;空间复杂度：O(N^2)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;适用&#34;&gt;适用：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;邻接矩阵只适用于没有重边（或重边可以忽略）的情况。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;其最显著的优点是可以 查询一条边是否存在。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;由于邻接矩阵在稀疏图上&lt;strong&gt;效率&lt;/strong&gt;很低（尤其是在点数较多的图上，空间无法承受），所以一般只会在稠密图上使用邻接矩阵。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;出度、入度都可O(E)的查询&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;邻接表高空间利用率邻接矩阵&#34;&gt;~邻接表:高空间利用率邻接矩阵&lt;/h3&gt;
+&lt;h4 id=&#34;实现-1&#34;&gt;实现：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;使用一个支持&lt;strong&gt;动态增加元素的数据结构&lt;/strong&gt;构成的数组(vector / list)，如 &lt;code&gt;vector&amp;lt;int&amp;gt; adj[n + 1]&lt;/code&gt; 来存边，其中 &lt;code&gt;adj[u]&lt;/code&gt; 存储的是点u 的所有出边的相关信息（终点、边权等）。&lt;/li&gt;
+&lt;li&gt;用链表的话方便删除&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;复杂度-1&#34;&gt;复杂度：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;查询是否存在u到v的边：O(d(u))（如果事先进行了排序就可以使用 &lt;a href=&#34;https://oi-wiki.org/basic/binary/&#34;&gt;二分查找&lt;/a&gt; 做到O(log(d(u)))）。&lt;/p&gt;
+&lt;p&gt;遍历点u的所有出边：O(d(u))。&lt;/p&gt;
+&lt;p&gt;遍历整张图：O(n+m)。// 连续&lt;/p&gt;
+&lt;p&gt;空间复杂度：O(n+m)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;适用-1&#34;&gt;适用：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;存各种图都很适合，除非有特殊需求（如需要快速查询一条边是否存在，且点数较少，可以使用邻接矩阵）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;尤其适用于需要对&lt;strong&gt;一个点的所有出边进行排序的场合&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;链式前向星&#34;&gt;~链式前向星&lt;/h3&gt;
+&lt;p&gt;ps：优点是边是带编号的，有时会非常有用，而且如果 &lt;code&gt;cnt&lt;/code&gt; 的初始值为0，存双向边时 &lt;code&gt;i ^ 1&lt;/code&gt; 即是 &lt;code&gt;i&lt;/code&gt; 的反边（常用于 &lt;a href=&#34;https://oi-wiki.org/graph/flow/&#34;&gt;网络流&lt;/a&gt;）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;奇数  ^ 1 -=1;&lt;/p&gt;
+&lt;p&gt;偶数 ^ 1 += 1;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;代码实现&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;addEdge&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v){
+      to[cnt] = v;
+      next[cnt] = head[u];
+      head[u] = cnt++;
+}
+&lt;span style=&#34;color:#228b22&#34;&gt;// 遍历u的出边
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[u];~i;i = next[i]){
+      &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = to[i];
+      &lt;span style=&#34;color:#228b22&#34;&gt;// v 为出边所指向的点。
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;图的遍历&#34;&gt;图的遍历&lt;/h2&gt;
+&lt;h3 id=&#34;与树的区别&#34;&gt;~与树的区别：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;图可能有回路：记录&lt;strong&gt;标记数组&lt;/strong&gt;，防止走循环死路&lt;/li&gt;
+&lt;li&gt;图不一定&lt;strong&gt;连通&lt;/strong&gt;：从一个节点出发不一定达到所有节点
+&lt;ul&gt;
+&lt;li&gt;每次都从一个没有被访问的节点开始dfs&lt;/li&gt;
+&lt;li&gt;然后访问出边到达的没有被访问过的节点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dfs&#34;&gt;～DFS：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;DFS 最显著的特征在于其&lt;strong&gt;递归调用自身&lt;/strong&gt;。同时与 BFS 类似，DFS 会对其访问过的点打上&lt;strong&gt;访问标记&lt;/strong&gt;，在遍历图时跳过已打过标记的点，以确保&lt;strong&gt;每个点仅访问一次&lt;/strong&gt;。符合以上两条规则的函数，便是广义上的 DFS。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;代码实现：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;dfs&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u) {
+  vis[u] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[u];~i; i = edge[i].nxt) {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; (!vis[edge[i].to]) {
+      dfs(v);
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DFS 序列是指 DFS 调用过程中访问的节点编号的序列。&lt;strong&gt;每个子树都对应 DFS 序列中的连续一段（一段区间）。&lt;/strong&gt;（线段树）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在 DFS 过程中，通过记录每个节点从哪个点访问而来，可以建立一个&lt;strong&gt;树结构&lt;/strong&gt;，称为 DFS 树。DFS 树是原图的一个生成树。&lt;/p&gt;
+&lt;p&gt;DFS树有很多性质，比如可以用来求强连通分量。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DFS在使用当中往往外面套了层壳来保证每个点都能被遍历到&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; visit{
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt; n;++i){
+          &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(vis[i] == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;continue&lt;/span&gt;;
+          dfs(i);
+    } 
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;bfs&#34;&gt;～BFS：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;所谓宽度优先。就是每次都尝试访问同一层的节点。 如果同一层都访问完了，再访问下一层。这样做的结果是，BFS 算法找到的路径是从起点开始的&lt;strong&gt;最短&lt;/strong&gt;合法路径。换言之，这条路所包含的边数最小(非边权和最小)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;代码实现&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;bfs&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u) {
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt; (!Q.empty()) Q.pop();
+  Q.push(u);
+  vis[u] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#228b22&#34;&gt;//标记数组，表示这个点是否已经被搜索过
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  d[u] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//到起点的深度
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  p[u] = -&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//记录从起点到这个点的最短路上的上一个点。
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt; (!Q.empty()) {
+    u = Q.front();
+    Q.pop();
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[u]; i; i = e[i].x) {&lt;span style=&#34;color:#228b22&#34;&gt;//链式前向星
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; (!vis[e[i].t]) {
+        Q.push(e[i].t);
+        vis[e[i].t] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+        d[e[i].t] = d[u] + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+        p[e[i].t] = u;
+      }
+    }
+  }
+}
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;restore&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) { &lt;span style=&#34;color:#228b22&#34;&gt;//恢复最短路径上的点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; res;
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = x; v != -&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; v = p[v]) {
+    res.push_back(v);
+  }
+  std::reverse(res.begin(), res.end());
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; res.size(); ++i) printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, res[i]);
+  puts(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;应用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在一个&lt;strong&gt;无权图&lt;/strong&gt;上求从起点到其他所有点的&lt;strong&gt;最短路径&lt;/strong&gt;。(有权图有其他的算法)&lt;/li&gt;
+&lt;li&gt;在O(N+M)时间内求出所有连通块。(我们只需要从每个没有被访问过的节点开始做 BFS，显然每次 BFS 会走完一个连通块）&lt;/li&gt;
+&lt;li&gt;如果把一个游戏的动作看做是状态图上的一条边（一个转移），那么 BFS 可以用来找到在游戏中从一个状态到达另一个状态所需要的最小步骤。&lt;/li&gt;
+&lt;li&gt;在一个边权为0/1的图上求最短路。(&lt;strong&gt;需要修改入队的过程&lt;/strong&gt;，如果某条边权值为 0，且可以减小边的终点到图的起点的距离，那么把边的起点加到&lt;strong&gt;队列首&lt;/strong&gt;而不是队列尾）&lt;/li&gt;
+&lt;li&gt;在一个有向无权图中找&lt;strong&gt;最小环&lt;/strong&gt;。（从每个点开始 BFS，在我们即将抵达一个之前访问过的点开始的时候，就知道遇到了一个环。图的最小环是每次 BFS 得到的最小环的平均值。）&lt;/li&gt;
+&lt;li&gt;找到一定在(a,b)最短路上的&lt;strong&gt;边&lt;/strong&gt;。分别从 a 和 b 进行 BFS，得到两个 d 数组。之后对每一条边(u,v)，如果da[u]+1+db[v] == da[b]，则说明该边在最短路上&lt;/li&gt;
+&lt;li&gt;找到一定在(a,b)最短路上的点。分别从a和b进行 BFS，得到两个d数组。之后对每一个点 v，如果da[v]+db[v] == da[b] ，则说明该点在最短路上。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;例子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;三个自由度的bfs.   &lt;a href=&#34;https://oj.yukisaki.cn/problem?problem_id=1195&#34;&gt;oj1195&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;双端队列bfs&#34;&gt;～双端队列BFS：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;适用范围：边权值为可能有，也可能没有（由于 BFS 适用于权值为 1 的图，所以一般是 0 or 1），或者能够转化为这种边权值的最短路问题。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例子：例如在走迷宫问题中，你可以花 1 个金币走 5 步，也可以不花金币走 1 步，这就可以用 0-1 BFS 解决。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;实现：一般情况下，我们把(没有权值的边)扩展到的点放到队首，(有权值的边)扩展到的点放到队尾。这样即可保证在整个队列中，像普通 BFS 一样，&lt;strong&gt;越靠近队首，权值越小，且权值零一之间有分隔。&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;代码实现：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;队列不为空&lt;/span&gt;) {
+  &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u = &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;队首&lt;/span&gt;;
+  &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;弹出队首&lt;/span&gt;;
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;枚举&lt;/span&gt; u &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;的邻居&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;更新数据&lt;/span&gt;
+    &lt;span style=&#34;color:#008b45&#34;&gt;if&lt;/span&gt; (...)
+      &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;添加到队首&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+      &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;添加到队尾&lt;/span&gt;;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;优先队列bfs&#34;&gt;~优先队列BFS：&lt;/h3&gt;
+&lt;p&gt;即是堆优化的Dijkstra算法。&lt;/p&gt;
+&lt;h3 id=&#34;dfs与bfs的区别&#34;&gt;～dfs与bfs的区别：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;两者除了都能遍历图的连通块以外，用途完全不同，很少有能混用两种算法的情况。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;最小生成树&#34;&gt;最小生成树&lt;/h2&gt;
+&lt;h3 id=&#34;定义&#34;&gt;~定义：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;生成树：一个连通无向图的生成&lt;strong&gt;子图&lt;/strong&gt;，同时要求是&lt;strong&gt;树&lt;/strong&gt;。也即在图的边集中选择n-1条，将所有顶点连通，形成一棵树。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只有连通图才有生成树&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;最小生成树为：&lt;strong&gt;边权和最小&lt;/strong&gt;的生成树&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;性质&#34;&gt;~性质：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;MST的最大边权是这个图所有生成树的最大边权中最小的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;kruskal-算法&#34;&gt;~Kruskal 算法&lt;/h3&gt;
+&lt;p&gt;算法的基本思想是&lt;strong&gt;从小到大加入边，采用贪心的思想&lt;/strong&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;原理&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;将边排序（键值从小到大） 贪心&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;也可以采用优先队列 可能常数更优秀&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然后从小到大遍历边(u,v)。当u、v已经被连在一起时，跳过这条边。&lt;/p&gt;
+&lt;p&gt;点是否被连在一起采用并查集进行维护。&lt;/p&gt;
+&lt;h4 id=&#34;代码实现&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;merge_sort&lt;/span&gt;(T * data,&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l,&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r);
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;merge&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x,&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; y);
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;check&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x,&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; y);
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;find&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x);
+
+&lt;span style=&#34;color:#228b22&#34;&gt;// main precedure
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+  	merge_sort(Edge,&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;,size);
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= edgeSize;++i){
+      	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(check(Edge[i].x,Edge[i].y)) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;continue&lt;/span&gt;;
+      	merge(Edge[i].x,Edge[i].y);
+      	ans += &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+      	length += Edge[i].weight;
+      	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(ans == edgeSize - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+     		&lt;span style=&#34;color:#228b22&#34;&gt;//若不能return说明没有最小生成树
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;判断mst是否唯一&#34;&gt;判断MST是否唯一：&lt;/h4&gt;
+&lt;p&gt;做两次Kruskal，将第一次被放入最小生成树的边打上标记，第二次优先处理没有打标记的。若能成功，则说明不唯一。&lt;/p&gt;
+&lt;h3 id=&#34;prim算法&#34;&gt;~Prim算法&lt;/h3&gt;
+&lt;h4 id=&#34;原理-1&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;每次加点，同样是贪心的思想。加入的点是每次选点时离生成树边权最小的点。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这样选保证了这个点通过这条边加入生成树是最优的 类似于dijkstra&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;所以要维护每个点离生成树的边权最小值&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;最后边权和就是 low_cost[i] 1&amp;lt;=i&amp;lt;=n求和&lt;/p&gt;
+&lt;h4 id=&#34;代码实现-1&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;prim&lt;/span&gt;(){
+  	priority_queue&amp;lt;Edge&amp;gt; que;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!que.empty()) que.pop();
+  	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; low_cost[nodeSize]; &lt;span style=&#34;color:#228b22&#34;&gt;//如果节点到生成树的距离
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; visit[nodeSize] = {&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;};
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= nodeSize;++i) low_cost[i] = &lt;span style=&#34;color:#b452cd&#34;&gt;0x7f7f7f7f&lt;/span&gt;;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;];~i;i = edge[i].nxt){
+      	que.push({&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;,edge[i].to,edge[i].weight});
+      	low_cost[edge[i].to] = edge[i].weight;
+    }
+    visit[&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;low_cost[&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt; nodeSize;++i){
+      	Edge tmp = que.top();que.pop();
+      	visit[tmp.to] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+      	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[tmp.to];~i;i=edge[i].nxt){
+          	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(visit[edge[i].to]) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;continue&lt;/span&gt;;
+          	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(edge[i].weight &amp;lt; low_cost[edge[i].to]){
+              	low_cost[edge[i].to] = edge[i].weight;
+              	que.push({tmp.to,edge[i].to,edge[i].weight});
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;boruvka算法&#34;&gt;~Boruvka算法&lt;/h3&gt;
+&lt;h2 id=&#34;拓扑排序&#34;&gt;拓扑排序&lt;/h2&gt;
+&lt;p&gt;拓扑排序要解决的问题是给一个图的所有节点排序，使得前面的节点不“依赖于”后面的节点。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因此我们可以说在一个有向无环图中，将图中的顶点以线性方式进行排序，使得对于任何的顶点u到v的有向边(u,v) , 都可以有u在v的前面。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;dfs算法&#34;&gt;~DFS算法&lt;/h3&gt;
+&lt;h4 id=&#34;原理-2&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;DFS过程中记录每个节点的访问时间和回溯时间，&lt;strong&gt;当$u$回溯时间小于$v$时，不存在从$u\rightarrow v$的有向边&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;proof&lt;/em&gt;: 反证法，tree edge(显然有$t(v)&amp;lt;t(u)$矛盾)；forward edge(说明$v$在$u$的子树上，$v$先回溯，矛盾)；cross edge(说明$v$先被访问，否则$u,v$会在同一棵子树上，矛盾)；back edge(与大前提DAG矛盾)。&lt;/p&gt;
+&lt;p&gt;所以说每个图当中&lt;strong&gt;回溯时间最小&lt;/strong&gt;的节点一定是tail(出度为零)，一定是当前图拓扑排序的最后一位，所以回溯时将当前节点压入栈中即可。&lt;/p&gt;
+&lt;h4 id=&#34;时间复杂度&#34;&gt;时间复杂度：&lt;/h4&gt;
+&lt;p&gt;O(E+V)&lt;/p&gt;
+&lt;h4 id=&#34;代码实现-2&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;dfs&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u){
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(visit[u]) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[u];~i;i = next[i]){
+     		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = to[i];
+      	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(visit[v]) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;continue&lt;/span&gt;;
+      	visit[v] = &lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;;
+      	dfs(v);
+    }
+  	ans.push(u);	&lt;span style=&#34;color:#228b22&#34;&gt;// 回溯最早的节点压入栈中 最后逆序输出
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;kahn算法&#34;&gt;~kahn算法&lt;/h3&gt;
+&lt;h4 id=&#34;原理-3&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;初始状态下，集合S装着&lt;strong&gt;所有入度为0&lt;/strong&gt;的点， L是一个空列表。&lt;/p&gt;
+&lt;p&gt;每次从S中取出一个点u（可以随便取）放入L , 然后将u的所有边删除。对于边(u,v)，若将该边删除后点v的入度变为0，则将v放入S中。&lt;/p&gt;
+&lt;p&gt;不断重复以上过程，直到集合S为空。检查图中是否存在任何边，如果有，那么这个图一定&lt;strong&gt;有环路(其中节点不会进入集合S中)&lt;/strong&gt;，否则返回L ， L中顶点的顺序就是拓扑排序的结果。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当然从出度为零的点开始做也是可以的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;时间复杂度-1&#34;&gt;时间复杂度：&lt;/h4&gt;
+&lt;p&gt;O(E+V)&lt;/p&gt;
+&lt;h4 id=&#34;代码实现-3&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;toposort&lt;/span&gt;() {
+  	q = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; queue();
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i++){
+    		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; (in_deg[i] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;) q.push(i);
+  	}
+  	ans = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; vector();
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt; (!q.empty()) {
+    		u = q.pop();
+    		ans.push_back(u);
+    		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; each edge(u, v) {
+      			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; (--in_deg[v] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;) q.push(v);
+    		}
+  	}
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; (ans.size() == n) {
+    		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i++)
+      			std::cout &amp;lt;&amp;lt; ans[i] &amp;lt;&amp;lt; std::endl;
+    		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;;
+  	} &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; {
+    		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;false&lt;/span&gt;;
+  	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;字典序tupo排序&#34;&gt;字典序tupo排序：&lt;/h4&gt;
+&lt;p&gt;将S采用的队列替换为&lt;em&gt;&lt;strong&gt;优先队列&lt;/strong&gt;&lt;/em&gt;即可。&lt;/p&gt;
+&lt;h4 id=&#34;关键路径&#34;&gt;关键路径：&lt;/h4&gt;
+&lt;p&gt;AOE网络的应用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;顶点表示事件，有向边的权值表示某个活动的持续时间，有向边的方向表示活动和事件的&lt;strong&gt;先后次序&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;进入顶点的所有活动都结束后，顶点表示的事件才可以发生，从该顶点出发的所有活动才可以开始。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;入度为0：开工事件；出度为0:竣工事件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;完成整项工程至少需要多少时间：源点到收点的最长路径的长度，称为关键路径&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;算法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;最早发生时间：事件的最早发生时间&lt;/p&gt;
+&lt;p&gt;每个直接前驱的最早发生时间加上从该前驱到该顶点的活动时间的&lt;strong&gt;最大者&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;最迟发生时间：不影响整个项目按时完成的前提下，这个事件最晚可以什么时候发生&lt;/p&gt;
+&lt;p&gt;每个直接后继的最迟发生时间减去顶点到该直接后继的活动时间的&lt;strong&gt;最小者&lt;/strong&gt;就是该顶点的最迟发生时间。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;最早发生时间和最晚发生时间相同的顶点序列构成关键路径&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;具体实现：&lt;/p&gt;
+&lt;p&gt;先用拓扑排序得到活动发生的顺序。这样&lt;strong&gt;保证拓扑序&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;按拓扑序顺序可得到每个事件的最早发生时间&lt;/p&gt;
+&lt;p&gt;逆序可得到每个事件的最迟发生时间&lt;/p&gt;
+&lt;p&gt;最后比较即可得到关键事件&lt;/p&gt;
+&lt;p&gt;然后按拓扑序if输出&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;应用&#34;&gt;应用：&lt;/h4&gt;
+&lt;p&gt;判断有向图是否存在环路&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;判断无向图是否存在环路：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;类似于有向图环路拓扑法：&lt;/p&gt;
+&lt;p&gt;将所有度数&amp;lt;=1的节点删除并删除对应边&lt;/p&gt;
+&lt;p&gt;将所有度数为1的节点放入队列中开始删除 每次删除后将新的度数为1的点加入队列&lt;/p&gt;
+&lt;p&gt;看最后有没有剩下节点&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DFS/BFS：&lt;/p&gt;
+&lt;p&gt;搜索的本质就是形成一棵搜索树&lt;/p&gt;
+&lt;p&gt;如果某一个节点被访问了两次说明出现了回边。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;最短路径问题&#34;&gt;最短路径问题&lt;/h2&gt;
+&lt;h3 id=&#34;输出最短路&#34;&gt;~输出最短路&lt;/h3&gt;
+&lt;p&gt;开一个 &lt;code&gt;pre&lt;/code&gt; 数组，在更新距离的时候记录下来后面的点是如何转移过去的，算法结束前再递归地输出路径即可。&lt;/p&gt;
+&lt;h3 id=&#34;floyd算法&#34;&gt;～Floyd算法&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= n;++i)
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; j = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;j &amp;lt;= n;++j) f[i][j] = &lt;span style=&#34;color:#b452cd&#34;&gt;0x7f7f7f7f&lt;/span&gt;;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= edgeSize;++i) f[edge[i].from][edge[i].to] = edge[i].weight;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= n;++i) f[i][i] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (k = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; k &amp;lt;= n; k++) {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; i++) {
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt; (j = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; j &amp;lt;= n; j++) {
+            f[i][j] = min(f[i][j], f[i][k] + f[k][j]);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;spfa算法&#34;&gt;~SPFA算法&lt;/h3&gt;
+&lt;h4 id=&#34;原理-4&#34;&gt;原理：&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;dist[x] 表示节点x到源的当前最短路径&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;松弛操作: 通过 dist[y] + edge(y,x) 更新dist&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; ，因为最短路一定比其他路径要短&lt;/li&gt;
+&lt;li&gt;初始化时所有都设置为0x7f7f7f7f(INT_MAX)。从起点开始松弛周围的点，被松弛的点才可能去改变其他点到起点的最短路，所以加入队列。直到被松弛过的队列为空。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;代码实现-4&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;SPFA&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; start){
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= nodeSize;++i) dist[i] = &lt;span style=&#34;color:#b452cd&#34;&gt;0x7f7f7f7f&lt;/span&gt;;
+  	memset(visit,&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;sizeof&lt;/span&gt;(visit));
+  	dist[start] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+  	visit[start] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!que.empty) que.pop();
+  	que.push(start);
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!que.empty){
+      	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; now = que.front();que.pop();
+      	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[now];~i;i = edge[i].next){
+          	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = edge[i].to;
+          	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(dist[v] &amp;gt; dist[now] + edge[i].weight){ &lt;span style=&#34;color:#228b22&#34;&gt;// relax
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;              	dist[v] = dist[now] + edge[i].weight;
+              	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!visit[v]){
+                  	que.push(v);
+                  	visit[v] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+                }
+            }
+        }
+      	visit[now] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;复杂度-2&#34;&gt;复杂度：&lt;/h4&gt;
+&lt;p&gt;虽然在大多数情况下 SPFA 跑得很快，但其最坏情况下的时间复杂度为O(MN)，将其卡到这个复杂度也是不难的&lt;/p&gt;
+&lt;h3 id=&#34;dijkstra算法&#34;&gt;~dijkstra算法&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只适用于&lt;em&gt;&lt;strong&gt;非负权图&lt;/strong&gt;&lt;/em&gt;，但是时间复杂度非常优秀。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;原理-5&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;对于一个有向图或无向图，所有边权为正，给定a和b，求a到b的最短路，保证a一定能够到达b。这条最短路是否一定存在呢？答案是肯定的。相反，&lt;strong&gt;最长路就不一定了，由于边权为正，如果遇到有环的时候，可以一直在这个环上走&lt;/strong&gt;，因为要找最长的，这样就使得路径越变越长，永无止境，所以对于正权图，在可达的情况下最短路一定存在，最长路则不一定存在。这里先讨论正权图的最短路问题。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;经过tarjan缩点后 无环。最长路和最短路都可以用最短路算法求解&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;最短路满足&lt;strong&gt;最优子结构性质&lt;/strong&gt;，是一个&lt;strong&gt;动态规划问&lt;/strong&gt;题。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;最短路的最优子结构可以描述为：D(s, t) = {Vs &amp;hellip; Vi &amp;hellip; Vj &amp;hellip; Vt}表示s到t的最短路，&lt;strong&gt;其中i和j是这条路径上的两个中间结点&lt;/strong&gt;，&lt;strong&gt;那么D(i, j)必定是i到j的最短路&lt;/strong&gt;，这个性质是显然的，可以用反证法证明。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;基于上面的最优子结构性质，如果存在这样一条最短路D(s, t) = {Vs &amp;hellip; Vi Vt}，其中i和t是最短路上相邻的点，那么D(s, i) = {Vs &amp;hellip; Vi} 必定是s到i的最短路。Dijkstra算法就是基于这样一个性质，通过最短路径长度递增，逐渐生成最短路。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果源点到x点的最短路已经求出，并且保存在d[x]，则可以利用x去更新x能够直接到达的点y的最短路。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当前所有被松弛过的点中dist值最小的即被求出最短路径(不可能再被更新)，然后用这个点再去松弛其他的点。&lt;/p&gt;
+&lt;h4 id=&#34;代码实现-5&#34;&gt;代码实现:&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;node&lt;/span&gt;{
+  	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; index,dist;
+  	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;operator&lt;/span&gt; &amp;lt; (&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; node &amp;amp; o) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt;{}
+}
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= nodeSize;++i){
+  	dist[i] = &lt;span style=&#34;color:#b452cd&#34;&gt;0x7f7f7f7f&lt;/span&gt;;
+}
+dist[start] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+q.push(node{start,&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;});
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!q.empty()){
+		node x = q.top();
+		q.pop();
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u = x.index;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(vis[u]) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;continue&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;// 已经被确定最短路的标记；而且这时候如果还在队列中说明这个dist已经过时了。
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; vis[u]=&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+  	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i=head[u];~i;i=edge[i].next){
+				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(dis[edge[i].to] &amp;gt; dis[u] + edge[i].len){
+						dis[edge[i].to] = dis[u]+edge[i].len;
+						q.push(node{edge[i].to,dis[edge[i].to]});
+				}
+		}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;强连通分量&#34;&gt;强连通分量&lt;/h2&gt;
+&lt;h3 id=&#34;定义-1&#34;&gt;～定义：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;在有向图G中，如果任意两个不同的顶点相互可达，并且&lt;em&gt;maximal&lt;/em&gt;，则称该有向子图是强连通的。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Strong Connect Components&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;DAG：有向无环图&lt;/strong&gt;(Directed Acyclic Graph)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;图存在拓扑排序等价于图是DAG&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;有向无环图中&lt;strong&gt;唯一&lt;/strong&gt;出度为0的点,一定可以由任何点出发均可达(&lt;em&gt;由于无环,所以从任何点出发往前走,必然&lt;strong&gt;终止于一个出度为0&lt;/strong&gt;的点&lt;/em&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;有向无环图中所有入度不为0的点，一定可以由某个入度为0的点出发可达。 (由于无环，所以从任何入度不为0的点往回走，必然终止于一个入度为0的点)。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;所以入度为零的所有点使得整个图能够被遍历完全&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;经过强连通分量&lt;strong&gt;缩点&lt;/strong&gt;处理后，新图像一定是DAG。可以利用上面的性质。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;强连通分量完全分隔一个图，没有遗漏也没有重叠。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;应用-1&#34;&gt;～应用：&lt;/h3&gt;
+&lt;p&gt;我们可以将一张图的每个强连通分量都缩成一个点。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;那么重新建图后新图为DAG&lt;/li&gt;
+&lt;li&gt;可以进行拓扑排序\最小生成树\最短路径等多种算法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;tarjan算法&#34;&gt;～tarjan算法：&lt;/h3&gt;
+&lt;h4 id=&#34;原理-6&#34;&gt;原理：&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;做一遍DFS，用&lt;strong&gt;dfn[i]表示编号为i的节点在DFS过程中的访问序号&lt;/strong&gt;(也可以叫做开始时间)。在DFS过程中会形成一搜索树。在搜索树上越先遍历到的节点，显然dfn的值就越小。dfn值越小的节点，就称为越“早” 。用low[i]表示从i节点出发DFS过程中i下方节点(开始时间大于dfn[i]，且由i可达的节点)所能到达的最早的节点的开始时间。初始时low[i]=dfn[i]。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DFS过程中，碰到哪个节点，就将哪个节点入栈。栈中节点只有在其所属的强连通分量已经全部求出时，才会出栈。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果发现某节点u有边连到栈里的节点v(&lt;em&gt;&lt;strong&gt;返祖边&lt;/strong&gt;&lt;/em&gt;)，则更新u的low值为min(low[u],dfn[v]) ，若low[u]被更新为dfn[v],则表明目前发现u可达的最早的节点是v；对于u的子节点v，从v出发进行的DFS结束回到u时，使得 low[u] = min(low[u],low[v])。**因为u可达v, 所以v可达的最早的节点，也是u可达的；**如果一个节点u，从其出发进行的DFS已经全部完成并回到u，而且此时其low值等于dfn值，则说明u可达的所有节点，&lt;strong&gt;都不能到达任何比u早的节点&lt;/strong&gt;。因此该节点u就是一个强连通分量在DFS搜索树中的根；此时，显然栈中u上方的节点，都是不能到达比u早的节点的。将栈中节点弹出，一直弹到u(包括u), 弹出的节点就构成了一个强连通分量。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;代码实现-6&#34;&gt;代码实现：&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;tarjan&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a){
+    dfn[a] = low[a] = ++timeclock;
+    instack[a] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+    stack[++top] = a;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = head[a]; ~i ;i = Edge[i].next)
+    {
+        &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = Edge[i].to;
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!dfn[v]) &lt;span style=&#34;color:#228b22&#34;&gt;//没有访问过的
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        {
+            tarjan(v);
+            low[a] = min(low[a],low[v]);&lt;span style=&#34;color:#228b22&#34;&gt;//它能到达所连结点能到达的最早结点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        }
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(instack[v]) { &lt;span style=&#34;color:#228b22&#34;&gt;// 被访问过且在栈中
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;            low[a] = min(low[a], dfn[v]); &lt;span style=&#34;color:#228b22&#34;&gt;// 说明这是一条返祖边
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        }
+    }
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(dfn[a] == low[a]) &lt;span style=&#34;color:#228b22&#34;&gt;//自己包括自己所能到的点所能到达的最早的点是自己 说明自己是一个根结点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;    {
+        tot++;&lt;span style=&#34;color:#228b22&#34;&gt;// 缩点后新图的节点个数
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; v = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(a != v){
+            v = stack[top--];
+            color[v] = tot;
+            sum[tot] += money[v];&lt;span style=&#34;color:#228b22&#34;&gt;//权值收缩
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;            instack[v]=&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//新建图
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;memset(head,-&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;sizeof&lt;/span&gt;(head));
+memset(Edge,&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;sizeof&lt;/span&gt;(Edge));
+tmpcount = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= edgeSize;++i){
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(color[from[i]] != color[to[i]]) {
+        addEdge(color[from[i]],color[to[i]],sum[color[to[i]]]);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;dfs算法-1&#34;&gt;~DFS算法&lt;/h3&gt;
+&lt;h4 id=&#34;原理-7&#34;&gt;原理：&lt;/h4&gt;
+&lt;p&gt;利用缩点后的图是DAG的性质，其&lt;em&gt;tail scc&lt;/em&gt;当中的点能访问到的点均属于本&lt;em&gt;scc&lt;/em&gt;。问题转化为如何快速找到当前图中的一个点使得该点是该图缩点后&lt;em&gt;tail scc&lt;/em&gt;当中的一个点。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Lemma&lt;/strong&gt; ： The SCC contains the largest finish time vertex must be the head SCC.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;proof:&lt;/em&gt;	 反证法。假设$u$的回溯时间最大，且存在来自其他scc的$v:v\rightarrow u$。显然，$v$不能比$u$早被访问，否则$u$必然是$v$的dfs子树，回溯时间小于$v$。其次，$v$不能在其他的dfs树当中，否则$v$必然比$u$开始晚，结束也晚。所以说，$u,v$必须在同一棵dfs树上且要先访问$u$，说明存在$u\rightarrow v$ ，则$u,v$属于同一个scc，产生矛盾。&lt;/p&gt;
+&lt;p&gt;所以取$G$的反图$G^R$，再dfs遍历找到回溯最晚的点$u$，即可找到$G$当中属于&lt;em&gt;tail scc&lt;/em&gt;的一个点$u$。&lt;/p&gt;
+&lt;h4 id=&#34;伪代码&#34;&gt;伪代码：&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Construct $G^R$ and dfs it. Maintain a sorted list by the finish time.&lt;/li&gt;
+&lt;li&gt;DFS $G$ by the descending order of the finish time(Do not start from a visited vertex).&lt;/li&gt;
+&lt;li&gt;Each visit forms a SCC.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;欧拉图&#34;&gt;欧拉图&lt;/h2&gt;
+&lt;h3 id=&#34;定义-2&#34;&gt;~定义：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;通过图中所有边恰好一次且行遍所有顶点的&lt;strong&gt;通路&lt;/strong&gt;称为欧拉通路。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过图中所有边恰好一次且行遍所有顶点的&lt;strong&gt;回路&lt;/strong&gt;称为欧拉回路。(要回去)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;具有欧拉回路的&lt;strong&gt;无向图或有向图&lt;/strong&gt;称为欧拉图。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;具有欧拉通路但不具有欧拉回路的无向图或有向图称为半欧拉图。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;非形式化地讲，欧拉图就是从任意一个点开始都可以一笔画完整个图，半欧拉图必须从某个点开始才能一笔画完整个图。&lt;/p&gt;
+&lt;h3 id=&#34;性质-1&#34;&gt;~性质：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;欧拉图中所有顶点的度数都是偶数。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;若G是欧拉图，则它为若干个&lt;strong&gt;边不重的圈&lt;/strong&gt;的并。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;若G是半欧拉图，则它为若干个&lt;strong&gt;边不重的圈和一条简单路径&lt;/strong&gt;的并。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;判别&#34;&gt;~判别：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;对于无向图 G， G是欧拉图当且仅当G是连通的且G&lt;strong&gt;没有奇度顶点&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于&lt;strong&gt;无向图&lt;/strong&gt; G， G是半欧拉图当且仅当G是连通的且&lt;strong&gt;G中恰有0个或2个奇度顶点(一个起点 一个终点)。&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于有向图 G， G是欧拉图当且仅当G的所有顶点属于同一个强连通分量且每个顶点的入度和出度相同。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于有向图 G， G是半欧拉图当且仅当G有n-2个顶点的入度==出度，1个顶点+1(起点)，1个顶点-1(终点)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;求欧拉回路&#34;&gt;～求欧拉回路：&lt;/h3&gt;
+&lt;h4 id=&#34;fleury算法--todo&#34;&gt;Fleury算法 // todo&lt;/h4&gt;
+&lt;p&gt;算法流程为每次选择下一条边的时候&lt;strong&gt;优先选择不是桥的边&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;桥是大小为一的边割集&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一个广泛使用但是错误的实现方式是先 Tarjan 预处理桥边，然后再 DFS 避免走桥。但是由于走图过程中&lt;strong&gt;边会被删去&lt;/strong&gt;，一些&lt;strong&gt;非桥边会变为桥边&lt;/strong&gt;导致错误。最简单的实现方法是每次删除一条边之后暴力跑一遍 Tarjan 找桥，时间复杂度是 O(m(n+m))。复杂的实现方法要用到动态图等，实用价值不高。&lt;/p&gt;
+&lt;h4 id=&#34;hierholzer算法&#34;&gt;Hierholzer算法&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;判断是否有欧拉路径或者欧拉回路。当有欧拉路径而无欧拉回路时必须要指定起点 &lt;strong&gt;目的：确保dfs有解&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;递归调用函数&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;hierholzer&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; u){
+     &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;i &amp;lt;= n;++i){
+         &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(adj[u][i]){&lt;span style=&#34;color:#228b22&#34;&gt;// 有向图和无向图处理不同
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;             adj[u][i]--;
+             adj[i][u]--;
+             hierholzer[i];
+        }
+    }
+     s.push(u);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+- https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/ - 2021 happypig</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Semantic Notes</title>
+        <link>https://happierpig.github.io/posts/semantic/</link>
+        <pubDate>Thu, 28 Oct 2021 17:57:57 +0800</pubDate>
+        
+        <guid>https://happierpig.github.io/posts/semantic/</guid>
+        <description>Pigpen Park https://happierpig.github.io/posts/semantic/ -&lt;h1 id=&#34;ast-node-信息结构&#34;&gt;AST Node 信息结构&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我的ASTNode结构&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Type Node：存储对象的类型 （Def by Induction）&lt;strong&gt;只作为其他节点的成员变量出现而不单独作为结点出现&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;(ClassType)基本类型+面向对象：字符串&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;(ArrayType)数组：存储基本类型+数组的维数信息&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;函数类型：以上类型Node+void&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Constant:：仅仅存值，类型按照ClassType存储&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;NewExprNode：是”New“表达式精简后的结点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;包括类型、维数和initList&lt;/li&gt;
+&lt;li&gt;非递归结点，一次性获取了alloc的所有信息都一个结点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Identifier：仅存储了对象的名字，具体信息应当去Scope里寻找&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ArrayAccess：&lt;strong&gt;递归&lt;/strong&gt;产生结点，生成一棵树，维数需要递归获得&lt;/p&gt;
+&lt;p&gt;对TypeNode的作用：维数减一，之后若为零，则转化为ClassTypeNode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Block：存储ArrayList&amp;lt;StmtNode&amp;gt;；产生新的Scope&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ReturnNode：返回类型从保存的Expression Node获得&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;VariableDeclaration：一个VarDefStmtNode-&amp;gt;ArrayList&amp;lt;VarDefNode&amp;gt;&lt;/p&gt;
+&lt;p&gt;VarDefNode: Type+String+Init&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;FunctionDeclaration：Type+String+ParameterList+codeBlock&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ClassDeclaration：String+Func+Var&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;RootNode：类定义、函数定义、全局变量定义；&lt;/p&gt;
+&lt;p&gt;全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; Class RootNode &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; ASTNode{
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ArrayList&amp;lt;ASTNode&amp;gt; elements;&lt;span style=&#34;color:#228b22&#34;&gt;//引用三种类型的声明语句
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;semantic-question&#34;&gt;Semantic Question&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;需要检查的信息 (从README中提取)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;作用域&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;类以及函数的前向引用&lt;/p&gt;
+&lt;p&gt;全局变量和局部变量&lt;strong&gt;不支持&lt;/strong&gt;前向引用，作用域为&lt;strong&gt;声明开始的位置&lt;/strong&gt;直到最近的一个块的结束位置&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类内部的成员变量、函数作用域都是整个类&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内层作用域对外层作用域的&lt;strong&gt;覆盖&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;未定义/多重定义变量&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Return&lt;/code&gt;必须在函数作用域； &lt;code&gt;break/continue&lt;/code&gt;必须在勋在作用域内部&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;{}&lt;/code&gt;块、&lt;code&gt;函数入口&lt;/code&gt;、&lt;code&gt;类的入口&lt;/code&gt;引入一个新的作用域&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;for/if/while 即使没有{} 也会引入新的作用域&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;{
+  &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a;
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(;;) &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a;      &lt;span style=&#34;color:#228b22&#34;&gt;//Success
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a;;) &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a; &lt;span style=&#34;color:#228b22&#34;&gt;//Failed
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;true&lt;/span&gt;) &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a;  &lt;span style=&#34;color:#228b22&#34;&gt;//Success
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(flag) &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a;     &lt;span style=&#34;color:#228b22&#34;&gt;//Success
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;命名空间：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;在同一个作用域里，变量，函数，和类都&lt;strong&gt;分别&lt;/strong&gt;不能同名(即变量不能和变量同名，其余同理)，变量和函数可以&lt;strong&gt;重名&lt;/strong&gt;，但是类不可以和变量、函数重名。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意 Expression DOT IDENTIFIER 的处理 可能是类成员函数，也可能是取成员变量&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内部作用域的命名空间可以遮掩外部作用域的命名空间&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Type匹配问题&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;各种expression语句的要求&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;return与function type&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;null&lt;/code&gt;空值常量：引用类型 当作右值可以被任意Type接住；可以参与 &lt;code&gt;== null&lt;/code&gt;与&lt;code&gt;!= null&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;A a = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;;   &lt;span style=&#34;color:#228b22&#34;&gt;//Success
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; a = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//Failed: null不能赋值给基本类型
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;A &lt;span style=&#34;color:#008b45&#34;&gt;foo&lt;/span&gt;(){
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//Success
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数组type匹配：类型和维数要相等&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Expression 中对象的左右值问题&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有对象都是引用类型&lt;/li&gt;
+&lt;li&gt;运算结果是右值&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;++a&lt;/code&gt;为左值，&lt;code&gt;a++&lt;/code&gt;为右值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;函数&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;内建函数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;必须要有一个&lt;code&gt;int main()&lt;/code&gt;在其中&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;返回值是int 参数为空&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;返回值不是void，则必须有return语句 (main除外)，必须要进行type-check&lt;/p&gt;
+&lt;p&gt;是void，return必须单独使用，不能出现&lt;code&gt;return expr;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数组&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;内建函数 .Size()&lt;/li&gt;
+&lt;li&gt;可以不初始化，声明为null&lt;/li&gt;
+&lt;li&gt;交错数组创建的&lt;strong&gt;维数&lt;/strong&gt;验证&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;基本类型有&lt;strong&gt;内建函数&lt;/strong&gt;；基本类型不能被赋值为null&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;构造函数的定义和C++相同，无返回值无参数(有参数的未定义)，&lt;strong&gt;可以没有构造函数&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;this&lt;/code&gt;指针返回某个类的引用对象，关键字仅在&lt;strong&gt;类作用域内&lt;/strong&gt;可以使用。&lt;/p&gt;
+&lt;p&gt;不在类作用域内的 this 应当视为语法错误， &lt;strong&gt;this 指针作为左值视为语法错误&lt;/strong&gt;。(设置为右值即可)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;bool 类型仅可以做 == 和 != 比较，出现 &amp;lt;=, &amp;gt;=, &amp;lt;, &amp;gt; 的比较是语法错误的。&lt;/p&gt;
+&lt;p&gt;对象可以和 null 比较(仅限 !=, == )，但是不能运算。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;IF/FOR/WHILE语句当中的Condition&lt;strong&gt;要求&lt;/strong&gt;是不同的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;单目运算符除&lt;code&gt;++ -- &lt;/code&gt;以外对左右值没有要求 对操作对象的类型有要求&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;design&#34;&gt;Design&lt;/h1&gt;
+&lt;h3 id=&#34;scope&#34;&gt;Scope&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;“并查集”结构。每个结点只记录其父亲。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每个Scope都只需要在本地找，找不到向上找；&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(Variable_Table.&lt;span style=&#34;color:#658b00&#34;&gt;containsKey&lt;/span&gt;(identifier)) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; Variable_Table.&lt;span style=&#34;color:#658b00&#34;&gt;get&lt;/span&gt;(identifier);
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;parent&lt;/span&gt; != &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; parent.&lt;span style=&#34;color:#658b00&#34;&gt;fetch_Variable_Type&lt;/span&gt;(identifier);
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;HashMap&amp;lt;String,value&amp;gt;存什么value：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Variables：存typenode信息即可. Semantic Check仅需要知道identifier对应数据的类型&lt;/li&gt;
+&lt;li&gt;Functions：将整个FuncDefNode存入 以便Check函数调用的正确性&lt;/li&gt;
+&lt;li&gt;Class：将类的Scope存进去(其中包括成员变量、成员函数)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;全局记录一个当前作用域&lt;code&gt;cScope&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;进入一个新作用域时 &lt;code&gt;cScope = new Scope(cScope);&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;离开当前作用域时 &lt;code&gt;cScope = cScope.parent;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;从而模拟一个Stack的效果 ，以实现命名空间的&lt;strong&gt;覆盖&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;全局存储变量、类和函数；类作用域存储变量和函数；局部作用域只存储局部变量&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;调用变量：声明变量看当前作用域hashmap中有无value；调用变量要从当前向上回溯获取类型&lt;/p&gt;
+&lt;p&gt;调用类相关：从GlobalScope获取类的Scope并从其中读取信息&lt;/p&gt;
+&lt;p&gt;调用函数：从GlobalScope中Fetch_Funciton(String identifier)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;前向引用&#34;&gt;前向引用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;实现前向引用所需要的信息：类的成员变量&lt;strong&gt;标识符&lt;/strong&gt;、类的成员&lt;strong&gt;函数签名&lt;/strong&gt;、全局函数签名&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在Semantic Check之前先&lt;strong&gt;扫一遍&lt;/strong&gt;，将全局函数和类(包括成员函数的&lt;strong&gt;签名&lt;/strong&gt;也即FuncDefNode、成员变量的&lt;strong&gt;类型&lt;/strong&gt;和Identifier)读入到Scope里面。&lt;/p&gt;
+&lt;p&gt;此时对数据的类型是否合法&lt;strong&gt;不做检查&lt;/strong&gt;（信息不够），但进行一些基础的语法检查，包括是否重命名、有没有main函数等等&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这之后在Semantic check时已有的信息：所有合法的类型、函数的签名、类成员变量的标识符，即实现了前向引用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;非前向引用：按照正常&lt;strong&gt;线性顺序处理&lt;/strong&gt;即非前向引用，不用特殊处理，但要保证根结点当存储的子节点&lt;strong&gt;是按照线性顺序的&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;内建函数&#34;&gt;内建函数&lt;/h3&gt;
+&lt;p&gt;为了提高代码复用率，我是在前向引用信息收集前，向GlobalScope当中塞对应的信息。从而达到后续处理相同。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//built-in Function print 构造一个FuncDefNode 塞入全局作用域
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;ArrayList&amp;lt;VarDefNode&amp;gt; tmp_List = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; ArrayList&amp;lt;&amp;gt;();
+tmp_List.&lt;span style=&#34;color:#658b00&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; VarDefNode(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; ClassTypeNode(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;string&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(-1,-1)),&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;str&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(-1,-1)));
+FuncDefNode tmp = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; FuncDefNode(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; VoidTypeNode(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(-1,-1)),&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;print&amp;#34;&lt;/span&gt;,tmp_List,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;,_pos);
+initScope.&lt;span style=&#34;color:#658b00&#34;&gt;define_Function&lt;/span&gt;(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;print&amp;#34;&lt;/span&gt;,tmp);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;type&#34;&gt;Type&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;依赖于&lt;code&gt;TypeNode&lt;/code&gt;来对数据的类型进行区分&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;int/bool/string以及面向对象都是&lt;code&gt;ClassTypeNode&lt;/code&gt; 仅保存字符串&lt;/p&gt;
+&lt;p&gt;对于内置类型的处理，预处理阶段塞入globalScope的class当中&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;arrayType:&lt;/code&gt; &amp;ldquo;baseTypeNode&amp;rdquo; + 维数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;函数返回值:  baseType+ArrayType+VOID&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于表达式的类型检查&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;TypeNode：每个表达式结点带一个TypeNode，表示运算后的类型，以便其父节点调用、检查类型匹配&lt;/p&gt;
+&lt;p&gt;类型的初始化：回溯时候初始化，即当前表达式结点 运算之后的类型由其&lt;strong&gt;子节点&lt;/strong&gt;的类型以及当前结点的&lt;strong&gt;操作&lt;/strong&gt;共同决定(要处理当前结点，必须先处理子节点，回溯之后子节点的类型已经确定）&lt;/p&gt;
+&lt;p&gt;叶子结点的类型：常量则直接确定，变量则从Scope中获取；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;isAssignable&lt;/code&gt;: 每个表达式结点都持有，以便父节点检查语法。&lt;/p&gt;
+&lt;p&gt;根据当前操作来确定当前结点运算之后是左值还是右值。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如加减乘除则将自身设置为右值，赋值操作将自身设置为左值&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于数组类型的处理&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;[]&lt;/code&gt;每一个ArrayAccess结点都将自身的类型设置为&lt;code&gt;维数=原数组维数-1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;如果维数为0，则把数组类型转换为一般数据类型&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;feature&#34;&gt;Feature&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Semantic Check本质上是在一棵树上进行遍历，提取想要的信息并根据规则判断合法性。&lt;/p&gt;
+&lt;p&gt;其信息的传输分为&lt;strong&gt;两种&lt;/strong&gt;，一种是深度优先遍历时从上层结点带给下层结点的，另外一种是回溯时从下层结点带回上层结点的。两种信息传输都可以充分使用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于类型和左右值的处理就是采取&lt;strong&gt;回溯时&lt;/strong&gt;得到的信息的方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于&lt;code&gt;对象取用&lt;/code&gt;结点可以采取从上到下传入信息&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;// in ASTNode
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;ObjectMemberExprNode&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; ExprNode{
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ExprNode base;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; String member;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;boolean&lt;/span&gt; forFunc;				&lt;span style=&#34;color:#228b22&#34;&gt;//如果父节点是FunctionCallNode，则打标记将此值置为true，默认为false
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; FuncDefNode funcInfo;	&lt;span style=&#34;color:#228b22&#34;&gt;//在处理当前结点时，发现被打了标记，则去class的scope里面找函数，并且把函数的签名赋值带回；此外都找变量
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;      ...
+}
+&lt;span style=&#34;color:#228b22&#34;&gt;// in SemanticChecker
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(FuncCallExprNode node) {
+    FuncDefNode checkBase;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node.&lt;span style=&#34;color:#658b00&#34;&gt;Func&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; ObjectMemberExprNode){		
+        ((ObjectMemberExprNode) (node.&lt;span style=&#34;color:#658b00&#34;&gt;Func&lt;/span&gt;)).&lt;span style=&#34;color:#658b00&#34;&gt;forFunc&lt;/span&gt; = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;true&lt;/span&gt;;	&lt;span style=&#34;color:#228b22&#34;&gt;//打标记
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        node.&lt;span style=&#34;color:#658b00&#34;&gt;Func&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;accept&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;);	&lt;span style=&#34;color:#228b22&#34;&gt;//向下处理对象取用结点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        checkBase = ((ObjectMemberExprNode) (node.&lt;span style=&#34;color:#658b00&#34;&gt;Func&lt;/span&gt;)).&lt;span style=&#34;color:#658b00&#34;&gt;funcInfo&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//从下面结点中获取函数签名
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;    }
+      ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于&lt;code&gt;Return 语句&lt;/code&gt;的处理&lt;/p&gt;
+&lt;p&gt;因为Lambda表达式可以嵌套，且为了代码复用，采取了全局栈的方式&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; Stack&amp;lt;ASTNode&amp;gt; FuncStation;
+&lt;span style=&#34;color:#228b22&#34;&gt;//	处理函数或者lambda结点时将对应的包括所有信息的ASTNode压入栈中
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//  处理return语句时很方便
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(ReturnStmtNode node) {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(FuncStation.&lt;span style=&#34;color:#658b00&#34;&gt;empty&lt;/span&gt;()) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; SemanticError;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(FuncStation.&lt;span style=&#34;color:#658b00&#34;&gt;peek&lt;/span&gt;() &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; FuncDefNode) {
+          ....
+    }&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;{
+        LambdaExprNode nowFunc = (LambdaExprNode) FuncStation.&lt;span style=&#34;color:#658b00&#34;&gt;peek&lt;/span&gt;();
+          ....
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;debug-log&#34;&gt;Debug Log&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;细枝末节 : )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;For&lt;/code&gt;语句产生了两个作用域&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = 1;;){&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i;} &lt;span style=&#34;color:#228b22&#34;&gt;//判断不出重定义
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(BlockStmtNode node){
+  cScope = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Scope(cScope);
+  node.&lt;span style=&#34;color:#658b00&#34;&gt;stmtList&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;forEach&lt;/span&gt;(tmp-&amp;gt;tmp.&lt;span style=&#34;color:#658b00&#34;&gt;accept&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;));
+}
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(ForStmtNode node){
+  ...
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node.&lt;span style=&#34;color:#658b00&#34;&gt;loopBody&lt;/span&gt; != &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;) node.&lt;span style=&#34;color:#658b00&#34;&gt;loopBody&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;accept&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;);&lt;span style=&#34;color:#228b22&#34;&gt;//BlockStmt的话会产生新作用域
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  ... &lt;span style=&#34;color:#228b22&#34;&gt;//modified
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node.&lt;span style=&#34;color:#658b00&#34;&gt;loopBody&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; BlockStmtNode) 
+    ((BlockStmtNode) node.&lt;span style=&#34;color:#658b00&#34;&gt;loopBody&lt;/span&gt;).&lt;span style=&#34;color:#658b00&#34;&gt;stmtList&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;forEach&lt;/span&gt;(tmp-&amp;gt;tmp.&lt;span style=&#34;color:#658b00&#34;&gt;accept&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;));
+  &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; node.&lt;span style=&#34;color:#658b00&#34;&gt;loopBody&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;accept&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;this&lt;/span&gt;);
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ArrayList使用前未判&lt;code&gt;null&lt;/code&gt;，直接forEach遍历，导致空指针调用&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;单目运算符对左右值的要求考虑出错:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;+5&lt;/code&gt; &lt;code&gt;-5&lt;/code&gt; &lt;code&gt;!false&lt;/code&gt;  均允许&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;赋值运算符右边可以为&lt;code&gt;null&lt;/code&gt;，基本类型不能赋值为&lt;code&gt;null&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;class 内部调用函数时，忽略了对类内部Scope中的函数进行检查，只去判断了全局作用域，导致找不到函数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对&lt;code&gt;{{{;};{}}};&lt;/code&gt;的处理&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;// g4设计 保证能识别; 不出现syntax问题
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;statement
+  :	block    &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;codeBlock
+  | .......
+  | ;        &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;blankStmt
+  ;
+&lt;span style=&#34;color:#228b22&#34;&gt;// ASTBuilder 设计添加特判 遇到blankStmt不要向stmtList里面添加元素
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ASTNode &lt;span style=&#34;color:#008b45&#34;&gt;visitBlock&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;BlockContext&lt;/span&gt; ctx) {
+    ArrayList&amp;lt;StmtNode&amp;gt; _List = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;statement&lt;/span&gt;() != &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;){
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;StatementContext&lt;/span&gt; ele : ctx.&lt;span style=&#34;color:#658b00&#34;&gt;statement&lt;/span&gt;()){
+            &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!(ele &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;BlankStmtContext&lt;/span&gt;)){ &lt;span style=&#34;color:#228b22&#34;&gt;// 处理
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;                &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(_List == &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;) _List = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; ArrayList&amp;lt;&amp;gt;();
+                _List.&lt;span style=&#34;color:#658b00&#34;&gt;add&lt;/span&gt;((StmtNode) visit(ele));
+            }
+        }
+    }
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; BlockStmtNode(_List,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(ctx));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;函数参数可以传&lt;code&gt;null&lt;/code&gt;  ; return可以&lt;code&gt;null&lt;/code&gt; ;  &lt;code&gt;== !=&lt;/code&gt;可以与&lt;code&gt;null&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类构造函数不能有返回类型&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;A&lt;/span&gt;{
+      &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;A&lt;/span&gt;(){&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; 1;}
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+- https://happierpig.github.io/posts/semantic/ - 2021 happypig</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>From CST to AST</title>
+        <link>https://happierpig.github.io/posts/ast/</link>
+        <pubDate>Tue, 12 Oct 2021 21:50:57 +0800</pubDate>
+        
+        <guid>https://happierpig.github.io/posts/ast/</guid>
+        <description>Pigpen Park https://happierpig.github.io/posts/ast/ -&lt;h2 id=&#34;ast-vs-cst&#34;&gt;AST vs CST&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Abstract Vs. Concrete Syntax Tree :&lt;/p&gt;
+&lt;p&gt;Antlr4提供的是CST，为什么要将CST转换为AST再进行Semantic检查？&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees/&#34;&gt;Reference Document&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;CST: 将语法表示成树的形式&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A parse tree pictorially shows how the start symbol of a grammar derives a string in the language.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;CST是语言一对一到树上的映射。仅有叶子节点带有实际信息，中间节点均为Parser 解析出信息的过程。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;AST：AST are simplified syntactic representations of the source code, and they&amp;rsquo;re most often expressed by the data structures of the language used for implementation.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Abstract syntax trees, or simply &lt;em&gt;syntax trees&lt;/em&gt;, differ from parse trees because superficial distinctions of form, unimportant for translation, do not appear in syntax trees.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;AST仅保留对&lt;strong&gt;分析有用&lt;/strong&gt;的信息。内部节点也存有信息(如BinaryExprNode中间节点存有操作符)，而像&lt;code&gt;;&lt;/code&gt;的词法符号都被抛弃，对分析没有任何帮助&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The front-end of a compiler can be seen as a process that transforms the input from &lt;strong&gt;its most concrete form&lt;/strong&gt; (statements in the source language) &lt;strong&gt;to its most abstract form&lt;/strong&gt; - stored in internal data structures and ready for &lt;strong&gt;analysis &amp;amp; translation.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CST更具体、接近于语法层面 而AST更抽象、方便于后续处理。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;CST是ANTLR根据&lt;code&gt;.g4&lt;/code&gt;文件语法规则分析文本得到的满足形式的树，而我们需要的是内容上保留足够信息、形式上不拘泥便于处理的树。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;from-cst-to-ast&#34;&gt;From CST to AST&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;将&lt;strong&gt;需要的各种信息抽象成各类结点&lt;/strong&gt;：其中可以相互嵌套递归&lt;/p&gt;
+&lt;p&gt;注意多态&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- ASTNode
+	- RootNode		// 根结点 由第一个规则产生
+	- StmtNode		// node as a statement
+      - varDefStmtNode
+      - returnStmtNode
+      - blockStmtNode
+      - exprStmtNode
+      - ifStmtNode
+      - forStmtNode
+      - whileStmtNode
+      ...
+	- ExprNode		// node as an expression
+      - assignExprNode
+      - binaryExprNode
+      - noAryExprNode
+      - constExprNode
+      - cmpExprNode
+      - varExprNode
+      ...
+	- TypeNode
+      - ArrayTypeNode
+      - ClassTypeNode
+  - ClassDeclNode
+  - FuncDeclNode
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从&lt;code&gt;ParseTree parseTreeRoot = parser.program();&lt;/code&gt;返回的CST的根节点进入开始深度优先遍历&lt;/p&gt;
+&lt;p&gt;实际上等价于在CST上遍历同时抽象出需要的信息建立自己的AST结点&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;RootNode = astbuilder.visit(parseTreeRoot);&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;每进入一层，实际上都是对其子节点的信息进行处理（才能获取到足够的信息new出点），也即递归进入下一层的节点处理，一路到最底层获得到足够信息建出一个基本的ASTNode，由此一路向上&lt;strong&gt;回溯&lt;/strong&gt;时才建成每个点。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ASTNode &lt;span style=&#34;color:#008b45&#34;&gt;visitBinaryExpr&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;BinaryExprContext&lt;/span&gt; ctx) {
+        String op = ctx.&lt;span style=&#34;color:#658b00&#34;&gt;op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;getText&lt;/span&gt;();
+        ExprNode ls = (ExprNode) visit(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;operand1&lt;/span&gt;); &lt;span style=&#34;color:#228b22&#34;&gt;// 向下递归建点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        ExprNode rs = (ExprNode) visit(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;operand2&lt;/span&gt;); &lt;span style=&#34;color:#228b22&#34;&gt;// 向下递归建点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;              &lt;span style=&#34;color:#228b22&#34;&gt;//回溯时才真正建立本点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;              .....
+        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; BinaryExprNode(tmpOp,&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(ctx),ls,rs);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tips:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//通过lambda表达式遍历ArrayList
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;ctx.&lt;span style=&#34;color:#658b00&#34;&gt;expression&lt;/span&gt;().&lt;span style=&#34;color:#658b00&#34;&gt;forEach&lt;/span&gt;(tmp-&amp;gt;arraySize.&lt;span style=&#34;color:#658b00&#34;&gt;add&lt;/span&gt;((ExprNode) visit(tmp)));
+
+&lt;span style=&#34;color:#228b22&#34;&gt;//通过for循环遍历ArrayList
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;SubProgramContext&lt;/span&gt; elements : ctx.&lt;span style=&#34;color:#658b00&#34;&gt;subProgram&lt;/span&gt;()){...}
+
+&lt;span style=&#34;color:#228b22&#34;&gt;//enhanced switch
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt; tmpOp = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;switch&lt;/span&gt; (op) {
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;++&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;PREINC&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;--&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;PREDEC&lt;/span&gt;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;!&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;LNOT&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;~&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;BITNOT&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;NEG&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;+&amp;#34;&lt;/span&gt; -&amp;gt; MonoExprNode.&lt;span style=&#34;color:#658b00&#34;&gt;Op&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;POS&lt;/span&gt;;
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;default&lt;/span&gt; -&amp;gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; RuntimeException(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;[debug] 3&amp;#34;&lt;/span&gt;);
+};
+
+&lt;span style=&#34;color:#228b22&#34;&gt;//利用已有的visit
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ASTNode &lt;span style=&#34;color:#008b45&#34;&gt;visitBaseVariableType&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;BaseVariableTypeContext&lt;/span&gt; ctx) {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; visit(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;baseType&lt;/span&gt;());
+}
+
+&lt;span style=&#34;color:#228b22&#34;&gt;//可以通过 ctx.xx == null 判断有无该参数
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ASTNode &lt;span style=&#34;color:#008b45&#34;&gt;visitFunctionType&lt;/span&gt;(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;FunctionTypeContext&lt;/span&gt; ctx) {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;VOID&lt;/span&gt;() == &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;null&lt;/span&gt;){ &lt;span style=&#34;color:#228b22&#34;&gt;//return variableType
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; visit(ctx.&lt;span style=&#34;color:#658b00&#34;&gt;variableType&lt;/span&gt;());
+    }&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;{ &lt;span style=&#34;color:#228b22&#34;&gt;// void function
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; VoidTypeNode(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;new&lt;/span&gt; Position(ctx));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+- https://happierpig.github.io/posts/ast/ - 2021 happypig</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>学用Antlr4</title>
+        <link>https://happierpig.github.io/posts/learnanltr/</link>
+        <pubDate>Sun, 10 Oct 2021 21:36:57 +0800</pubDate>
+        
+        <guid>https://happierpig.github.io/posts/learnanltr/</guid>
+        <description>Pigpen Park https://happierpig.github.io/posts/learnanltr/ -&lt;h1 id=&#34;环境&#34;&gt;环境&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;采用Mac os + IntelliJ IDEA&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;IDE:Preference-&amp;gt;Plugins-&amp;gt;下载安装ANTLR v4&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从&lt;a href=&#34;https://www.antlr.org/download.html&#34;&gt;官网&lt;/a&gt;下载&lt;code&gt;Complete ANTLR 4.9.2 Java binaries jar&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;IDE: File-&amp;gt;Project Structure-&amp;gt;Libraries-&amp;gt;&lt;code&gt;+&lt;/code&gt; 选定刚刚下载的jar包&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;正则表达式&#34;&gt;正则表达式&lt;/h1&gt;
+&lt;h2 id=&#34;what&#34;&gt;What&lt;/h2&gt;
+&lt;p&gt;正则表达式是用来&lt;strong&gt;描述&lt;/strong&gt;一定数量字符文本的&lt;strong&gt;模式串&lt;/strong&gt;，用于&lt;strong&gt;匹配&lt;/strong&gt;字符串中符合描述的串。&lt;/p&gt;
+&lt;h2 id=&#34;规则&#34;&gt;规则&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;正则表达式是大小写敏感的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;特殊保留字符&lt;code&gt;[ ] \ ^ $ . | ? * + ( )&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;想在正则表达式中将这些字符用作文本字符，需要用反斜杠\对其进行换码 。例如想匹配“1+1=2”，正确的表达式1\+1=2.&lt;/p&gt;
+&lt;p&gt;而在字符集中只剩下部分字符有特殊含义&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Invisible char&lt;/p&gt;
+&lt;p&gt;可以使用特殊字符序列来代表某些不可显示字符：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;\t&lt;/code&gt;代表Tab(0x09)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;\r&lt;/code&gt;代表回车符(0x0D)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;\n&lt;/code&gt;代表换行符(0x0A)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;要注意的是Windows中文本文件使用“\r\n”来结束一行而Unix使用“\n”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;两种正则导向引擎&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;文本导向&lt;/strong&gt;：引擎在移动到输入的下一个字符之前尝试正则表达式的所有路径，它将返回&lt;strong&gt;最长的匹配项&lt;/strong&gt;。例如，&lt;code&gt;(Set|SetValue)&lt;/code&gt;输入“SetValue”将匹配“SetValue”。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;正则导向&lt;/strong&gt;：如果引擎在某个位置出现故障，它会回溯以尝试替代路径。路径按从左到右的顺序尝试。因此，即使稍后在另一条路径中有更长的匹配项，它也会返回&lt;strong&gt;最左边的匹配项&lt;/strong&gt;。例如，&lt;code&gt;(Set|SetValue)&lt;/code&gt;输入“SetValue”将匹配“Set”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;字符集&#34;&gt;字符集&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;字符集：是由一对方括号“[]”括起来的字符集合。&lt;/p&gt;
+&lt;p&gt;使用字符集时正则表达式引擎仅仅匹配&lt;strong&gt;字符集中多个字符中的一个&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用&amp;laquo;gr[ae]y&amp;raquo;匹配gray或grey(不会匹配graay或graey)&lt;/p&gt;
+&lt;p&gt;[A-Za-z_][A-Za-z_0-9]* 匹配Identifier&lt;/p&gt;
+&lt;p&gt;0[xX][A-Fa-f0-9]* 匹配十六进制数字&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;字符集中的字符无顺序，无优先级&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;取反字符集：将会对字符集取反。结果是将匹配任何不在字符集中的字符&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;取反字符集必须要匹配一个字符&lt;/strong&gt;。包括空格以及回车换行符&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;q[^u]意味着：匹配一个q，后面跟着一个不是u的字符。所以它不会匹配“Iraq”中的q，而会匹配“Iraq is a country”中的q和一个空格符。事实上，空格符是匹配中的一部分，因为它是一个“不是u的字符”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;字符集中的元字符&lt;/p&gt;
+&lt;p&gt;字符集中只有4个字符具有特殊含义&lt;code&gt;] \ ^ -&lt;/code&gt;。“\”代表转义；“^”代表取反；“-”代表&lt;strong&gt;范围定义。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;其他常见的元字符在字符集定义内部都是正常字符，不需要转义。例如，要搜索星号*或加号+，你可以用[+*]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;字符集的重复&lt;/p&gt;
+&lt;p&gt;如果用&lt;code&gt;? * +&lt;/code&gt;将会重复&lt;strong&gt;整个字符集&lt;/strong&gt;。而不仅是它上次匹配成功的那个字符。[0-9]+会匹配837以及222&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;使用---进行重复&#34;&gt;使用? * + 进行重复&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;含义：&lt;/p&gt;
+&lt;p&gt;?：告诉引擎匹配前导字符0次或一次。事实上是表示前导字符是可选的。&lt;/p&gt;
+&lt;p&gt;+：告诉引擎匹配&lt;strong&gt;前导字符&lt;/strong&gt;1次或多次&lt;/p&gt;
+&lt;p&gt;*：告诉引擎匹配&lt;strong&gt;前导字符&lt;/strong&gt;0次或多次&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;限制性重复&lt;/p&gt;
+&lt;p&gt;允许定义对一个字符重复多少次。词法是：&lt;code&gt;{min,max}&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;min和max都是非负整数。如果逗号有而max被忽略了，则max没有限制。如果逗号和max都被忽略了，则重复min次。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因此{0,}和*一样，{1，}和+ 的作用一样。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;用&lt;code&gt;\b\[1-9][0-9]{3}\b&lt;/code&gt;匹配1000~9999之间的数字(“\b”表示&lt;strong&gt;单词边界&lt;/strong&gt;)。&lt;code&gt;\b\[1-9][0-9]{2,4}\b&lt;/code&gt;匹配在100~99999之间的数字。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;注意&lt;strong&gt;贪婪性&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;假设用一个正则表达式匹配一个HTML标签&lt;code&gt;&amp;lt;html&amp;gt;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如果采用正则表达式&lt;code&gt;&amp;lt;.+&amp;gt; &lt;/code&gt;，则对于测试字符串&lt;code&gt;This is a \&amp;lt;html&amp;gt;first\&amp;lt;/html&amp;gt; test&lt;/code&gt;，会匹配“&amp;lt;html&amp;gt;first&amp;lt;/html&amp;gt;”。很显然这不是我们想要的结果。原因在于“+”是&lt;strong&gt;greedy&lt;/strong&gt;的，即“+”会导致正则表达式引擎试图尽可能的&lt;strong&gt;重复满足前一个字符&lt;/strong&gt;。只有当这种重复会引起整个正则表达式匹配失败的情况下，引擎才会进行回溯。也就是说，它会放弃最后一次的“重复”，然后处理正则表达式余下的部分。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;和&lt;code&gt;+&lt;/code&gt;类似，&lt;code&gt;? *&lt;/code&gt;重复也是贪婪的。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：&lt;/p&gt;
+&lt;p&gt;第一个符号是“&amp;lt;”，第二个是通配符“.”，匹配了字符“h”，然后“+”&lt;strong&gt;一直匹配任意字符(贪婪)&lt;/strong&gt;，直到换行符匹配失败(“.”不匹配换行符)。于是引擎开始对&lt;strong&gt;下一个正则表达式符号&lt;/strong&gt;进行匹配，也即试图匹配“&amp;gt;”。到目前为止，“&amp;lt;.+”已经匹配了“&amp;lt;html&amp;gt;first&amp;lt;/html&amp;gt; test”。引擎会试图将“&amp;gt;”与换行符进行匹配，结果失败了。于是引擎会进行&lt;strong&gt;回溯&lt;/strong&gt;。则最终结果是“&amp;lt;.+”匹配“&amp;lt;html&amp;gt;first&amp;lt;/html”，“&amp;gt;”与“&amp;gt;”匹配。记住，正则导向的引擎是“&lt;strong&gt;急切的&lt;/strong&gt;”，所以它会急着报告它找到的第一个匹配（而不是继续回溯），即使可能会有更好的匹配，例如“&amp;lt;html&amp;gt;”。所以我们可以看到，由于“+”的贪婪性，使得正则表达式引擎返回了一个最长匹配。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用&lt;strong&gt;懒惰性&lt;/strong&gt;取代&lt;strong&gt;贪婪性&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一个用于修正以上问题的方案是用“+”的惰性代替贪婪性。你可以在“+”后面紧跟一个问号“?”来达到这一点。&lt;code&gt;* ? {}&lt;/code&gt;表示的重复也可以用这个方案。在上面的例子中使用&lt;code&gt;&amp;lt;.+?&amp;gt;&lt;/code&gt;，引擎会尽可能少的去重复前一个字符，尽力匹配成功下一个字符。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注:&lt;/p&gt;
+&lt;p&gt;再一次，正则表达式记号“&amp;lt;”会匹配字符串的第一个“&amp;lt;”。下一个正则记号是“.”。这次是一个&lt;strong&gt;懒惰的&lt;/strong&gt;“+”来重复上一个字符。这告诉正则引擎，&lt;strong&gt;尽可能少的重复上一个字符&lt;/strong&gt;。因此引擎匹配“.”和字符“h”，然后用“&amp;gt;”匹配“t”，结果失败了。引擎会进行回溯，和上一个例子不同，因为是惰性重复，所以引擎是&lt;strong&gt;扩展惰性重复&lt;/strong&gt;而不是最终失败后的回溯减少，于是“&amp;lt;.+”现在被扩展为“&amp;lt;ht”，直至&amp;quot;&amp;lt;html&amp;quot;。引擎继续匹配下一个记号“&amp;gt;”与&amp;quot;&amp;gt;&amp;quot;。这次得到了一个成功匹配。引擎于是报告“&amp;lt;html&amp;gt;”是一个成功的匹配。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;匹配几乎任意字符&#34;&gt;&lt;code&gt;.&lt;/code&gt;匹配几乎任意字符&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;.&lt;/code&gt;匹配任意单个字符(除换行符外)。等价于字符集&lt;code&gt;\[^\n\r]&lt;/code&gt;(Window)&lt;/p&gt;
+&lt;h3 id=&#34;锚定&#34;&gt;锚定&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;字符串开始和结束的锚定：它&lt;strong&gt;不匹配&lt;/strong&gt;任何字符。相反，他们匹配的是字符之前或之后的&lt;strong&gt;位置&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;^&lt;/code&gt;匹配一行字符串第一个字符前的位置;&lt;code&gt;$&lt;/code&gt;匹配字符串中最后一个字符的后面的位置&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果想校验用户的输入为整数，用&lt;code&gt;^\d+$&lt;/code&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;选择符&#34;&gt;选择符&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;|&lt;/code&gt;表示选择。你可以用选择符匹配多个可能的正则表达式中的一个。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;搜索文字“cat”或“dog”，可以用&lt;code&gt;cat|dog&lt;/code&gt;。可扩展列表&lt;code&gt;cat|dog|mouse|fish&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;圆括号告诉正则引擎把括号内部(cat|dog)当成一个&lt;strong&gt;正则表达式单位&lt;/strong&gt;来处理。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;组&#34;&gt;组&lt;/h3&gt;
+&lt;p&gt;把正则表达式的一部分放在圆括号内，你可以将它们形成组。然后你可以对整个组使用一些正则操作，例如&lt;strong&gt;重复操作符&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;要注意的是，只有圆括号“()”才能用于形成组。“[]”用于定义字符集。“{}”用于定义重复操作。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;antlr4&#34;&gt;Antlr4&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Lexer(词法分析器)和Parser(语法分析器)：&lt;/p&gt;
+&lt;p&gt;Lexer通过输入的字节流(01二进制流)按照词法规则来把字节流划分成一块一块的&lt;code&gt;token&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;Parser通过&lt;code&gt;词素+符号&lt;/code&gt;按照文法规则来识别语言结构，生成对应的&lt;code&gt;RuleNode&lt;/code&gt;结点。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;区分词法规则和文法规则-&amp;gt;词法规则以大写字母开头，文法规则以小写字母开头&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Antlr 可识别的语法模式(文法规则)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;序列模式:&lt;code&gt;ifStmt: If &#39;(&#39; expression &#39;)&#39; trueStmt=statement&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;选择模式:&lt;code&gt;loopStmt: forStmt | whileStmt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;！ &lt;code&gt;#&lt;/code&gt;为分支打标签&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;词法符号依赖模式: 一个词法符号需要与另一个词法符号一起出现配对。如：&lt;code&gt;&#39;(&#39; xxx &#39;)&#39;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;嵌套模式&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;直接递归与间接递归&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;优先级问题：位置靠前的分支优先级越高&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;运算符优先级依靠Expression语句的定义顺序规定&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Antlr4能够处理直接左递归，但不能处理&lt;strong&gt;间接左递归&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;assoc=right&amp;gt;&lt;/code&gt;指定右结合方式：&lt;strong&gt;实际上就是优先递归生成右边的子树&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://happierpig.github.io/images/Antlr/assoc-right.png&#34; alt=&#34;右结合&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;可以在文法规则当中为分支打标签 &lt;code&gt;#&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;如果备选分支上面没有标签，ANTLR就只为每条规则生成一个ParserRuleContext，备选分支的访问需要通过&lt;strong&gt;父规则的成员函数和成员变量。&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;subProgram
+    :   functionDecl
+    |   classDecl
+    |   variableDecl &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;
+    ;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;SubProgramContext&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; ParserRuleContext {
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; FunctionDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;functionDecl&lt;/span&gt;();
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ClassDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;classDecl&lt;/span&gt;();
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; VariableDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;variableDecl&lt;/span&gt;();
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;SubProgramContext&lt;/span&gt;(ParserRuleContext parent, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; invokingState);
+      &lt;span style=&#34;color:#707a7c&#34;&gt;@Override&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &amp;lt;T&amp;gt; T &lt;span style=&#34;color:#008b45&#34;&gt;accept&lt;/span&gt;(ParseTreeVisitor&amp;lt;? &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; T&amp;gt; visitor);
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;打标签=&amp;gt;必须为每个备选分支都打上标签。这样ANTLR对该规则每个分支生成一个ParserRuleContext(继承自父规则的Context)，而父规则并&lt;strong&gt;无&lt;/strong&gt;通向分支的成员函数和成员变量，由此形成多态。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;jumpStmt
+    :   RETURN expression? &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;  &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;returnStmt
+    |   BREAK &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;               &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;breakStmt
+    |   CONTINUE &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;            &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;continueStmt
+    ;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;JumpStmtContext&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; ParserRuleContext {
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;JumpStmtContext&lt;/span&gt;(ParserRuleContext parent, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; invokingState);
+      &lt;span style=&#34;color:#707a7c&#34;&gt;@Override&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;getRuleIndex&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; RULE_jumpStmt; }
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;JumpStmtContext&lt;/span&gt;() { }
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;copyFrom&lt;/span&gt;(JumpStmtContext ctx);
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;BreakStmtContext&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; JumpStmtContext {
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; TerminalNode &lt;span style=&#34;color:#008b45&#34;&gt;BREAK&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; getToken(MxParser.&lt;span style=&#34;color:#658b00&#34;&gt;BREAK&lt;/span&gt;, 0); }
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;BreakStmtContext&lt;/span&gt;(JumpStmtContext ctx) { copyFrom(ctx); }
+      &lt;span style=&#34;color:#707a7c&#34;&gt;@Override&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &amp;lt;T&amp;gt; T &lt;span style=&#34;color:#008b45&#34;&gt;accept&lt;/span&gt;(ParseTreeVisitor&amp;lt;? &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; T&amp;gt; visitor);
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;lexer&#34;&gt;Lexer&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Lexer解决歧义问题的方法是&lt;strong&gt;优先使用位置靠前的词法规则&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;Int: &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;&lt;/span&gt;;
+ID: [a-zA-Z][a-zA-Z0-9_]*
+  ;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样避免了Lexer把&lt;code&gt;int&lt;/code&gt;分析成为一个ID&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;antlr为隐式生成的字符串常量词法规则放在显示定义的词法规则之前，所以他们总有最高的优先级。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;ps: 同一优先级的运算符摆在同一个位置的候选分支 如(&#39;*&#39; | &amp;lsquo;/&amp;rsquo; | &amp;lsquo;%&#39;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;fragment&lt;/code&gt; 辅助规则&lt;/p&gt;
+&lt;p&gt;表示该规则本身不是一个词法符号，它只会被其他词法规则使用而不会在文法规则里使用。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;Float: Digit + &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;.&amp;#39;&lt;/span&gt; + Digit;
+fragment
+Digit: [1-9][0-9]* | 0 ;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;非贪婪匹配(懒惰)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;String: &#39;&amp;quot;&#39;.*?&#39;&amp;quot;&#39;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;识别转义字符&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;String: &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;&amp;#34;&amp;#39;&lt;/span&gt;(ESC|.)*?&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;&amp;#34;&amp;#39;&lt;/span&gt;
+fragment
+ESC: &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;\\&amp;#34;&amp;#39;&lt;/span&gt; | &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;\\\\&amp;#39;&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//antlr语法本身需要用\对\进行转义
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;处理注释和空白字符&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;当Lexer处理到注释和空白字符时，希望将其丢弃而不是处理&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;定义需要被丢弃的词法符号的方法和正常一样，只需增加&lt;code&gt; -&amp;gt; skip&lt;/code&gt;指令&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Lexer可以接受许多-&amp;gt;指令，eg.Channel&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;LINE_COMMENT: &#39;\\&#39; .*? &#39;\r&#39;?&#39;\n&#39;;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;COMMENT: &#39;/*&#39; .*?  &#39;*/&#39;;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;WS:[ \t\r\n]+ -&amp;gt; skip;&lt;/code&gt; 匹配一个或多个空白字符并舍弃&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Boundary between Lexer and Parser&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;并非很清晰，需要明确程序的需求&lt;/li&gt;
+&lt;li&gt;Lexer 处理 raw char string 丢弃不需要Parser知道的东西，并将词&lt;strong&gt;抽象更高一级&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;&#39;()&#39;&lt;/code&gt;与&lt;code&gt;&#39;(&#39; &#39;)&#39;&lt;/code&gt;不等价，若&lt;code&gt;&#39;()&#39;&lt;/code&gt;注册在前面，优先级会更高，&lt;code&gt;&#39;()&#39;&lt;/code&gt;就不能被识别为&lt;code&gt;&#39;(&#39;&lt;/code&gt;了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;allocFormat:baseType (&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;&lt;/span&gt;()&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&amp;#39;&lt;/span&gt;)?&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;；&lt;/span&gt;
+functionDecl: functionType? IDENTIFIER &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;(&amp;#39;&lt;/span&gt; parameterList? &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;)&amp;#39;&lt;/span&gt; block;
+无法识别 &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;foo&lt;/span&gt;();&lt;span style=&#34;color:#228b22&#34;&gt;//ANTLR会因为优先识别为&amp;#39;()&amp;#39;而识别不到&amp;#39;(&amp;#39;，无法识别为functionDecl语法
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;img src=&#34;https://happierpig.github.io/images/Antlr/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E8%A7%84%E5%88%99.png&#34; alt=&#34;一些基本词法&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;vistor&#34;&gt;Vistor&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;继承关系：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;MxBaseVisitor-&amp;gt;AbstractParseTreeVisitor
+          |                  |
+          v	                 v
+接口 MxVistor -&amp;gt; 接口  ParseTreeVisitor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ParseTreeVisitor&lt;/code&gt;：定义了&lt;code&gt;T visit(ParseTree var1);&lt;/code&gt;、&lt;code&gt;T visitChildren(RuleNode var1);&lt;/code&gt;等&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;MxVisitor:&lt;/code&gt;继承以上接口并新增&lt;code&gt;T visitProgram(MxParser.ProgramContext ctx);&lt;/code&gt;等根据.g4生成的parsetree结点&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;AbstractParseTreeVisitor&lt;/code&gt;:实现&lt;code&gt;visit(ParseTree tree)&lt;/code&gt;:tree.accept(this);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;MxBaseVisitor&lt;/code&gt;:实现并继承以上&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;ParserRuleContext-&amp;gt;RuleContext
+                        |
+                        v
+                  接口 RuleNode-&amp;gt;接口 ParseTree
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ParseTree&lt;/code&gt;:定义了接口&lt;code&gt;&amp;lt;T&amp;gt; T accept(ParseTreeVisitor&amp;lt;? extends T&amp;gt; var1);&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;RuleContext&lt;/code&gt;:实现了函数&lt;code&gt;getText()&lt;/code&gt;转树结点内容为字符串、&lt;code&gt;getChildCount()&lt;/code&gt;获得子结点的个数、&lt;code&gt;accept&lt;/code&gt;(实际上无用，被覆写)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ParserRuleContext&lt;/code&gt;: 为&lt;code&gt;MxParser&lt;/code&gt;文件中各&lt;code&gt;xxxxContext&lt;/code&gt;的父类，&lt;code&gt;xxxContext&lt;/code&gt;都各自覆写了对应的&lt;code&gt;accept&lt;/code&gt;函数为调用对应的&lt;code&gt;visitXXXContext&lt;/code&gt;，也即调用&lt;code&gt;MxBaseVisitor.visit(xxxContext)&lt;/code&gt; =&amp;gt; &lt;code&gt;xxxContext.accept(MxBaseVisitor)&lt;/code&gt;=&amp;gt;&lt;code&gt;MxBaseVisitor.visitxxxContext(xxxContext)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;而&lt;code&gt;MxBaseVisitor.visitxxxContext(xxxContext)&lt;/code&gt;实际上被其子类(如ASTBuilder)所覆写。所以调用visit(xxx)等于调用我们自己实现的visitxxxContext(xxxContext);&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;注意&lt;strong&gt;向上转型&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;调用的是实际所指向的对象的成员函数，借此实现多态&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;parser&#34;&gt;Parser&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ProgramContext&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;用MxParser.program()可接到 ProgramContext(Derived from parse tree)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;public List&amp;lt;SubProgramContext&amp;gt; subProgram()&lt;/code&gt; 返回子节点形成的&lt;code&gt;ArrayList&amp;lt;Sub..&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;源于&lt;code&gt; program: subProgram *&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;覆写了&lt;code&gt;public &amp;lt;T&amp;gt; T accept(ParseTreeVisitor&amp;lt;? extends T&amp;gt; visitor)&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;AbstractParseTreeVistor&lt;/code&gt;实现的&lt;strong&gt;visit函数&lt;/strong&gt;即&lt;code&gt;ParseTree.accept(this)&lt;/code&gt;实际上调用了该accept函数&lt;/p&gt;
+&lt;p&gt;而该accept函数的实现又调用了&lt;code&gt;ParseTreeVistor.visitProgram&lt;/code&gt;也即实际调用&lt;code&gt;ASTBuilder&lt;/code&gt;中&lt;strong&gt;覆写的函数&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;=&amp;gt; visit(Type ctx) 调用 ASTBuilder. visitType(ctx) 返回一个自定义的ASTNode&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;SubProgramContext&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;subProgram
+    :   functionDecl    &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;functionDeclaration
+    |   classDecl       &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;classDeclaration
+    |   variableDecl    &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;#&lt;/span&gt;variableDeclaration
+    ;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;实际上是作为&lt;code&gt;父类&lt;/code&gt;发挥作用 提高代码复用率&lt;/p&gt;
+&lt;p&gt;自然情况下&lt;strong&gt;不会真正的出现类似的父类对象&lt;/strong&gt;，&lt;strong&gt;都是父类引用对应的子类而实现多台&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;FunctionDeclarationContext&lt;/code&gt;、&lt;code&gt;ClassDeclarationContext&lt;/code&gt;、&lt;code&gt;VariableDeclarationContext&lt;/code&gt;均extends &lt;code&gt;subProgramCtx&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;其子类均实现了&lt;code&gt;accept&lt;/code&gt;函数(等价于ASTBuilder.visit(子类ctx)返回子类节点)&lt;/p&gt;
+&lt;p&gt;由于向上转型 传一个父类的引用进入函数当中是可以调用其&lt;code&gt;accept&lt;/code&gt;函数的 (由此实现多态)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Usage：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;ArrayList&amp;lt;ASTNode(or other father node)&amp;gt; _List;
+ProgramCtx.&lt;span style=&#34;color:#658b00&#34;&gt;subProgram&lt;/span&gt;.&lt;span style=&#34;color:#658b00&#34;&gt;forEach&lt;/span&gt;(ptr-&amp;gt;_List.&lt;span style=&#34;color:#658b00&#34;&gt;add&lt;/span&gt;((ASTNode) visit(ptr)));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;FunctionDeclarationContext&lt;/code&gt;、&lt;code&gt;ClassDeclarationContext&lt;/code&gt;、&lt;code&gt;VariableDeclarationContext&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;类似于&lt;code&gt;ProgramContext&lt;/code&gt;覆写&lt;code&gt;accept&lt;/code&gt;需要实现visitxxx(xxx ctx);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;其成员函数即为返回对应的&lt;code&gt;functionDeclCtx&lt;/code&gt; 、&lt;code&gt;classDeclCtx&lt;/code&gt;、 &lt;code&gt;variableDeclCtx&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;！这样打标签实在是多此一举！&lt;/strong&gt; (进行一个modify&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;打标签的实质是：告诉ANTLR不要为&lt;code&gt;subProgram&lt;/code&gt;生成实际的&lt;code&gt;accept&lt;/code&gt;而是把其当作父类，其各种组件打上标签及都要生成对应的&lt;code&gt;ParseRuleContext &amp;amp;&amp;amp; accept &amp;amp;&amp;amp; extends subProgram&lt;/code&gt;。也即这个文法实际上由其他文法定义而成，只不过分类在一起。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//After modificatin
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;subProgram
+    :   functionDecl
+    |   classDecl
+    |   variableDecl
+    ;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;SubProgramContext&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; ParserRuleContext {
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; FunctionDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;functionDecl&lt;/span&gt;(); &lt;span style=&#34;color:#228b22&#34;&gt;//访问子Context
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; ClassDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;classDecl&lt;/span&gt;();
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; VariableDeclContext &lt;span style=&#34;color:#008b45&#34;&gt;variableDecl&lt;/span&gt;();
+      &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;SubProgramContext&lt;/span&gt;(ParserRuleContext parent, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; invokingState);
+      &lt;span style=&#34;color:#707a7c&#34;&gt;@Override&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt; &amp;lt;T&amp;gt; T &lt;span style=&#34;color:#008b45&#34;&gt;accept&lt;/span&gt;(ParseTreeVisitor&amp;lt;? &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; T&amp;gt; visitor);
+}
+&lt;span style=&#34;color:#228b22&#34;&gt;//既有accept 又能向下到子节点 实为文法
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;不打标签的文法规则可以&lt;strong&gt;通过成员函数/成员变量&lt;/strong&gt;访问到子Context&lt;/p&gt;
+&lt;p&gt;打了标签只能充当多态的二传手了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Necessity&lt;/strong&gt; for tag Expressions :&lt;/p&gt;
+&lt;p&gt;给每一种分支都覆写一个&lt;code&gt;accept&lt;/code&gt;函数，而&lt;code&gt;expression&lt;/code&gt;本身当作父类起到多态作用。&lt;/p&gt;
+&lt;p&gt;即abstract class ExprNode: BinaryExprNode/NoaryExprNode extends ExprNode.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;一些语法&#34;&gt;一些语法：&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;java 泛型的实现是：擦拭法 有许多缺点，&lt;a href=&#34;https://www.liaoxuefeng.com/wiki/1252599548343744/1265104600263968&#34;&gt;详见&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;T&amp;gt;&lt;/code&gt;等价于&lt;code&gt;template &amp;lt;typename T&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;ArrayList&amp;lt;Int&amp;gt; 可向上转型为 List&amp;lt;Int&amp;gt;
+ArrayList&amp;lt;Int&amp;gt; 不可向上转型为 ArrayList&amp;lt;Number&amp;gt;
+但实际上Int 继承与Number 有相同的实现 &lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;，&lt;/span&gt;理论上可以转型&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;，&lt;/span&gt;实现方法&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;：&lt;/span&gt;
+ArrayList&amp;lt;? &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; Number&amp;gt;
+则所有ArrayList&amp;lt;T&amp;gt; T继承与Number的都可以转型被接到
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;xxx&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;extends&lt;/span&gt; yyy;
+xxx a;
+yyy b = a;
+b &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; xxx &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;true&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;父类引用子类对象实际上不改变子类对象的类型，不发生任何变化（与类型转换丢失信息不同）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//可以用父类作函数参数接住子类对象实现多态
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(ASTNode node);
+
+&lt;span style=&#34;color:#228b22&#34;&gt;//可以将父类引用子类对象传入重载函数实现多态
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(ExprNode node);
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(StmtNode node);
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;visit&lt;/span&gt;(TypeNode node);
+ArrayList&amp;lt;ASTNode&amp;gt; elements;
+elements.&lt;span style=&#34;color:#658b00&#34;&gt;forEach&lt;/span&gt;(tmp-&amp;gt;visit(tmp));
+
+&lt;span style=&#34;color:#228b22&#34;&gt;// nodeA 为 ExprNode
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;ASTNode ptr = nodeA;
+ptr &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;instanceof&lt;/span&gt; ExprNode == &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;true&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;参考资料:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/dragon/archive/2006/05/09/394923.html&#34;&gt;https://www.cnblogs.com/dragon/archive/2006/05/09/394923.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;《antlr4 权威指南》&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+- https://happierpig.github.io/posts/learnanltr/ - 2021 happypig</description>
+        </item>
     
     
     
@@ -22,6 +1720,21 @@
 &lt;p&gt;&lt;strong&gt;朋友&lt;/strong&gt;，你能体会到吗，那流星划落天空的雨，天才妙想不断涌现，那剔透如水晶般的思维，一切都有迹可循。仿佛到达了巅峰，无限的快感，无限的智慧，没有什么是我学不会的，没有什么是我做不到的，我是世界的中心，我是主宰，我必将改变一切。所有的所有都那么有趣，我投入了全部的热情，各处涉猎，却又都能专精，我一日千里。我不需要睡眠，我亢奋，我想把一切都做好。同时，我过度热情，哪怕陌生人，我也能和他聊上半天，不对，不是聊，是我单方面的灌输。我妙语连珠，我汪洋恣肆，虽然，别人并听不懂，可我也不怎么沮丧。可突然，莫名的黏稠的黑色混沌了我的大脑，我的思维凝滞，热情退却，精力萎靡，一切，都是那么虚无。我不想学习，不想继续之前的爱好，之前的一切，都是那么那么无趣。&lt;/p&gt;
 &lt;h3 id=&#34;那是未来的我们&#34;&gt;那是未来的我们&lt;/h3&gt;
 - https://happierpig.github.io/posts/my-first-post/ - 2021 happypig</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>关于</title>
+        <link>https://happierpig.github.io/about/</link>
+        <pubDate>Wed, 06 Oct 2021 18:36:57 +0800</pubDate>
+        
+        <guid>https://happierpig.github.io/about/</guid>
+        <description>Pigpen Park https://happierpig.github.io/about/ -&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is a test!&lt;/p&gt;
+&lt;/blockquote&gt;
+- https://happierpig.github.io/about/ - 2021 happypig</description>
         </item>
     
     

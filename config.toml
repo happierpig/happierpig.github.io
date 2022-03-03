@@ -2,7 +2,7 @@ baseURL = "https://happierpig.github.io/"
 DefaultContentLanguage = "zh" # Theme's display language, supports: en, fr, zh, zh-hant
 languageCode = "en-us"
 title = "Pigpen Park"
-copyright = "2021 happypig"
+copyright = "2022 happypig"
 theme = "diary"
 GoogleAnalytics = "G-KGF6W04P5B"
 
