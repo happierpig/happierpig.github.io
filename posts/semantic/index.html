@@ -1,344 +1,53 @@
-<!doctype html><html><head>
-<title>Semantic Notes</title><meta charset=utf-8>
-<meta name=X-UA-Compatible content="IE=edge">
-<meta name=google-site-verification content>
-<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport>
-<meta content="telephone=no" name=format-detection>
-<meta name=description content="关于编译器大作业。">
-<meta name=renderer content="webkit">
-<meta name=theme-color content="#ffffff">
-<meta property="og:title" content="Semantic Notes">
-<meta property="og:description" content="关于编译器大作业。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://happierpig.github.io/posts/semantic/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-10-28T17:57:57+08:00">
-<meta property="article:modified_time" content="2021-10-28T17:57:57+08:00"><meta property="og:site_name" content="My Blog">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Semantic Notes">
-<meta name=twitter:description content="关于编译器大作业。">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGF6W04P5B"></script>
-<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-KGF6W04P5B",{anonymize_ip:!1})}</script>
-<link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css>
-<link rel=icon href=https://happierpig.github.io/favicon.ico>
-<link rel=stylesheet href=https://happierpig.github.io/scss/journal.min.3f72a5fc8f5b5dd732a4b476aced0eece2156958d9d414316494ddb10593ddf7.css integrity="sha256-P3Kl/I9bXdcypLR2rO0O7OIVaVjZ1BQxZJTdsQWT3fc=" media=screen>
-<link rel=stylesheet href=https://happierpig.github.io/scss/dark-mode.min.f7c2efa7183435a6bd1842f91c541481c7a5137b5991629a870f24e4a516ad4b.css integrity="sha256-98Lvpxg0Naa9GEL5HFQUgcelE3tZkWKahw8k5KUWrUs=" media=screen>
-<script src=/vendor/js/loadCSS.js></script>
-<script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script>
-<script src=/js/toc.js></script>
-<link href=//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet>
-<script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
-</head><body>
-<div id=app><div id=sideContainer class=side-container>
-<a class="a-block nav-head false" href=https://happierpig.github.io/>
-<div class=nav-title>
-Pigpen Park
-</div><div class=nav-subtitle>
-Happypig :)
-</div></a>
-<div class=nav-link-list>
-<a class="a-block nav-link-item active" href=/posts>
-网志
-</a>
-<a class="a-block nav-link-item false" href=/categories>
-分类
-</a>
-<a class="a-block nav-link-item false" href=/tags>
-标签
-</a>
-<a class="a-block nav-link-item false" href=/about>
-关于
-</a>
-<div class=nav-link-item>
-<a href=https://github.com/happierpig target=_blank>
-<i title=Github class="fa fa-github fa-x"></i>
-</a>
-<a href=https://t.me/happierpig target=_blank>
-<i title=Telegram class="fa fa-telegram fa-x"></i>
-</a>
-<a href=https://space.bilibili.com/22913325 target=_blank>
-<i title=Bilibili class="fa fa-youtube-play fa-x"></i>
-</a>
-</div></div><div class=nav-footer>
-Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a>
-<br>
-移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a> <br>
-<br>
-&copy;
-2022 happypig
-<br>
-Naïve
-</div></div><div id=extraContainer class=extra-container>
-<div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
-<div class=toc-content>
-<center>- 目录 -</center>
-<ul>
-<li>
-<a href=#ast-node-%e4%bf%a1%e6%81%af%e7%bb%93%e6%9e%84 onclick="onNavClick(`#ast-node-信息结构-nav`)" id=ast-node-信息结构-nav>
-AST Node 信息结构
-</a>
-</li><li>
-<a href=#semantic-question onclick="onNavClick(`#semantic-question-nav`)" id=semantic-question-nav>
-Semantic Question
-</a>
-</li><li>
-<a href=#design onclick="onNavClick(`#design-nav`)" id=design-nav>
-Design
-</a>
-</li><ul>
-<ul>
-<li>
-<a href=#scope onclick="onNavClick(`#scope-nav`)" id=scope-nav>
-Scope
-</a>
-</li><li>
-<a href=#%e5%89%8d%e5%90%91%e5%bc%95%e7%94%a8 onclick="onNavClick(`#前向引用-nav`)" id=前向引用-nav>
-前向引用
-</a>
-</li><li>
-<a href=#%e5%86%85%e5%bb%ba%e5%87%bd%e6%95%b0 onclick="onNavClick(`#内建函数-nav`)" id=内建函数-nav>
-内建函数
-</a>
-</li><li>
-<a href=#type onclick="onNavClick(`#type-nav`)" id=type-nav>
-Type
-</a>
-</li><li>
-<a href=#feature onclick="onNavClick(`#feature-nav`)" id=feature-nav>
-Feature
-</a>
-</li></ul></ul><li>
-<a href=#debug-log onclick="onNavClick(`#debug-log-nav`)" id=debug-log-nav>
-Debug Log
-</a>
-</li></ul></div></div><div class=pagination>
-<a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }">
-<i class="material-icons pagination-action-icon">
-keyboard_arrow_up
-</i>
-</a>
-<a type=button class=pagination-action id=darkModeToggleButton>
-<span class="material-icons pagination-action-icon" id=darkModeToggleIcon>
-dark_mode
-</span>
-</a>
-</div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
-<div class=drawer-content>
-<div class=drawer-menu>
-<a class="a-block drawer-menu-item active" href=/posts>
-网志
-</a>
-<a class="a-block drawer-menu-item false" href=/categories>
-分类
-</a>
-<a class="a-block drawer-menu-item false" href=/tags>
-标签
-</a>
-<a class="a-block drawer-menu-item false" href=/about>
-关于
-</a>
-<div class=toc>
-<div class=toc-content>
-<center>- 目录 -</center>
-<ul>
-<li>
-<a href=#ast-node-%e4%bf%a1%e6%81%af%e7%bb%93%e6%9e%84 onclick="onNavClick(`#ast-node-信息结构-nav`)" id=ast-node-信息结构-nav>
-AST Node 信息结构
-</a>
-</li><li>
-<a href=#semantic-question onclick="onNavClick(`#semantic-question-nav`)" id=semantic-question-nav>
-Semantic Question
-</a>
-</li><li>
-<a href=#design onclick="onNavClick(`#design-nav`)" id=design-nav>
-Design
-</a>
-</li><ul>
-<ul>
-<li>
-<a href=#scope onclick="onNavClick(`#scope-nav`)" id=scope-nav>
-Scope
-</a>
-</li><li>
-<a href=#%e5%89%8d%e5%90%91%e5%bc%95%e7%94%a8 onclick="onNavClick(`#前向引用-nav`)" id=前向引用-nav>
-前向引用
-</a>
-</li><li>
-<a href=#%e5%86%85%e5%bb%ba%e5%87%bd%e6%95%b0 onclick="onNavClick(`#内建函数-nav`)" id=内建函数-nav>
-内建函数
-</a>
-</li><li>
-<a href=#type onclick="onNavClick(`#type-nav`)" id=type-nav>
-Type
-</a>
-</li><li>
-<a href=#feature onclick="onNavClick(`#feature-nav`)" id=feature-nav>
-Feature
-</a>
-</li></ul></ul><li>
-<a href=#debug-log onclick="onNavClick(`#debug-log-nav`)" id=debug-log-nav>
-Debug Log
-</a>
-</li></ul></div></div></div></div></div><transition name=fade>
-<div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition>
-<nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container">
-<div id=navBackground class=nav-background></div><div class="container container-narrow nav-content">
-<button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
-<i class=material-icons>
-menu
-</i>
-</button>
-<a id=navTitle class=navbar-brand href=https://happierpig.github.io/>
-Pigpen Park
-</a>
+<!doctype html><html><head><title>Semantic Notes</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content="关于编译器大作业。"><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="Semantic Notes"><meta property="og:description" content="关于编译器大作业。"><meta property="og:type" content="article"><meta property="og:url" content="https://happierpig.github.io/posts/semantic/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-10-28T17:57:57+08:00"><meta property="article:modified_time" content="2021-10-28T17:57:57+08:00"><meta property="og:site_name" content="My Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Semantic Notes"><meta name=twitter:description content="关于编译器大作业。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-KGF6W04P5B"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-KGF6W04P5B",{anonymize_ip:!1})}</script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><link rel=icon href=https://happierpig.github.io/favicon.ico><link rel=stylesheet href=https://happierpig.github.io/scss/journal.min.3f72a5fc8f5b5dd732a4b476aced0eece2156958d9d414316494ddb10593ddf7.css integrity="sha256-P3Kl/I9bXdcypLR2rO0O7OIVaVjZ1BQxZJTdsQWT3fc=" media=screen><link rel=stylesheet href=https://happierpig.github.io/scss/dark-mode.min.f7c2efa7183435a6bd1842f91c541481c7a5137b5991629a870f24e4a516ad4b.css integrity="sha256-98Lvpxg0Naa9GEL5HFQUgcelE3tZkWKahw8k5KUWrUs=" media=screen><script src=/vendor/js/loadCSS.js></script>
+<script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script><script src=/js/toc.js></script>
+<link href=//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script></head><body><div id=app><div id=sideContainer class=side-container><a class="a-block nav-head false" href=https://happierpig.github.io/><div class=nav-title>Pigpen Park</div><div class=nav-subtitle>Happypig :)</div></a><div class=nav-link-list><a class="a-block nav-link-item active" href=/posts>网志</a>
+<a class="a-block nav-link-item false" href=/categories>分类</a>
+<a class="a-block nav-link-item false" href=/tags>标签</a>
+<a class="a-block nav-link-item false" href=/about>关于</a><div class=nav-link-item><a href=https://github.com/happierpig target=_blank><i title=Github class="fa fa-github fa-x"></i></a>
+<a href=https://t.me/happierpig target=_blank><i title=Telegram class="fa fa-telegram fa-x"></i></a>
+<a href=https://space.bilibili.com/22913325 target=_blank><i title=Bilibili class="fa fa-youtube-play fa-x"></i></a></div></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2022 happypig<br>Naïve</div></div><div id=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- 目录 -</center><ul><li><a href=#ast-node-%e4%bf%a1%e6%81%af%e7%bb%93%e6%9e%84 onclick="onNavClick(`#ast-node-信息结构-nav`)" id=ast-node-信息结构-nav>AST Node 信息结构</a></li><li><a href=#semantic-question onclick="onNavClick(`#semantic-question-nav`)" id=semantic-question-nav>Semantic Question</a></li><li><a href=#design onclick="onNavClick(`#design-nav`)" id=design-nav>Design</a></li><ul><ul><li><a href=#scope onclick="onNavClick(`#scope-nav`)" id=scope-nav>Scope</a></li><li><a href=#%e5%89%8d%e5%90%91%e5%bc%95%e7%94%a8 onclick="onNavClick(`#前向引用-nav`)" id=前向引用-nav>前向引用</a></li><li><a href=#%e5%86%85%e5%bb%ba%e5%87%bd%e6%95%b0 onclick="onNavClick(`#内建函数-nav`)" id=内建函数-nav>内建函数</a></li><li><a href=#type onclick="onNavClick(`#type-nav`)" id=type-nav>Type</a></li><li><a href=#feature onclick="onNavClick(`#feature-nav`)" id=feature-nav>Feature</a></li></ul></ul><li><a href=#debug-log onclick="onNavClick(`#debug-log-nav`)" id=debug-log-nav>Debug Log</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a type=button class=pagination-action id=darkModeToggleButton><span class="material-icons pagination-action-icon" id=darkModeToggleIcon>dark_mode</span></a></div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item active" href=/posts>网志</a>
+<a class="a-block drawer-menu-item false" href=/categories>分类</a>
+<a class="a-block drawer-menu-item false" href=/tags>标签</a>
+<a class="a-block drawer-menu-item false" href=/about>关于</a><div class=toc><div class=toc-content><center>- 目录 -</center><ul><li><a href=#ast-node-%e4%bf%a1%e6%81%af%e7%bb%93%e6%9e%84 onclick="onNavClick(`#ast-node-信息结构-nav`)" id=ast-node-信息结构-nav>AST Node 信息结构</a></li><li><a href=#semantic-question onclick="onNavClick(`#semantic-question-nav`)" id=semantic-question-nav>Semantic Question</a></li><li><a href=#design onclick="onNavClick(`#design-nav`)" id=design-nav>Design</a></li><ul><ul><li><a href=#scope onclick="onNavClick(`#scope-nav`)" id=scope-nav>Scope</a></li><li><a href=#%e5%89%8d%e5%90%91%e5%bc%95%e7%94%a8 onclick="onNavClick(`#前向引用-nav`)" id=前向引用-nav>前向引用</a></li><li><a href=#%e5%86%85%e5%bb%ba%e5%87%bd%e6%95%b0 onclick="onNavClick(`#内建函数-nav`)" id=内建函数-nav>内建函数</a></li><li><a href=#type onclick="onNavClick(`#type-nav`)" id=type-nav>Type</a></li><li><a href=#feature onclick="onNavClick(`#feature-nav`)" id=feature-nav>Feature</a></li></ul></ul><li><a href=#debug-log onclick="onNavClick(`#debug-log-nav`)" id=debug-log-nav>Debug Log</a></li></ul></div></div></div></div></div><transition name=fade><div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div id=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a id=navTitle class=navbar-brand href=https://happierpig.github.io/>Pigpen Park</a>
 <button type=button class=nav-darkmode-toggle id=darkModeToggleButton2>
-<i class=material-icons id=darkModeToggleIcon2>
-dark_mode
-</i>
-</button>
-</div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-<a href=https://happierpig.github.io/>
-<div class=single-column-header-title>Pigpen Park</div><div class=single-column-header-subtitle>Happypig :)</div></a>
-</div><div id=content>
-<div id=streamContainer class=stream-container>
-<div class="post-list-container post-list-container-shadow">
-<div class=post>
-<div class=post-head-wrapper style=background-image:url(https://happierpig.github.io/images/Semantic/bg.jpeg)>
-<div class=post-title>
-Semantic Notes
-<div class=post-subtitle>
-关于编译器大作业。
-</div><div class=post-meta>
-<time itemprop=datePublished>
-2021-10-28 17:57
-</time>
+<i class=material-icons id=darkModeToggleIcon2>dark_mode</i></button></div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://happierpig.github.io/><div class=single-column-header-title>Pigpen Park</div><div class=single-column-header-subtitle>Happypig :)</div></a></div><div id=content><div id=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://happierpig.github.io/images/Semantic/bg.jpeg)><div class=post-title>Semantic Notes<div class=post-subtitle>关于编译器大作业。</div><div class=post-meta><time itemprop=datePublished>2021-10-28 17:57</time>
 <i class=material-icons>folder</i>
 <a href=/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6>计算机科学</a>
 &nbsp;
 <i class=material-icons>schedule</i>
 17 min
 2 s.
-<span class=views>
-&nbsp;
+<span class=views>&nbsp;
 <i class="fa fa-eye"></i>
-<span id=busuanzi_container_page_pv>
-<span id=busuanzi_value_page_pv><i class="fa fa-spinner fa-spin"></i></span>
-</span>
-</span>
-</div></div></div><div class=post-body-wrapper>
-<div class=post-body v-pre>
-<h1 id=ast-node-信息结构>AST Node 信息结构</h1><blockquote>
-<p>我的ASTNode结构</p></blockquote><ul>
-<li>
-<p>Type Node：存储对象的类型 （Def by Induction）<strong>只作为其他节点的成员变量出现而不单独作为结点出现</strong></p><ul>
-<li>
-<p>(ClassType)基本类型+面向对象：字符串</p></li><li>
-<p>(ArrayType)数组：存储基本类型+数组的维数信息</p></li><li>
-<p>函数类型：以上类型Node+void</p></li></ul></li><li>
-<p>Constant:：仅仅存值，类型按照ClassType存储</p></li><li>
-<p>NewExprNode：是”New“表达式精简后的结点</p><ul>
-<li>包括类型、维数和initList</li><li>非递归结点，一次性获取了alloc的所有信息都一个结点</li></ul></li><li>
-<p>Identifier：仅存储了对象的名字，具体信息应当去Scope里寻找</p></li><li>
-<p>ArrayAccess：<strong>递归</strong>产生结点，生成一棵树，维数需要递归获得</p><p>对TypeNode的作用：维数减一，之后若为零，则转化为ClassTypeNode</p></li><li>
-<p>Block：存储ArrayList&lt;StmtNode>；产生新的Scope</p></li><li>
-<p>ReturnNode：返回类型从保存的Expression Node获得</p></li><li>
-<p>VariableDeclaration：一个VarDefStmtNode->ArrayList&lt;VarDefNode></p><p>VarDefNode: Type+String+Init</p></li><li>
-<p>FunctionDeclaration：Type+String+ParameterList+codeBlock</p></li><li>
-<p>ClassDeclaration：String+Func+Var</p></li><li>
-<p>RootNode：类定义、函数定义、全局变量定义；</p><p>全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>public</span> Class RootNode <span style=color:#8b008b;font-weight:700>extends</span> ASTNode{
+<span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv><i class="fa fa-spinner fa-spin"></i></span></span></span></div></div></div><div class=post-body-wrapper><div class=post-body v-pre><h1 id=ast-node-信息结构>AST Node 信息结构</h1><blockquote><p>我的ASTNode结构</p></blockquote><ul><li><p>Type Node：存储对象的类型 （Def by Induction）<strong>只作为其他节点的成员变量出现而不单独作为结点出现</strong></p><ul><li><p>(ClassType)基本类型+面向对象：字符串</p></li><li><p>(ArrayType)数组：存储基本类型+数组的维数信息</p></li><li><p>函数类型：以上类型Node+void</p></li></ul></li><li><p>Constant:：仅仅存值，类型按照ClassType存储</p></li><li><p>NewExprNode：是”New“表达式精简后的结点</p><ul><li>包括类型、维数和initList</li><li>非递归结点，一次性获取了alloc的所有信息都一个结点</li></ul></li><li><p>Identifier：仅存储了对象的名字，具体信息应当去Scope里寻找</p></li><li><p>ArrayAccess：<strong>递归</strong>产生结点，生成一棵树，维数需要递归获得</p><p>对TypeNode的作用：维数减一，之后若为零，则转化为ClassTypeNode</p></li><li><p>Block：存储ArrayList&lt;StmtNode>；产生新的Scope</p></li><li><p>ReturnNode：返回类型从保存的Expression Node获得</p></li><li><p>VariableDeclaration：一个VarDefStmtNode->ArrayList&lt;VarDefNode></p><p>VarDefNode: Type+String+Init</p></li><li><p>FunctionDeclaration：Type+String+ParameterList+codeBlock</p></li><li><p>ClassDeclaration：String+Func+Var</p></li><li><p>RootNode：类定义、函数定义、全局变量定义；</p><p>全部由ASTNode父类引用 而不是分成三个链表，这是为了保证顺序Check Semantic实现作用域是从声明处开始到作用域结束</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>public</span> Class RootNode <span style=color:#8b008b;font-weight:700>extends</span> ASTNode{
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>public</span> ArrayList&lt;ASTNode&gt; elements;<span style=color:#228b22>//引用三种类型的声明语句
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>}
-</span></span></code></pre></div></li></ul><h1 id=semantic-question>Semantic Question</h1><blockquote>
-<p>需要检查的信息 (从README中提取)</p></blockquote><ul>
-<li>
-<p>作用域</p><ul>
-<li>
-<p>类以及函数的前向引用</p><p>全局变量和局部变量<strong>不支持</strong>前向引用，作用域为<strong>声明开始的位置</strong>直到最近的一个块的结束位置</p></li><li>
-<p>类内部的成员变量、函数作用域都是整个类</p></li><li>
-<p>内层作用域对外层作用域的<strong>覆盖</strong></p></li><li>
-<p>未定义/多重定义变量</p></li><li>
-<p><code>Return</code>必须在函数作用域； <code>break/continue</code>必须在勋在作用域内部</p></li><li>
-<p><code>{}</code>块、<code>函数入口</code>、<code>类的入口</code>引入一个新的作用域</p><blockquote>
-<p>for/if/while 即使没有{} 也会引入新的作用域</p></blockquote><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>{
+</span></span></code></pre></div></li></ul><h1 id=semantic-question>Semantic Question</h1><blockquote><p>需要检查的信息 (从README中提取)</p></blockquote><ul><li><p>作用域</p><ul><li><p>类以及函数的前向引用</p><p>全局变量和局部变量<strong>不支持</strong>前向引用，作用域为<strong>声明开始的位置</strong>直到最近的一个块的结束位置</p></li><li><p>类内部的成员变量、函数作用域都是整个类</p></li><li><p>内层作用域对外层作用域的<strong>覆盖</strong></p></li><li><p>未定义/多重定义变量</p></li><li><p><code>Return</code>必须在函数作用域； <code>break/continue</code>必须在勋在作用域内部</p></li><li><p><code>{}</code>块、<code>函数入口</code>、<code>类的入口</code>引入一个新的作用域</p><blockquote><p>for/if/while 即使没有{} 也会引入新的作用域</p></blockquote><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  <span style=color:#00688b;font-weight:700>int</span> a;
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>for</span>(;;) <span style=color:#00688b;font-weight:700>int</span> a;      <span style=color:#228b22>//Success
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>  <span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> a;;) <span style=color:#00688b;font-weight:700>int</span> a; <span style=color:#228b22>//Failed
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>  <span style=color:#8b008b;font-weight:700>while</span>(<span style=color:#8b008b;font-weight:700>true</span>) <span style=color:#00688b;font-weight:700>int</span> a;  <span style=color:#228b22>//Success
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>  <span style=color:#8b008b;font-weight:700>if</span>(flag) <span style=color:#00688b;font-weight:700>int</span> a;     <span style=color:#228b22>//Success
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>}
-</span></span></code></pre></div></li></ul></li><li>
-<p>命名空间：</p><ul>
-<li>
-<p>在同一个作用域里，变量，函数，和类都<strong>分别</strong>不能同名(即变量不能和变量同名，其余同理)，变量和函数可以<strong>重名</strong>，但是类不可以和变量、函数重名。</p><blockquote>
-<p>注意 Expression DOT IDENTIFIER 的处理 可能是类成员函数，也可能是取成员变量</p></blockquote></li><li>
-<p>内部作用域的命名空间可以遮掩外部作用域的命名空间</p></li></ul></li><li>
-<p>Type匹配问题</p><ul>
-<li>
-<p>各种expression语句的要求</p></li><li>
-<p>return与function type</p></li><li>
-<p><code>null</code>空值常量：引用类型 当作右值可以被任意Type接住；可以参与 <code>== null</code>与<code>!= null</code></p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>A a = <span style=color:#8b008b;font-weight:700>null</span>;   <span style=color:#228b22>//Success
+</span></span></code></pre></div></li></ul></li><li><p>命名空间：</p><ul><li><p>在同一个作用域里，变量，函数，和类都<strong>分别</strong>不能同名(即变量不能和变量同名，其余同理)，变量和函数可以<strong>重名</strong>，但是类不可以和变量、函数重名。</p><blockquote><p>注意 Expression DOT IDENTIFIER 的处理 可能是类成员函数，也可能是取成员变量</p></blockquote></li><li><p>内部作用域的命名空间可以遮掩外部作用域的命名空间</p></li></ul></li><li><p>Type匹配问题</p><ul><li><p>各种expression语句的要求</p></li><li><p>return与function type</p></li><li><p><code>null</code>空值常量：引用类型 当作右值可以被任意Type接住；可以参与 <code>== null</code>与<code>!= null</code></p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>A a = <span style=color:#8b008b;font-weight:700>null</span>;   <span style=color:#228b22>//Success
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span><span style=color:#00688b;font-weight:700>int</span> a = <span style=color:#8b008b;font-weight:700>null</span>; <span style=color:#228b22>//Failed: null不能赋值给基本类型
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>A <span style=color:#008b45>foo</span>(){
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>null</span>; <span style=color:#228b22>//Success
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>}
-</span></span></code></pre></div></li><li>
-<p>数组type匹配：类型和维数要相等</p></li></ul></li><li>
-<p>Expression 中对象的左右值问题</p><ul>
-<li>所有对象都是引用类型</li><li>运算结果是右值</li><li><code>++a</code>为左值，<code>a++</code>为右值</li></ul></li><li>
-<p>函数</p><ul>
-<li>
-<p>内建函数</p></li><li>
-<p>必须要有一个<code>int main()</code>在其中</p><blockquote>
-<p>返回值是int 参数为空</p></blockquote></li><li>
-<p>返回值不是void，则必须有return语句 (main除外)，必须要进行type-check</p><p>是void，return必须单独使用，不能出现<code>return expr;</code></p></li></ul></li><li>
-<p>数组</p><ul>
-<li>内建函数 .Size()</li><li>可以不初始化，声明为null</li><li>交错数组创建的<strong>维数</strong>验证</li></ul></li><li>
-<p>类</p><ul>
-<li>
-<p>基本类型有<strong>内建函数</strong>；基本类型不能被赋值为null</p></li><li>
-<p>构造函数的定义和C++相同，无返回值无参数(有参数的未定义)，<strong>可以没有构造函数</strong></p></li><li>
-<p><code>this</code>指针返回某个类的引用对象，关键字仅在<strong>类作用域内</strong>可以使用。</p><p>不在类作用域内的 this 应当视为语法错误， <strong>this 指针作为左值视为语法错误</strong>。(设置为右值即可)</p></li></ul></li><li>
-<p>bool 类型仅可以做 == 和 != 比较，出现 &lt;=, >=, &lt;, > 的比较是语法错误的。</p><p>对象可以和 null 比较(仅限 !=, == )，但是不能运算。</p></li><li>
-<p>IF/FOR/WHILE语句当中的Condition<strong>要求</strong>是不同的</p></li><li>
-<p>单目运算符除<code>++ -- </code>以外对左右值没有要求 对操作对象的类型有要求</p></li></ul><h1 id=design>Design</h1><h3 id=scope>Scope</h3><ul>
-<li>
-<p>“并查集”结构。每个结点只记录其父亲。</p><blockquote>
-<p>每个Scope都只需要在本地找，找不到向上找；</p></blockquote><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>if</span>(Variable_Table.<span style=color:#658b00>containsKey</span>(identifier)) <span style=color:#8b008b;font-weight:700>return</span> Variable_Table.<span style=color:#658b00>get</span>(identifier);
+</span></span></code></pre></div></li><li><p>数组type匹配：类型和维数要相等</p></li></ul></li><li><p>Expression 中对象的左右值问题</p><ul><li>所有对象都是引用类型</li><li>运算结果是右值</li><li><code>++a</code>为左值，<code>a++</code>为右值</li></ul></li><li><p>函数</p><ul><li><p>内建函数</p></li><li><p>必须要有一个<code>int main()</code>在其中</p><blockquote><p>返回值是int 参数为空</p></blockquote></li><li><p>返回值不是void，则必须有return语句 (main除外)，必须要进行type-check</p><p>是void，return必须单独使用，不能出现<code>return expr;</code></p></li></ul></li><li><p>数组</p><ul><li>内建函数 .Size()</li><li>可以不初始化，声明为null</li><li>交错数组创建的<strong>维数</strong>验证</li></ul></li><li><p>类</p><ul><li><p>基本类型有<strong>内建函数</strong>；基本类型不能被赋值为null</p></li><li><p>构造函数的定义和C++相同，无返回值无参数(有参数的未定义)，<strong>可以没有构造函数</strong></p></li><li><p><code>this</code>指针返回某个类的引用对象，关键字仅在<strong>类作用域内</strong>可以使用。</p><p>不在类作用域内的 this 应当视为语法错误， <strong>this 指针作为左值视为语法错误</strong>。(设置为右值即可)</p></li></ul></li><li><p>bool 类型仅可以做 == 和 != 比较，出现 &lt;=, >=, &lt;, > 的比较是语法错误的。</p><p>对象可以和 null 比较(仅限 !=, == )，但是不能运算。</p></li><li><p>IF/FOR/WHILE语句当中的Condition<strong>要求</strong>是不同的</p></li><li><p>单目运算符除<code>++ -- </code>以外对左右值没有要求 对操作对象的类型有要求</p></li></ul><h1 id=design>Design</h1><h3 id=scope>Scope</h3><ul><li><p>“并查集”结构。每个结点只记录其父亲。</p><blockquote><p>每个Scope都只需要在本地找，找不到向上找；</p></blockquote><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>if</span>(Variable_Table.<span style=color:#658b00>containsKey</span>(identifier)) <span style=color:#8b008b;font-weight:700>return</span> Variable_Table.<span style=color:#658b00>get</span>(identifier);
 </span></span><span style=display:flex><span><span style=color:#8b008b;font-weight:700>else</span> <span style=color:#8b008b;font-weight:700>if</span>(<span style=color:#8b008b;font-weight:700>this</span>.<span style=color:#658b00>parent</span> != <span style=color:#8b008b;font-weight:700>null</span>) <span style=color:#8b008b;font-weight:700>return</span> parent.<span style=color:#658b00>fetch_Variable_Type</span>(identifier);
 </span></span><span style=display:flex><span><span style=color:#8b008b;font-weight:700>else</span> <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>null</span>;
-</span></span></code></pre></div></li><li>
-<p>HashMap&lt;String,value>存什么value：</p><ul>
-<li>Variables：存typenode信息即可. Semantic Check仅需要知道identifier对应数据的类型</li><li>Functions：将整个FuncDefNode存入 以便Check函数调用的正确性</li><li>Class：将类的Scope存进去(其中包括成员变量、成员函数)</li></ul></li><li>
-<p>全局记录一个当前作用域<code>cScope</code></p><p>进入一个新作用域时 <code>cScope = new Scope(cScope);</code></p><p>离开当前作用域时 <code>cScope = cScope.parent;</code></p><p>从而模拟一个Stack的效果 ，以实现命名空间的<strong>覆盖</strong></p></li><li>
-<p>全局存储变量、类和函数；类作用域存储变量和函数；局部作用域只存储局部变量</p><blockquote>
-<p>调用变量：声明变量看当前作用域hashmap中有无value；调用变量要从当前向上回溯获取类型</p><p>调用类相关：从GlobalScope获取类的Scope并从其中读取信息</p><p>调用函数：从GlobalScope中Fetch_Funciton(String identifier)</p></blockquote></li></ul><h3 id=前向引用>前向引用</h3><ul>
-<li>
-<p>实现前向引用所需要的信息：类的成员变量<strong>标识符</strong>、类的成员<strong>函数签名</strong>、全局函数签名</p></li><li>
-<p>在Semantic Check之前先<strong>扫一遍</strong>，将全局函数和类(包括成员函数的<strong>签名</strong>也即FuncDefNode、成员变量的<strong>类型</strong>和Identifier)读入到Scope里面。</p><p>此时对数据的类型是否合法<strong>不做检查</strong>（信息不够），但进行一些基础的语法检查，包括是否重命名、有没有main函数等等</p></li><li>
-<p>这之后在Semantic check时已有的信息：所有合法的类型、函数的签名、类成员变量的标识符，即实现了前向引用。</p></li><li>
-<p>非前向引用：按照正常<strong>线性顺序处理</strong>即非前向引用，不用特殊处理，但要保证根结点当存储的子节点<strong>是按照线性顺序的</strong></p></li></ul><h3 id=内建函数>内建函数</h3><p>为了提高代码复用率，我是在前向引用信息收集前，向GlobalScope当中塞对应的信息。从而达到后续处理相同。</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>//built-in Function print 构造一个FuncDefNode 塞入全局作用域
+</span></span></code></pre></div></li><li><p>HashMap&lt;String,value>存什么value：</p><ul><li>Variables：存typenode信息即可. Semantic Check仅需要知道identifier对应数据的类型</li><li>Functions：将整个FuncDefNode存入 以便Check函数调用的正确性</li><li>Class：将类的Scope存进去(其中包括成员变量、成员函数)</li></ul></li><li><p>全局记录一个当前作用域<code>cScope</code></p><p>进入一个新作用域时 <code>cScope = new Scope(cScope);</code></p><p>离开当前作用域时 <code>cScope = cScope.parent;</code></p><p>从而模拟一个Stack的效果 ，以实现命名空间的<strong>覆盖</strong></p></li><li><p>全局存储变量、类和函数；类作用域存储变量和函数；局部作用域只存储局部变量</p><blockquote><p>调用变量：声明变量看当前作用域hashmap中有无value；调用变量要从当前向上回溯获取类型</p><p>调用类相关：从GlobalScope获取类的Scope并从其中读取信息</p><p>调用函数：从GlobalScope中Fetch_Funciton(String identifier)</p></blockquote></li></ul><h3 id=前向引用>前向引用</h3><ul><li><p>实现前向引用所需要的信息：类的成员变量<strong>标识符</strong>、类的成员<strong>函数签名</strong>、全局函数签名</p></li><li><p>在Semantic Check之前先<strong>扫一遍</strong>，将全局函数和类(包括成员函数的<strong>签名</strong>也即FuncDefNode、成员变量的<strong>类型</strong>和Identifier)读入到Scope里面。</p><p>此时对数据的类型是否合法<strong>不做检查</strong>（信息不够），但进行一些基础的语法检查，包括是否重命名、有没有main函数等等</p></li><li><p>这之后在Semantic check时已有的信息：所有合法的类型、函数的签名、类成员变量的标识符，即实现了前向引用。</p></li><li><p>非前向引用：按照正常<strong>线性顺序处理</strong>即非前向引用，不用特殊处理，但要保证根结点当存储的子节点<strong>是按照线性顺序的</strong></p></li></ul><h3 id=内建函数>内建函数</h3><p>为了提高代码复用率，我是在前向引用信息收集前，向GlobalScope当中塞对应的信息。从而达到后续处理相同。</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>//built-in Function print 构造一个FuncDefNode 塞入全局作用域
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>ArrayList&lt;VarDefNode&gt; tmp_List = <span style=color:#8b008b;font-weight:700>new</span> ArrayList&lt;&gt;();
 </span></span><span style=display:flex><span>tmp_List.<span style=color:#658b00>add</span>(<span style=color:#8b008b;font-weight:700>new</span> VarDefNode(<span style=color:#8b008b;font-weight:700>new</span> ClassTypeNode(<span style=color:#cd5555>&#34;string&#34;</span>,<span style=color:#8b008b;font-weight:700>new</span> Position(-1,-1)),<span style=color:#cd5555>&#34;str&#34;</span>,<span style=color:#8b008b;font-weight:700>null</span>,<span style=color:#8b008b;font-weight:700>new</span> Position(-1,-1)));
 </span></span><span style=display:flex><span>FuncDefNode tmp = <span style=color:#8b008b;font-weight:700>new</span> FuncDefNode(<span style=color:#8b008b;font-weight:700>new</span> VoidTypeNode(<span style=color:#8b008b;font-weight:700>new</span> Position(-1,-1)),<span style=color:#cd5555>&#34;print&#34;</span>,tmp_List,<span style=color:#8b008b;font-weight:700>null</span>,_pos);
 </span></span><span style=display:flex><span>initScope.<span style=color:#658b00>define_Function</span>(<span style=color:#cd5555>&#34;print&#34;</span>,tmp);
-</span></span></code></pre></div><h3 id=type>Type</h3><ul>
-<li>
-<p>依赖于<code>TypeNode</code>来对数据的类型进行区分</p><ul>
-<li>
-<p>int/bool/string以及面向对象都是<code>ClassTypeNode</code> 仅保存字符串</p><p>对于内置类型的处理，预处理阶段塞入globalScope的class当中</p></li><li>
-<p><code>arrayType:</code> &ldquo;baseTypeNode&rdquo; + 维数</p></li><li>
-<p>函数返回值: baseType+ArrayType+VOID</p></li></ul></li><li>
-<p>对于表达式的类型检查</p><ul>
-<li>
-<p>TypeNode：每个表达式结点带一个TypeNode，表示运算后的类型，以便其父节点调用、检查类型匹配</p><p>类型的初始化：回溯时候初始化，即当前表达式结点 运算之后的类型由其<strong>子节点</strong>的类型以及当前结点的<strong>操作</strong>共同决定(要处理当前结点，必须先处理子节点，回溯之后子节点的类型已经确定）</p><p>叶子结点的类型：常量则直接确定，变量则从Scope中获取；</p></li><li>
-<p><code>isAssignable</code>: 每个表达式结点都持有，以便父节点检查语法。</p><p>根据当前操作来确定当前结点运算之后是左值还是右值。</p><blockquote>
-<p>如加减乘除则将自身设置为右值，赋值操作将自身设置为左值</p></blockquote></li></ul></li><li>
-<p>对于数组类型的处理</p><ul>
-<li>
-<p><code>[]</code>每一个ArrayAccess结点都将自身的类型设置为<code>维数=原数组维数-1</code></p><p>如果维数为0，则把数组类型转换为一般数据类型</p></li></ul></li></ul><h3 id=feature>Feature</h3><ul>
-<li>
-<p>Semantic Check本质上是在一棵树上进行遍历，提取想要的信息并根据规则判断合法性。</p><p>其信息的传输分为<strong>两种</strong>，一种是深度优先遍历时从上层结点带给下层结点的，另外一种是回溯时从下层结点带回上层结点的。两种信息传输都可以充分使用。</p></li><li>
-<p>对于类型和左右值的处理就是采取<strong>回溯时</strong>得到的信息的方法</p></li><li>
-<p>对于<code>对象取用</code>结点可以采取从上到下传入信息</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>// in ASTNode
+</span></span></code></pre></div><h3 id=type>Type</h3><ul><li><p>依赖于<code>TypeNode</code>来对数据的类型进行区分</p><ul><li><p>int/bool/string以及面向对象都是<code>ClassTypeNode</code> 仅保存字符串</p><p>对于内置类型的处理，预处理阶段塞入globalScope的class当中</p></li><li><p><code>arrayType:</code> &ldquo;baseTypeNode&rdquo; + 维数</p></li><li><p>函数返回值: baseType+ArrayType+VOID</p></li></ul></li><li><p>对于表达式的类型检查</p><ul><li><p>TypeNode：每个表达式结点带一个TypeNode，表示运算后的类型，以便其父节点调用、检查类型匹配</p><p>类型的初始化：回溯时候初始化，即当前表达式结点 运算之后的类型由其<strong>子节点</strong>的类型以及当前结点的<strong>操作</strong>共同决定(要处理当前结点，必须先处理子节点，回溯之后子节点的类型已经确定）</p><p>叶子结点的类型：常量则直接确定，变量则从Scope中获取；</p></li><li><p><code>isAssignable</code>: 每个表达式结点都持有，以便父节点检查语法。</p><p>根据当前操作来确定当前结点运算之后是左值还是右值。</p><blockquote><p>如加减乘除则将自身设置为右值，赋值操作将自身设置为左值</p></blockquote></li></ul></li><li><p>对于数组类型的处理</p><ul><li><p><code>[]</code>每一个ArrayAccess结点都将自身的类型设置为<code>维数=原数组维数-1</code></p><p>如果维数为0，则把数组类型转换为一般数据类型</p></li></ul></li></ul><h3 id=feature>Feature</h3><ul><li><p>Semantic Check本质上是在一棵树上进行遍历，提取想要的信息并根据规则判断合法性。</p><p>其信息的传输分为<strong>两种</strong>，一种是深度优先遍历时从上层结点带给下层结点的，另外一种是回溯时从下层结点带回上层结点的。两种信息传输都可以充分使用。</p></li><li><p>对于类型和左右值的处理就是采取<strong>回溯时</strong>得到的信息的方法</p></li><li><p>对于<code>对象取用</code>结点可以采取从上到下传入信息</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>// in ASTNode
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span><span style=color:#8b008b;font-weight:700>public</span> <span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>ObjectMemberExprNode</span> <span style=color:#8b008b;font-weight:700>extends</span> ExprNode{
 </span></span><span style=display:flex><span>    <span style=color:#8b008b;font-weight:700>public</span> ExprNode base;
 </span></span><span style=display:flex><span>    <span style=color:#8b008b;font-weight:700>public</span> String member;
@@ -356,8 +65,7 @@ Semantic Notes
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>    }
 </span></span><span style=display:flex><span>  	...
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>
-<p>对于<code>Return 语句</code>的处理</p><p>因为Lambda表达式可以嵌套，且为了代码复用，采取了全局栈的方式</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>public</span> Stack&lt;ASTNode&gt; FuncStation;
+</span></span></code></pre></div></li><li><p>对于<code>Return 语句</code>的处理</p><p>因为Lambda表达式可以嵌套，且为了代码复用，采取了全局栈的方式</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>public</span> Stack&lt;ASTNode&gt; FuncStation;
 </span></span><span style=display:flex><span><span style=color:#228b22>//	处理函数或者lambda结点时将对应的包括所有信息的ASTNode压入栈中
 </span></span></span><span style=display:flex><span><span style=color:#228b22>//  处理return语句时很方便
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span><span style=color:#8b008b;font-weight:700>public</span> <span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(ReturnStmtNode node) {
@@ -369,10 +77,7 @@ Semantic Notes
 </span></span><span style=display:flex><span>      	....
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li></ul><h1 id=debug-log>Debug Log</h1><blockquote>
-<p>细枝末节 : )</p></blockquote><ul>
-<li>
-<p><code>For</code>语句产生了两个作用域</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = 1;;){<span style=color:#00688b;font-weight:700>int</span> i;} <span style=color:#228b22>//判断不出重定义
+</span></span></code></pre></div></li></ul><h1 id=debug-log>Debug Log</h1><blockquote><p>细枝末节 : )</p></blockquote><ul><li><p><code>For</code>语句产生了两个作用域</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = 1;;){<span style=color:#00688b;font-weight:700>int</span> i;} <span style=color:#228b22>//判断不出重定义
 </span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>public</span> <span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>visit</span>(BlockStmtNode node){
 </span></span><span style=display:flex><span>  cScope = <span style=color:#8b008b;font-weight:700>new</span> Scope(cScope);
 </span></span><span style=display:flex><span>  node.<span style=color:#658b00>stmtList</span>.<span style=color:#658b00>forEach</span>(tmp-&gt;tmp.<span style=color:#658b00>accept</span>(<span style=color:#8b008b;font-weight:700>this</span>));
@@ -386,12 +91,7 @@ Semantic Notes
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>else</span> node.<span style=color:#658b00>loopBody</span>.<span style=color:#658b00>accept</span>(<span style=color:#8b008b;font-weight:700>this</span>);
 </span></span><span style=display:flex><span>  ...
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>
-<p>ArrayList使用前未判<code>null</code>，直接forEach遍历，导致空指针调用</p></li><li>
-<p>单目运算符对左右值的要求考虑出错:</p><p><code>+5</code> <code>-5</code> <code>!false</code> 均允许</p></li><li>
-<p>赋值运算符右边可以为<code>null</code>，基本类型不能赋值为<code>null</code></p></li><li>
-<p>class 内部调用函数时，忽略了对类内部Scope中的函数进行检查，只去判断了全局作用域，导致找不到函数</p></li><li>
-<p>对<code>{{{;};{}}};</code>的处理</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>// g4设计 保证能识别; 不出现syntax问题
+</span></span></code></pre></div></li><li><p>ArrayList使用前未判<code>null</code>，直接forEach遍历，导致空指针调用</p></li><li><p>单目运算符对左右值的要求考虑出错:</p><p><code>+5</code> <code>-5</code> <code>!false</code> 均允许</p></li><li><p>赋值运算符右边可以为<code>null</code>，基本类型不能赋值为<code>null</code></p></li><li><p>class 内部调用函数时，忽略了对类内部Scope中的函数进行检查，只去判断了全局作用域，导致找不到函数</p></li><li><p>对<code>{{{;};{}}};</code>的处理</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#228b22>// g4设计 保证能识别; 不出现syntax问题
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>statement
 </span></span><span style=display:flex><span>  :	block    <span style=color:#a61717;background-color:#e3d2d2>#</span>codeBlock
 </span></span><span style=display:flex><span>  | .......
@@ -410,36 +110,14 @@ Semantic Notes
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>    <span style=color:#8b008b;font-weight:700>return</span> <span style=color:#8b008b;font-weight:700>new</span> BlockStmtNode(_List,<span style=color:#8b008b;font-weight:700>new</span> Position(ctx));
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>
-<p>函数参数可以传<code>null</code> ; return可以<code>null</code> ; <code>== !=</code>可以与<code>null</code></p></li><li>
-<p>类构造函数不能有返回类型</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>A</span>{
+</span></span></code></pre></div></li><li><p>函数参数可以传<code>null</code> ; return可以<code>null</code> ; <code>== !=</code>可以与<code>null</code></p></li><li><p>类构造函数不能有返回类型</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#8b008b;font-weight:700>class</span> <span style=color:#008b45;font-weight:700>A</span>{
 </span></span><span style=display:flex><span>  	<span style=color:#00688b;font-weight:700>int</span> <span style=color:#008b45>A</span>(){<span style=color:#8b008b;font-weight:700>return</span> 1;}
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></div></li></ul><hr width=100% id=EOF>
-<p style=color:#777>最后修改于 2021-10-28</p><i class="fa fa-tags"> </i>
-<a href=/tags/%E7%BC%96%E8%AF%91%E5%99%A8 style=color:#777>编译器</a>
+</span></span></code></pre></div></li></ul><hr width=100% id=EOF><p style=color:#777>最后修改于 2021-10-28</p><i class="fa fa-tags"></i><a href=/tags/%E7%BC%96%E8%AF%91%E5%99%A8 style=color:#777>编译器</a>
 &nbsp;
 <a href=/tags/%E7%AC%94%E8%AE%B0 style=color:#777>笔记</a>
 &nbsp;
 <a href=/tags/%E8%AF%AD%E6%B3%95%E6%A0%91 style=color:#777>语法树</a>
-&nbsp;
-</div><div class=post-related>
-<h3>相关内容</h3><ul>
-<li><a href=/posts/ast/>From CST to AST</a></li><li><a href=/posts/learnanltr/>学用Antlr4</a></li></ul></div></div><nav class=post-pagination>
-<a class=newer-posts href=https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/>
-下回<br>Basic Graph Algorithms
-</a>
-<a class=older-posts href=https://happierpig.github.io/posts/ast/>
-上回<br>From CST to AST
-</a>
-</nav><div class=post-comment-wrapper>
-<h4 align=center><hr>What do you think?<br></h4><script src=https://utteranc.es/client.js repo=happierpig/happierpig.github.io issue-term=title label=Comment theme=github-light crossorigin=anonymous async></script>
-</div></div></div></div></div><div id=single-column-footer>
-Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a>
-<br>
-移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a> <br>
-<br>
-&copy;
-2022 happypig
-</div></div><script src=/js/journal.js></script>
-</body></html>
+&nbsp;</div><div class=post-related><h3>相关内容</h3><ul><li><a href=/posts/ast/>From CST to AST</a></li><li><a href=/posts/learnanltr/>学用Antlr4</a></li></ul></div></div><nav class=post-pagination><a class=newer-posts href=https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/>下回<br>Basic Graph Algorithms</a>
+<a class=older-posts href=https://happierpig.github.io/posts/ast/>上回<br>From CST to AST</a></nav><div class=post-comment-wrapper><h4 align=center><hr>What do you think?<br></h4><script src=https://utteranc.es/client.js repo=happierpig/happierpig.github.io issue-term=title label=Comment theme=github-light crossorigin=anonymous async></script></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2022 happypig</div></div><script src=/js/journal.js></script></body></html>

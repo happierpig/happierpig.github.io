@@ -1,748 +1,30 @@
-<!doctype html><html><head>
-<title>Basic Graph Algorithms</title><meta charset=utf-8>
-<meta name=X-UA-Compatible content="IE=edge">
-<meta name=google-site-verification content>
-<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport>
-<meta content="telephone=no" name=format-detection>
-<meta name=description content="图论相关算法，仅作记录。">
-<meta name=renderer content="webkit">
-<meta name=theme-color content="#ffffff">
-<meta property="og:title" content="Basic Graph Algorithms">
-<meta property="og:description" content="图论相关算法，仅作记录。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2022-03-03T21:00:00+08:00">
-<meta property="article:modified_time" content="2022-03-03T21:00:00+08:00"><meta property="og:site_name" content="My Blog">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Basic Graph Algorithms">
-<meta name=twitter:description content="图论相关算法，仅作记录。">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGF6W04P5B"></script>
-<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-KGF6W04P5B",{anonymize_ip:!1})}</script>
-<link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css>
-<link rel=icon href=https://happierpig.github.io/favicon.ico>
-<link rel=stylesheet href=https://happierpig.github.io/scss/journal.min.3f72a5fc8f5b5dd732a4b476aced0eece2156958d9d414316494ddb10593ddf7.css integrity="sha256-P3Kl/I9bXdcypLR2rO0O7OIVaVjZ1BQxZJTdsQWT3fc=" media=screen>
-<link rel=stylesheet href=https://happierpig.github.io/scss/dark-mode.min.f7c2efa7183435a6bd1842f91c541481c7a5137b5991629a870f24e4a516ad4b.css integrity="sha256-98Lvpxg0Naa9GEL5HFQUgcelE3tZkWKahw8k5KUWrUs=" media=screen>
-<script src=/vendor/js/loadCSS.js></script>
-<script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script>
-<script src=/js/toc.js></script>
-<link href=//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet>
-<script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
-</head><body>
-<div id=app><div id=sideContainer class=side-container>
-<a class="a-block nav-head false" href=https://happierpig.github.io/>
-<div class=nav-title>
-Pigpen Park
-</div><div class=nav-subtitle>
-Happypig :)
-</div></a>
-<div class=nav-link-list>
-<a class="a-block nav-link-item active" href=/posts>
-网志
-</a>
-<a class="a-block nav-link-item false" href=/categories>
-分类
-</a>
-<a class="a-block nav-link-item false" href=/tags>
-标签
-</a>
-<a class="a-block nav-link-item false" href=/about>
-关于
-</a>
-<div class=nav-link-item>
-<a href=https://github.com/happierpig target=_blank>
-<i title=Github class="fa fa-github fa-x"></i>
-</a>
-<a href=https://t.me/happierpig target=_blank>
-<i title=Telegram class="fa fa-telegram fa-x"></i>
-</a>
-<a href=https://space.bilibili.com/22913325 target=_blank>
-<i title=Bilibili class="fa fa-youtube-play fa-x"></i>
-</a>
-</div></div><div class=nav-footer>
-Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a>
-<br>
-移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a> <br>
-<br>
-&copy;
-2022 happypig
-<br>
-Naïve
-</div></div><div id=extraContainer class=extra-container>
-<div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
-<div class=toc-content>
-<center>- 目录 -</center>
-<ul>
-<ul>
-<li>
-<a href=#%e5%9b%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86 onclick="onNavClick(`#图的基本知识-nav`)" id=图的基本知识-nav>
-图的基本知识
-</a>
-</li><li>
-<a href=#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8 onclick="onNavClick(`#图的存储-nav`)" id=图的存储-nav>
-图的存储
-</a>
-</li><ul>
-<li>
-<a href=#%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接矩阵-nav`)" id=邻接矩阵-nav>
-~邻接矩阵
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#实现-nav`)" id=实现-nav>
-实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#复杂度-nav`)" id=复杂度-nav>
-复杂度：
-</a>
-</li><li>
-<a href=#%e9%80%82%e7%94%a8 onclick="onNavClick(`#适用-nav`)" id=适用-nav>
-适用：
-</a>
-</li></ul><li>
-<a href=#%e9%82%bb%e6%8e%a5%e8%a1%a8%e9%ab%98%e7%a9%ba%e9%97%b4%e5%88%a9%e7%94%a8%e7%8e%87%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接表高空间利用率邻接矩阵-nav`)" id=邻接表高空间利用率邻接矩阵-nav>
-~邻接表:高空间利用率邻接矩阵
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#实现-1-nav`)" id=实现-1-nav>
-实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#复杂度-1-nav`)" id=复杂度-1-nav>
-复杂度：
-</a>
-</li><li>
-<a href=#%e9%80%82%e7%94%a8-1 onclick="onNavClick(`#适用-1-nav`)" id=适用-1-nav>
-适用：
-</a>
-</li></ul><li>
-<a href=#%e9%93%be%e5%bc%8f%e5%89%8d%e5%90%91%e6%98%9f onclick="onNavClick(`#链式前向星-nav`)" id=链式前向星-nav>
-~链式前向星
-</a>
-</li></ul><li>
-<a href=#%e5%9b%be%e7%9a%84%e9%81%8d%e5%8e%86 onclick="onNavClick(`#图的遍历-nav`)" id=图的遍历-nav>
-图的遍历
-</a>
-</li><ul>
-<li>
-<a href=#%e4%b8%8e%e6%a0%91%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#与树的区别-nav`)" id=与树的区别-nav>
-~与树的区别：
-</a>
-</li><li>
-<a href=#dfs onclick="onNavClick(`#dfs-nav`)" id=dfs-nav>
-～DFS：
-</a>
-</li><li>
-<a href=#bfs onclick="onNavClick(`#bfs-nav`)" id=bfs-nav>
-～BFS：
-</a>
-</li><li>
-<a href=#%e5%8f%8c%e7%ab%af%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#双端队列bfs-nav`)" id=双端队列bfs-nav>
-～双端队列BFS：
-</a>
-</li><li>
-<a href=#%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#优先队列bfs-nav`)" id=优先队列bfs-nav>
-~优先队列BFS：
-</a>
-</li><li>
-<a href=#dfs%e4%b8%8ebfs%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#dfs与bfs的区别-nav`)" id=dfs与bfs的区别-nav>
-～dfs与bfs的区别：
-</a>
-</li></ul><li>
-<a href=#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91 onclick="onNavClick(`#最小生成树-nav`)" id=最小生成树-nav>
-最小生成树
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89 onclick="onNavClick(`#定义-nav`)" id=定义-nav>
-~定义：
-</a>
-</li><li>
-<a href=#%e6%80%a7%e8%b4%a8 onclick="onNavClick(`#性质-nav`)" id=性质-nav>
-~性质：
-</a>
-</li><li>
-<a href=#kruskal-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kruskal-算法-nav`)" id=kruskal-算法-nav>
-~Kruskal 算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86 onclick="onNavClick(`#原理-nav`)" id=原理-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#代码实现-nav`)" id=代码实现-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%88%a4%e6%96%admst%e6%98%af%e5%90%a6%e5%94%af%e4%b8%80 onclick="onNavClick(`#判断mst是否唯一-nav`)" id=判断mst是否唯一-nav>
-判断MST是否唯一：
-</a>
-</li></ul><li>
-<a href=#prim%e7%ae%97%e6%b3%95 onclick="onNavClick(`#prim算法-nav`)" id=prim算法-nav>
-~Prim算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-1 onclick="onNavClick(`#原理-1-nav`)" id=原理-1-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#代码实现-1-nav`)" id=代码实现-1-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#boruvka%e7%ae%97%e6%b3%95 onclick="onNavClick(`#boruvka算法-nav`)" id=boruvka算法-nav>
-~Boruvka算法
-</a>
-</li></ul><li>
-<a href=#%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f onclick="onNavClick(`#拓扑排序-nav`)" id=拓扑排序-nav>
-拓扑排序
-</a>
-</li><ul>
-<li>
-<a href=#dfs%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dfs算法-nav`)" id=dfs算法-nav>
-~DFS算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-2 onclick="onNavClick(`#原理-2-nav`)" id=原理-2-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#时间复杂度-nav`)" id=时间复杂度-nav>
-时间复杂度：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-2 onclick="onNavClick(`#代码实现-2-nav`)" id=代码实现-2-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#kahn%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kahn算法-nav`)" id=kahn算法-nav>
-~kahn算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-3 onclick="onNavClick(`#原理-3-nav`)" id=原理-3-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#时间复杂度-1-nav`)" id=时间复杂度-1-nav>
-时间复杂度：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-3 onclick="onNavClick(`#代码实现-3-nav`)" id=代码实现-3-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%ad%97%e5%85%b8%e5%ba%8ftupo%e6%8e%92%e5%ba%8f onclick="onNavClick(`#字典序tupo排序-nav`)" id=字典序tupo排序-nav>
-字典序tupo排序：
-</a>
-</li><li>
-<a href=#%e5%85%b3%e9%94%ae%e8%b7%af%e5%be%84 onclick="onNavClick(`#关键路径-nav`)" id=关键路径-nav>
-关键路径：
-</a>
-</li><li>
-<a href=#%e5%ba%94%e7%94%a8 onclick="onNavClick(`#应用-nav`)" id=应用-nav>
-应用：
-</a>
-</li></ul></ul><li>
-<a href=#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e9%97%ae%e9%a2%98 onclick="onNavClick(`#最短路径问题-nav`)" id=最短路径问题-nav>
-最短路径问题
-</a>
-</li><ul>
-<li>
-<a href=#%e8%be%93%e5%87%ba%e6%9c%80%e7%9f%ad%e8%b7%af onclick="onNavClick(`#输出最短路-nav`)" id=输出最短路-nav>
-~输出最短路
-</a>
-</li><li>
-<a href=#floyd%e7%ae%97%e6%b3%95 onclick="onNavClick(`#floyd算法-nav`)" id=floyd算法-nav>
-～Floyd算法
-</a>
-</li><li>
-<a href=#spfa%e7%ae%97%e6%b3%95 onclick="onNavClick(`#spfa算法-nav`)" id=spfa算法-nav>
-~SPFA算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-4 onclick="onNavClick(`#原理-4-nav`)" id=原理-4-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-4 onclick="onNavClick(`#代码实现-4-nav`)" id=代码实现-4-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-2 onclick="onNavClick(`#复杂度-2-nav`)" id=复杂度-2-nav>
-复杂度：
-</a>
-</li></ul><li>
-<a href=#dijkstra%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dijkstra算法-nav`)" id=dijkstra算法-nav>
-~dijkstra算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-5 onclick="onNavClick(`#原理-5-nav`)" id=原理-5-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-5 onclick="onNavClick(`#代码实现-5-nav`)" id=代码实现-5-nav>
-代码实现:
-</a>
-</li></ul></ul><li>
-<a href=#%e5%bc%ba%e8%bf%9e%e9%80%9a%e5%88%86%e9%87%8f onclick="onNavClick(`#强连通分量-nav`)" id=强连通分量-nav>
-强连通分量
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89-1 onclick="onNavClick(`#定义-1-nav`)" id=定义-1-nav>
-～定义：
-</a>
-</li><li>
-<a href=#%e5%ba%94%e7%94%a8-1 onclick="onNavClick(`#应用-1-nav`)" id=应用-1-nav>
-～应用：
-</a>
-</li><li>
-<a href=#tarjan%e7%ae%97%e6%b3%95 onclick="onNavClick(`#tarjan算法-nav`)" id=tarjan算法-nav>
-～tarjan算法：
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-6 onclick="onNavClick(`#原理-6-nav`)" id=原理-6-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-6 onclick="onNavClick(`#代码实现-6-nav`)" id=代码实现-6-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#dfs%e7%ae%97%e6%b3%95-1 onclick="onNavClick(`#dfs算法-1-nav`)" id=dfs算法-1-nav>
-~DFS算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-7 onclick="onNavClick(`#原理-7-nav`)" id=原理-7-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bc%aa%e4%bb%a3%e7%a0%81 onclick="onNavClick(`#伪代码-nav`)" id=伪代码-nav>
-伪代码：
-</a>
-</li></ul></ul><li>
-<a href=#%e6%ac%a7%e6%8b%89%e5%9b%be onclick="onNavClick(`#欧拉图-nav`)" id=欧拉图-nav>
-欧拉图
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89-2 onclick="onNavClick(`#定义-2-nav`)" id=定义-2-nav>
-~定义：
-</a>
-</li><li>
-<a href=#%e6%80%a7%e8%b4%a8-1 onclick="onNavClick(`#性质-1-nav`)" id=性质-1-nav>
-~性质：
-</a>
-</li><li>
-<a href=#%e5%88%a4%e5%88%ab onclick="onNavClick(`#判别-nav`)" id=判别-nav>
-~判别：
-</a>
-</li><li>
-<a href=#%e6%b1%82%e6%ac%a7%e6%8b%89%e5%9b%9e%e8%b7%af onclick="onNavClick(`#求欧拉回路-nav`)" id=求欧拉回路-nav>
-～求欧拉回路：
-</a>
-</li><ul>
-<li>
-<a href=#fleury%e7%ae%97%e6%b3%95--todo onclick="onNavClick(`#fleury算法--todo-nav`)" id=fleury算法--todo-nav>
-Fleury算法 // todo
-</a>
-</li><li>
-<a href=#hierholzer%e7%ae%97%e6%b3%95 onclick="onNavClick(`#hierholzer算法-nav`)" id=hierholzer算法-nav>
-Hierholzer算法
-</a>
-</li></ul></div></div><div class=pagination>
-<a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }">
-<i class="material-icons pagination-action-icon">
-keyboard_arrow_up
-</i>
-</a>
-<a type=button class=pagination-action id=darkModeToggleButton>
-<span class="material-icons pagination-action-icon" id=darkModeToggleIcon>
-dark_mode
-</span>
-</a>
-</div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
-<div class=drawer-content>
-<div class=drawer-menu>
-<a class="a-block drawer-menu-item active" href=/posts>
-网志
-</a>
-<a class="a-block drawer-menu-item false" href=/categories>
-分类
-</a>
-<a class="a-block drawer-menu-item false" href=/tags>
-标签
-</a>
-<a class="a-block drawer-menu-item false" href=/about>
-关于
-</a>
-<div class=toc>
-<div class=toc-content>
-<center>- 目录 -</center>
-<ul>
-<ul>
-<li>
-<a href=#%e5%9b%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86 onclick="onNavClick(`#图的基本知识-nav`)" id=图的基本知识-nav>
-图的基本知识
-</a>
-</li><li>
-<a href=#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8 onclick="onNavClick(`#图的存储-nav`)" id=图的存储-nav>
-图的存储
-</a>
-</li><ul>
-<li>
-<a href=#%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接矩阵-nav`)" id=邻接矩阵-nav>
-~邻接矩阵
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#实现-nav`)" id=实现-nav>
-实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#复杂度-nav`)" id=复杂度-nav>
-复杂度：
-</a>
-</li><li>
-<a href=#%e9%80%82%e7%94%a8 onclick="onNavClick(`#适用-nav`)" id=适用-nav>
-适用：
-</a>
-</li></ul><li>
-<a href=#%e9%82%bb%e6%8e%a5%e8%a1%a8%e9%ab%98%e7%a9%ba%e9%97%b4%e5%88%a9%e7%94%a8%e7%8e%87%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接表高空间利用率邻接矩阵-nav`)" id=邻接表高空间利用率邻接矩阵-nav>
-~邻接表:高空间利用率邻接矩阵
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#实现-1-nav`)" id=实现-1-nav>
-实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#复杂度-1-nav`)" id=复杂度-1-nav>
-复杂度：
-</a>
-</li><li>
-<a href=#%e9%80%82%e7%94%a8-1 onclick="onNavClick(`#适用-1-nav`)" id=适用-1-nav>
-适用：
-</a>
-</li></ul><li>
-<a href=#%e9%93%be%e5%bc%8f%e5%89%8d%e5%90%91%e6%98%9f onclick="onNavClick(`#链式前向星-nav`)" id=链式前向星-nav>
-~链式前向星
-</a>
-</li></ul><li>
-<a href=#%e5%9b%be%e7%9a%84%e9%81%8d%e5%8e%86 onclick="onNavClick(`#图的遍历-nav`)" id=图的遍历-nav>
-图的遍历
-</a>
-</li><ul>
-<li>
-<a href=#%e4%b8%8e%e6%a0%91%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#与树的区别-nav`)" id=与树的区别-nav>
-~与树的区别：
-</a>
-</li><li>
-<a href=#dfs onclick="onNavClick(`#dfs-nav`)" id=dfs-nav>
-～DFS：
-</a>
-</li><li>
-<a href=#bfs onclick="onNavClick(`#bfs-nav`)" id=bfs-nav>
-～BFS：
-</a>
-</li><li>
-<a href=#%e5%8f%8c%e7%ab%af%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#双端队列bfs-nav`)" id=双端队列bfs-nav>
-～双端队列BFS：
-</a>
-</li><li>
-<a href=#%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#优先队列bfs-nav`)" id=优先队列bfs-nav>
-~优先队列BFS：
-</a>
-</li><li>
-<a href=#dfs%e4%b8%8ebfs%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#dfs与bfs的区别-nav`)" id=dfs与bfs的区别-nav>
-～dfs与bfs的区别：
-</a>
-</li></ul><li>
-<a href=#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91 onclick="onNavClick(`#最小生成树-nav`)" id=最小生成树-nav>
-最小生成树
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89 onclick="onNavClick(`#定义-nav`)" id=定义-nav>
-~定义：
-</a>
-</li><li>
-<a href=#%e6%80%a7%e8%b4%a8 onclick="onNavClick(`#性质-nav`)" id=性质-nav>
-~性质：
-</a>
-</li><li>
-<a href=#kruskal-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kruskal-算法-nav`)" id=kruskal-算法-nav>
-~Kruskal 算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86 onclick="onNavClick(`#原理-nav`)" id=原理-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#代码实现-nav`)" id=代码实现-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%88%a4%e6%96%admst%e6%98%af%e5%90%a6%e5%94%af%e4%b8%80 onclick="onNavClick(`#判断mst是否唯一-nav`)" id=判断mst是否唯一-nav>
-判断MST是否唯一：
-</a>
-</li></ul><li>
-<a href=#prim%e7%ae%97%e6%b3%95 onclick="onNavClick(`#prim算法-nav`)" id=prim算法-nav>
-~Prim算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-1 onclick="onNavClick(`#原理-1-nav`)" id=原理-1-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#代码实现-1-nav`)" id=代码实现-1-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#boruvka%e7%ae%97%e6%b3%95 onclick="onNavClick(`#boruvka算法-nav`)" id=boruvka算法-nav>
-~Boruvka算法
-</a>
-</li></ul><li>
-<a href=#%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f onclick="onNavClick(`#拓扑排序-nav`)" id=拓扑排序-nav>
-拓扑排序
-</a>
-</li><ul>
-<li>
-<a href=#dfs%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dfs算法-nav`)" id=dfs算法-nav>
-~DFS算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-2 onclick="onNavClick(`#原理-2-nav`)" id=原理-2-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#时间复杂度-nav`)" id=时间复杂度-nav>
-时间复杂度：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-2 onclick="onNavClick(`#代码实现-2-nav`)" id=代码实现-2-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#kahn%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kahn算法-nav`)" id=kahn算法-nav>
-~kahn算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-3 onclick="onNavClick(`#原理-3-nav`)" id=原理-3-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#时间复杂度-1-nav`)" id=时间复杂度-1-nav>
-时间复杂度：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-3 onclick="onNavClick(`#代码实现-3-nav`)" id=代码实现-3-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%ad%97%e5%85%b8%e5%ba%8ftupo%e6%8e%92%e5%ba%8f onclick="onNavClick(`#字典序tupo排序-nav`)" id=字典序tupo排序-nav>
-字典序tupo排序：
-</a>
-</li><li>
-<a href=#%e5%85%b3%e9%94%ae%e8%b7%af%e5%be%84 onclick="onNavClick(`#关键路径-nav`)" id=关键路径-nav>
-关键路径：
-</a>
-</li><li>
-<a href=#%e5%ba%94%e7%94%a8 onclick="onNavClick(`#应用-nav`)" id=应用-nav>
-应用：
-</a>
-</li></ul></ul><li>
-<a href=#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e9%97%ae%e9%a2%98 onclick="onNavClick(`#最短路径问题-nav`)" id=最短路径问题-nav>
-最短路径问题
-</a>
-</li><ul>
-<li>
-<a href=#%e8%be%93%e5%87%ba%e6%9c%80%e7%9f%ad%e8%b7%af onclick="onNavClick(`#输出最短路-nav`)" id=输出最短路-nav>
-~输出最短路
-</a>
-</li><li>
-<a href=#floyd%e7%ae%97%e6%b3%95 onclick="onNavClick(`#floyd算法-nav`)" id=floyd算法-nav>
-～Floyd算法
-</a>
-</li><li>
-<a href=#spfa%e7%ae%97%e6%b3%95 onclick="onNavClick(`#spfa算法-nav`)" id=spfa算法-nav>
-~SPFA算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-4 onclick="onNavClick(`#原理-4-nav`)" id=原理-4-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-4 onclick="onNavClick(`#代码实现-4-nav`)" id=代码实现-4-nav>
-代码实现：
-</a>
-</li><li>
-<a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-2 onclick="onNavClick(`#复杂度-2-nav`)" id=复杂度-2-nav>
-复杂度：
-</a>
-</li></ul><li>
-<a href=#dijkstra%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dijkstra算法-nav`)" id=dijkstra算法-nav>
-~dijkstra算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-5 onclick="onNavClick(`#原理-5-nav`)" id=原理-5-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-5 onclick="onNavClick(`#代码实现-5-nav`)" id=代码实现-5-nav>
-代码实现:
-</a>
-</li></ul></ul><li>
-<a href=#%e5%bc%ba%e8%bf%9e%e9%80%9a%e5%88%86%e9%87%8f onclick="onNavClick(`#强连通分量-nav`)" id=强连通分量-nav>
-强连通分量
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89-1 onclick="onNavClick(`#定义-1-nav`)" id=定义-1-nav>
-～定义：
-</a>
-</li><li>
-<a href=#%e5%ba%94%e7%94%a8-1 onclick="onNavClick(`#应用-1-nav`)" id=应用-1-nav>
-～应用：
-</a>
-</li><li>
-<a href=#tarjan%e7%ae%97%e6%b3%95 onclick="onNavClick(`#tarjan算法-nav`)" id=tarjan算法-nav>
-～tarjan算法：
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-6 onclick="onNavClick(`#原理-6-nav`)" id=原理-6-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-6 onclick="onNavClick(`#代码实现-6-nav`)" id=代码实现-6-nav>
-代码实现：
-</a>
-</li></ul><li>
-<a href=#dfs%e7%ae%97%e6%b3%95-1 onclick="onNavClick(`#dfs算法-1-nav`)" id=dfs算法-1-nav>
-~DFS算法
-</a>
-</li><ul>
-<li>
-<a href=#%e5%8e%9f%e7%90%86-7 onclick="onNavClick(`#原理-7-nav`)" id=原理-7-nav>
-原理：
-</a>
-</li><li>
-<a href=#%e4%bc%aa%e4%bb%a3%e7%a0%81 onclick="onNavClick(`#伪代码-nav`)" id=伪代码-nav>
-伪代码：
-</a>
-</li></ul></ul><li>
-<a href=#%e6%ac%a7%e6%8b%89%e5%9b%be onclick="onNavClick(`#欧拉图-nav`)" id=欧拉图-nav>
-欧拉图
-</a>
-</li><ul>
-<li>
-<a href=#%e5%ae%9a%e4%b9%89-2 onclick="onNavClick(`#定义-2-nav`)" id=定义-2-nav>
-~定义：
-</a>
-</li><li>
-<a href=#%e6%80%a7%e8%b4%a8-1 onclick="onNavClick(`#性质-1-nav`)" id=性质-1-nav>
-~性质：
-</a>
-</li><li>
-<a href=#%e5%88%a4%e5%88%ab onclick="onNavClick(`#判别-nav`)" id=判别-nav>
-~判别：
-</a>
-</li><li>
-<a href=#%e6%b1%82%e6%ac%a7%e6%8b%89%e5%9b%9e%e8%b7%af onclick="onNavClick(`#求欧拉回路-nav`)" id=求欧拉回路-nav>
-～求欧拉回路：
-</a>
-</li><ul>
-<li>
-<a href=#fleury%e7%ae%97%e6%b3%95--todo onclick="onNavClick(`#fleury算法--todo-nav`)" id=fleury算法--todo-nav>
-Fleury算法 // todo
-</a>
-</li><li>
-<a href=#hierholzer%e7%ae%97%e6%b3%95 onclick="onNavClick(`#hierholzer算法-nav`)" id=hierholzer算法-nav>
-Hierholzer算法
-</a>
-</li></ul></div></div></div></div></div><transition name=fade>
-<div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition>
-<nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container">
-<div id=navBackground class=nav-background></div><div class="container container-narrow nav-content">
-<button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
-<i class=material-icons>
-menu
-</i>
-</button>
-<a id=navTitle class=navbar-brand href=https://happierpig.github.io/>
-Pigpen Park
-</a>
+<!doctype html><html><head><title>Basic Graph Algorithms</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content="图论相关算法，仅作记录。"><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="Basic Graph Algorithms"><meta property="og:description" content="图论相关算法，仅作记录。"><meta property="og:type" content="article"><meta property="og:url" content="https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-03T21:00:00+08:00"><meta property="article:modified_time" content="2022-03-03T21:00:00+08:00"><meta property="og:site_name" content="My Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Basic Graph Algorithms"><meta name=twitter:description content="图论相关算法，仅作记录。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-KGF6W04P5B"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-KGF6W04P5B",{anonymize_ip:!1})}</script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><link rel=icon href=https://happierpig.github.io/favicon.ico><link rel=stylesheet href=https://happierpig.github.io/scss/journal.min.3f72a5fc8f5b5dd732a4b476aced0eece2156958d9d414316494ddb10593ddf7.css integrity="sha256-P3Kl/I9bXdcypLR2rO0O7OIVaVjZ1BQxZJTdsQWT3fc=" media=screen><link rel=stylesheet href=https://happierpig.github.io/scss/dark-mode.min.f7c2efa7183435a6bd1842f91c541481c7a5137b5991629a870f24e4a516ad4b.css integrity="sha256-98Lvpxg0Naa9GEL5HFQUgcelE3tZkWKahw8k5KUWrUs=" media=screen><script src=/vendor/js/loadCSS.js></script>
+<script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script><script src=/js/toc.js></script>
+<link href=//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script></head><body><div id=app><div id=sideContainer class=side-container><a class="a-block nav-head false" href=https://happierpig.github.io/><div class=nav-title>Pigpen Park</div><div class=nav-subtitle>Happypig :)</div></a><div class=nav-link-list><a class="a-block nav-link-item active" href=/posts>网志</a>
+<a class="a-block nav-link-item false" href=/categories>分类</a>
+<a class="a-block nav-link-item false" href=/tags>标签</a>
+<a class="a-block nav-link-item false" href=/about>关于</a><div class=nav-link-item><a href=https://github.com/happierpig target=_blank><i title=Github class="fa fa-github fa-x"></i></a>
+<a href=https://t.me/happierpig target=_blank><i title=Telegram class="fa fa-telegram fa-x"></i></a>
+<a href=https://space.bilibili.com/22913325 target=_blank><i title=Bilibili class="fa fa-youtube-play fa-x"></i></a></div></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2022 happypig<br>Naïve</div></div><div id=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- 目录 -</center><ul><ul><li><a href=#%e5%9b%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86 onclick="onNavClick(`#图的基本知识-nav`)" id=图的基本知识-nav>图的基本知识</a></li><li><a href=#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8 onclick="onNavClick(`#图的存储-nav`)" id=图的存储-nav>图的存储</a></li><ul><li><a href=#%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接矩阵-nav`)" id=邻接矩阵-nav>~邻接矩阵</a></li><ul><li><a href=#%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#实现-nav`)" id=实现-nav>实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#复杂度-nav`)" id=复杂度-nav>复杂度：</a></li><li><a href=#%e9%80%82%e7%94%a8 onclick="onNavClick(`#适用-nav`)" id=适用-nav>适用：</a></li></ul><li><a href=#%e9%82%bb%e6%8e%a5%e8%a1%a8%e9%ab%98%e7%a9%ba%e9%97%b4%e5%88%a9%e7%94%a8%e7%8e%87%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接表高空间利用率邻接矩阵-nav`)" id=邻接表高空间利用率邻接矩阵-nav>~邻接表:高空间利用率邻接矩阵</a></li><ul><li><a href=#%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#实现-1-nav`)" id=实现-1-nav>实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#复杂度-1-nav`)" id=复杂度-1-nav>复杂度：</a></li><li><a href=#%e9%80%82%e7%94%a8-1 onclick="onNavClick(`#适用-1-nav`)" id=适用-1-nav>适用：</a></li></ul><li><a href=#%e9%93%be%e5%bc%8f%e5%89%8d%e5%90%91%e6%98%9f onclick="onNavClick(`#链式前向星-nav`)" id=链式前向星-nav>~链式前向星</a></li></ul><li><a href=#%e5%9b%be%e7%9a%84%e9%81%8d%e5%8e%86 onclick="onNavClick(`#图的遍历-nav`)" id=图的遍历-nav>图的遍历</a></li><ul><li><a href=#%e4%b8%8e%e6%a0%91%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#与树的区别-nav`)" id=与树的区别-nav>~与树的区别：</a></li><li><a href=#dfs onclick="onNavClick(`#dfs-nav`)" id=dfs-nav>～DFS：</a></li><li><a href=#bfs onclick="onNavClick(`#bfs-nav`)" id=bfs-nav>～BFS：</a></li><li><a href=#%e5%8f%8c%e7%ab%af%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#双端队列bfs-nav`)" id=双端队列bfs-nav>～双端队列BFS：</a></li><li><a href=#%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#优先队列bfs-nav`)" id=优先队列bfs-nav>~优先队列BFS：</a></li><li><a href=#dfs%e4%b8%8ebfs%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#dfs与bfs的区别-nav`)" id=dfs与bfs的区别-nav>～dfs与bfs的区别：</a></li></ul><li><a href=#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91 onclick="onNavClick(`#最小生成树-nav`)" id=最小生成树-nav>最小生成树</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89 onclick="onNavClick(`#定义-nav`)" id=定义-nav>~定义：</a></li><li><a href=#%e6%80%a7%e8%b4%a8 onclick="onNavClick(`#性质-nav`)" id=性质-nav>~性质：</a></li><li><a href=#kruskal-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kruskal-算法-nav`)" id=kruskal-算法-nav>~Kruskal 算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86 onclick="onNavClick(`#原理-nav`)" id=原理-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#代码实现-nav`)" id=代码实现-nav>代码实现：</a></li><li><a href=#%e5%88%a4%e6%96%admst%e6%98%af%e5%90%a6%e5%94%af%e4%b8%80 onclick="onNavClick(`#判断mst是否唯一-nav`)" id=判断mst是否唯一-nav>判断MST是否唯一：</a></li></ul><li><a href=#prim%e7%ae%97%e6%b3%95 onclick="onNavClick(`#prim算法-nav`)" id=prim算法-nav>~Prim算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-1 onclick="onNavClick(`#原理-1-nav`)" id=原理-1-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#代码实现-1-nav`)" id=代码实现-1-nav>代码实现：</a></li></ul><li><a href=#boruvka%e7%ae%97%e6%b3%95 onclick="onNavClick(`#boruvka算法-nav`)" id=boruvka算法-nav>~Boruvka算法</a></li></ul><li><a href=#%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f onclick="onNavClick(`#拓扑排序-nav`)" id=拓扑排序-nav>拓扑排序</a></li><ul><li><a href=#dfs%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dfs算法-nav`)" id=dfs算法-nav>~DFS算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-2 onclick="onNavClick(`#原理-2-nav`)" id=原理-2-nav>原理：</a></li><li><a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#时间复杂度-nav`)" id=时间复杂度-nav>时间复杂度：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-2 onclick="onNavClick(`#代码实现-2-nav`)" id=代码实现-2-nav>代码实现：</a></li></ul><li><a href=#kahn%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kahn算法-nav`)" id=kahn算法-nav>~kahn算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-3 onclick="onNavClick(`#原理-3-nav`)" id=原理-3-nav>原理：</a></li><li><a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#时间复杂度-1-nav`)" id=时间复杂度-1-nav>时间复杂度：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-3 onclick="onNavClick(`#代码实现-3-nav`)" id=代码实现-3-nav>代码实现：</a></li><li><a href=#%e5%ad%97%e5%85%b8%e5%ba%8ftupo%e6%8e%92%e5%ba%8f onclick="onNavClick(`#字典序tupo排序-nav`)" id=字典序tupo排序-nav>字典序tupo排序：</a></li><li><a href=#%e5%85%b3%e9%94%ae%e8%b7%af%e5%be%84 onclick="onNavClick(`#关键路径-nav`)" id=关键路径-nav>关键路径：</a></li><li><a href=#%e5%ba%94%e7%94%a8 onclick="onNavClick(`#应用-nav`)" id=应用-nav>应用：</a></li></ul></ul><li><a href=#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e9%97%ae%e9%a2%98 onclick="onNavClick(`#最短路径问题-nav`)" id=最短路径问题-nav>最短路径问题</a></li><ul><li><a href=#%e8%be%93%e5%87%ba%e6%9c%80%e7%9f%ad%e8%b7%af onclick="onNavClick(`#输出最短路-nav`)" id=输出最短路-nav>~输出最短路</a></li><li><a href=#floyd%e7%ae%97%e6%b3%95 onclick="onNavClick(`#floyd算法-nav`)" id=floyd算法-nav>～Floyd算法</a></li><li><a href=#spfa%e7%ae%97%e6%b3%95 onclick="onNavClick(`#spfa算法-nav`)" id=spfa算法-nav>~SPFA算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-4 onclick="onNavClick(`#原理-4-nav`)" id=原理-4-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-4 onclick="onNavClick(`#代码实现-4-nav`)" id=代码实现-4-nav>代码实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-2 onclick="onNavClick(`#复杂度-2-nav`)" id=复杂度-2-nav>复杂度：</a></li></ul><li><a href=#dijkstra%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dijkstra算法-nav`)" id=dijkstra算法-nav>~dijkstra算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-5 onclick="onNavClick(`#原理-5-nav`)" id=原理-5-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-5 onclick="onNavClick(`#代码实现-5-nav`)" id=代码实现-5-nav>代码实现:</a></li></ul></ul><li><a href=#%e5%bc%ba%e8%bf%9e%e9%80%9a%e5%88%86%e9%87%8f onclick="onNavClick(`#强连通分量-nav`)" id=强连通分量-nav>强连通分量</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89-1 onclick="onNavClick(`#定义-1-nav`)" id=定义-1-nav>～定义：</a></li><li><a href=#%e5%ba%94%e7%94%a8-1 onclick="onNavClick(`#应用-1-nav`)" id=应用-1-nav>～应用：</a></li><li><a href=#tarjan%e7%ae%97%e6%b3%95 onclick="onNavClick(`#tarjan算法-nav`)" id=tarjan算法-nav>～tarjan算法：</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-6 onclick="onNavClick(`#原理-6-nav`)" id=原理-6-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-6 onclick="onNavClick(`#代码实现-6-nav`)" id=代码实现-6-nav>代码实现：</a></li></ul><li><a href=#dfs%e7%ae%97%e6%b3%95-1 onclick="onNavClick(`#dfs算法-1-nav`)" id=dfs算法-1-nav>~DFS算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-7 onclick="onNavClick(`#原理-7-nav`)" id=原理-7-nav>原理：</a></li><li><a href=#%e4%bc%aa%e4%bb%a3%e7%a0%81 onclick="onNavClick(`#伪代码-nav`)" id=伪代码-nav>伪代码：</a></li></ul></ul><li><a href=#%e6%ac%a7%e6%8b%89%e5%9b%be onclick="onNavClick(`#欧拉图-nav`)" id=欧拉图-nav>欧拉图</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89-2 onclick="onNavClick(`#定义-2-nav`)" id=定义-2-nav>~定义：</a></li><li><a href=#%e6%80%a7%e8%b4%a8-1 onclick="onNavClick(`#性质-1-nav`)" id=性质-1-nav>~性质：</a></li><li><a href=#%e5%88%a4%e5%88%ab onclick="onNavClick(`#判别-nav`)" id=判别-nav>~判别：</a></li><li><a href=#%e6%b1%82%e6%ac%a7%e6%8b%89%e5%9b%9e%e8%b7%af onclick="onNavClick(`#求欧拉回路-nav`)" id=求欧拉回路-nav>～求欧拉回路：</a></li><ul><li><a href=#fleury%e7%ae%97%e6%b3%95--todo onclick="onNavClick(`#fleury算法--todo-nav`)" id=fleury算法--todo-nav>Fleury算法 // todo</a></li><li><a href=#hierholzer%e7%ae%97%e6%b3%95 onclick="onNavClick(`#hierholzer算法-nav`)" id=hierholzer算法-nav>Hierholzer算法</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a type=button class=pagination-action id=darkModeToggleButton><span class="material-icons pagination-action-icon" id=darkModeToggleIcon>dark_mode</span></a></div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item active" href=/posts>网志</a>
+<a class="a-block drawer-menu-item false" href=/categories>分类</a>
+<a class="a-block drawer-menu-item false" href=/tags>标签</a>
+<a class="a-block drawer-menu-item false" href=/about>关于</a><div class=toc><div class=toc-content><center>- 目录 -</center><ul><ul><li><a href=#%e5%9b%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86 onclick="onNavClick(`#图的基本知识-nav`)" id=图的基本知识-nav>图的基本知识</a></li><li><a href=#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8 onclick="onNavClick(`#图的存储-nav`)" id=图的存储-nav>图的存储</a></li><ul><li><a href=#%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接矩阵-nav`)" id=邻接矩阵-nav>~邻接矩阵</a></li><ul><li><a href=#%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#实现-nav`)" id=实现-nav>实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#复杂度-nav`)" id=复杂度-nav>复杂度：</a></li><li><a href=#%e9%80%82%e7%94%a8 onclick="onNavClick(`#适用-nav`)" id=适用-nav>适用：</a></li></ul><li><a href=#%e9%82%bb%e6%8e%a5%e8%a1%a8%e9%ab%98%e7%a9%ba%e9%97%b4%e5%88%a9%e7%94%a8%e7%8e%87%e9%82%bb%e6%8e%a5%e7%9f%a9%e9%98%b5 onclick="onNavClick(`#邻接表高空间利用率邻接矩阵-nav`)" id=邻接表高空间利用率邻接矩阵-nav>~邻接表:高空间利用率邻接矩阵</a></li><ul><li><a href=#%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#实现-1-nav`)" id=实现-1-nav>实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#复杂度-1-nav`)" id=复杂度-1-nav>复杂度：</a></li><li><a href=#%e9%80%82%e7%94%a8-1 onclick="onNavClick(`#适用-1-nav`)" id=适用-1-nav>适用：</a></li></ul><li><a href=#%e9%93%be%e5%bc%8f%e5%89%8d%e5%90%91%e6%98%9f onclick="onNavClick(`#链式前向星-nav`)" id=链式前向星-nav>~链式前向星</a></li></ul><li><a href=#%e5%9b%be%e7%9a%84%e9%81%8d%e5%8e%86 onclick="onNavClick(`#图的遍历-nav`)" id=图的遍历-nav>图的遍历</a></li><ul><li><a href=#%e4%b8%8e%e6%a0%91%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#与树的区别-nav`)" id=与树的区别-nav>~与树的区别：</a></li><li><a href=#dfs onclick="onNavClick(`#dfs-nav`)" id=dfs-nav>～DFS：</a></li><li><a href=#bfs onclick="onNavClick(`#bfs-nav`)" id=bfs-nav>～BFS：</a></li><li><a href=#%e5%8f%8c%e7%ab%af%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#双端队列bfs-nav`)" id=双端队列bfs-nav>～双端队列BFS：</a></li><li><a href=#%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97bfs onclick="onNavClick(`#优先队列bfs-nav`)" id=优先队列bfs-nav>~优先队列BFS：</a></li><li><a href=#dfs%e4%b8%8ebfs%e7%9a%84%e5%8c%ba%e5%88%ab onclick="onNavClick(`#dfs与bfs的区别-nav`)" id=dfs与bfs的区别-nav>～dfs与bfs的区别：</a></li></ul><li><a href=#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91 onclick="onNavClick(`#最小生成树-nav`)" id=最小生成树-nav>最小生成树</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89 onclick="onNavClick(`#定义-nav`)" id=定义-nav>~定义：</a></li><li><a href=#%e6%80%a7%e8%b4%a8 onclick="onNavClick(`#性质-nav`)" id=性质-nav>~性质：</a></li><li><a href=#kruskal-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kruskal-算法-nav`)" id=kruskal-算法-nav>~Kruskal 算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86 onclick="onNavClick(`#原理-nav`)" id=原理-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0 onclick="onNavClick(`#代码实现-nav`)" id=代码实现-nav>代码实现：</a></li><li><a href=#%e5%88%a4%e6%96%admst%e6%98%af%e5%90%a6%e5%94%af%e4%b8%80 onclick="onNavClick(`#判断mst是否唯一-nav`)" id=判断mst是否唯一-nav>判断MST是否唯一：</a></li></ul><li><a href=#prim%e7%ae%97%e6%b3%95 onclick="onNavClick(`#prim算法-nav`)" id=prim算法-nav>~Prim算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-1 onclick="onNavClick(`#原理-1-nav`)" id=原理-1-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-1 onclick="onNavClick(`#代码实现-1-nav`)" id=代码实现-1-nav>代码实现：</a></li></ul><li><a href=#boruvka%e7%ae%97%e6%b3%95 onclick="onNavClick(`#boruvka算法-nav`)" id=boruvka算法-nav>~Boruvka算法</a></li></ul><li><a href=#%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f onclick="onNavClick(`#拓扑排序-nav`)" id=拓扑排序-nav>拓扑排序</a></li><ul><li><a href=#dfs%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dfs算法-nav`)" id=dfs算法-nav>~DFS算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-2 onclick="onNavClick(`#原理-2-nav`)" id=原理-2-nav>原理：</a></li><li><a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6 onclick="onNavClick(`#时间复杂度-nav`)" id=时间复杂度-nav>时间复杂度：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-2 onclick="onNavClick(`#代码实现-2-nav`)" id=代码实现-2-nav>代码实现：</a></li></ul><li><a href=#kahn%e7%ae%97%e6%b3%95 onclick="onNavClick(`#kahn算法-nav`)" id=kahn算法-nav>~kahn算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-3 onclick="onNavClick(`#原理-3-nav`)" id=原理-3-nav>原理：</a></li><li><a href=#%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6-1 onclick="onNavClick(`#时间复杂度-1-nav`)" id=时间复杂度-1-nav>时间复杂度：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-3 onclick="onNavClick(`#代码实现-3-nav`)" id=代码实现-3-nav>代码实现：</a></li><li><a href=#%e5%ad%97%e5%85%b8%e5%ba%8ftupo%e6%8e%92%e5%ba%8f onclick="onNavClick(`#字典序tupo排序-nav`)" id=字典序tupo排序-nav>字典序tupo排序：</a></li><li><a href=#%e5%85%b3%e9%94%ae%e8%b7%af%e5%be%84 onclick="onNavClick(`#关键路径-nav`)" id=关键路径-nav>关键路径：</a></li><li><a href=#%e5%ba%94%e7%94%a8 onclick="onNavClick(`#应用-nav`)" id=应用-nav>应用：</a></li></ul></ul><li><a href=#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e9%97%ae%e9%a2%98 onclick="onNavClick(`#最短路径问题-nav`)" id=最短路径问题-nav>最短路径问题</a></li><ul><li><a href=#%e8%be%93%e5%87%ba%e6%9c%80%e7%9f%ad%e8%b7%af onclick="onNavClick(`#输出最短路-nav`)" id=输出最短路-nav>~输出最短路</a></li><li><a href=#floyd%e7%ae%97%e6%b3%95 onclick="onNavClick(`#floyd算法-nav`)" id=floyd算法-nav>～Floyd算法</a></li><li><a href=#spfa%e7%ae%97%e6%b3%95 onclick="onNavClick(`#spfa算法-nav`)" id=spfa算法-nav>~SPFA算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-4 onclick="onNavClick(`#原理-4-nav`)" id=原理-4-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-4 onclick="onNavClick(`#代码实现-4-nav`)" id=代码实现-4-nav>代码实现：</a></li><li><a href=#%e5%a4%8d%e6%9d%82%e5%ba%a6-2 onclick="onNavClick(`#复杂度-2-nav`)" id=复杂度-2-nav>复杂度：</a></li></ul><li><a href=#dijkstra%e7%ae%97%e6%b3%95 onclick="onNavClick(`#dijkstra算法-nav`)" id=dijkstra算法-nav>~dijkstra算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-5 onclick="onNavClick(`#原理-5-nav`)" id=原理-5-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-5 onclick="onNavClick(`#代码实现-5-nav`)" id=代码实现-5-nav>代码实现:</a></li></ul></ul><li><a href=#%e5%bc%ba%e8%bf%9e%e9%80%9a%e5%88%86%e9%87%8f onclick="onNavClick(`#强连通分量-nav`)" id=强连通分量-nav>强连通分量</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89-1 onclick="onNavClick(`#定义-1-nav`)" id=定义-1-nav>～定义：</a></li><li><a href=#%e5%ba%94%e7%94%a8-1 onclick="onNavClick(`#应用-1-nav`)" id=应用-1-nav>～应用：</a></li><li><a href=#tarjan%e7%ae%97%e6%b3%95 onclick="onNavClick(`#tarjan算法-nav`)" id=tarjan算法-nav>～tarjan算法：</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-6 onclick="onNavClick(`#原理-6-nav`)" id=原理-6-nav>原理：</a></li><li><a href=#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0-6 onclick="onNavClick(`#代码实现-6-nav`)" id=代码实现-6-nav>代码实现：</a></li></ul><li><a href=#dfs%e7%ae%97%e6%b3%95-1 onclick="onNavClick(`#dfs算法-1-nav`)" id=dfs算法-1-nav>~DFS算法</a></li><ul><li><a href=#%e5%8e%9f%e7%90%86-7 onclick="onNavClick(`#原理-7-nav`)" id=原理-7-nav>原理：</a></li><li><a href=#%e4%bc%aa%e4%bb%a3%e7%a0%81 onclick="onNavClick(`#伪代码-nav`)" id=伪代码-nav>伪代码：</a></li></ul></ul><li><a href=#%e6%ac%a7%e6%8b%89%e5%9b%be onclick="onNavClick(`#欧拉图-nav`)" id=欧拉图-nav>欧拉图</a></li><ul><li><a href=#%e5%ae%9a%e4%b9%89-2 onclick="onNavClick(`#定义-2-nav`)" id=定义-2-nav>~定义：</a></li><li><a href=#%e6%80%a7%e8%b4%a8-1 onclick="onNavClick(`#性质-1-nav`)" id=性质-1-nav>~性质：</a></li><li><a href=#%e5%88%a4%e5%88%ab onclick="onNavClick(`#判别-nav`)" id=判别-nav>~判别：</a></li><li><a href=#%e6%b1%82%e6%ac%a7%e6%8b%89%e5%9b%9e%e8%b7%af onclick="onNavClick(`#求欧拉回路-nav`)" id=求欧拉回路-nav>～求欧拉回路：</a></li><ul><li><a href=#fleury%e7%ae%97%e6%b3%95--todo onclick="onNavClick(`#fleury算法--todo-nav`)" id=fleury算法--todo-nav>Fleury算法 // todo</a></li><li><a href=#hierholzer%e7%ae%97%e6%b3%95 onclick="onNavClick(`#hierholzer算法-nav`)" id=hierholzer算法-nav>Hierholzer算法</a></li></ul></div></div></div></div></div><transition name=fade><div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div id=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a id=navTitle class=navbar-brand href=https://happierpig.github.io/>Pigpen Park</a>
 <button type=button class=nav-darkmode-toggle id=darkModeToggleButton2>
-<i class=material-icons id=darkModeToggleIcon2>
-dark_mode
-</i>
-</button>
-</div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-<a href=https://happierpig.github.io/>
-<div class=single-column-header-title>Pigpen Park</div><div class=single-column-header-subtitle>Happypig :)</div></a>
-</div><div id=content>
-<div id=streamContainer class=stream-container>
-<div class="post-list-container post-list-container-shadow">
-<div class=post>
-<div class=post-head-wrapper style=background-image:url(https://happierpig.github.io/images/Graph/bg.png)>
-<div class=post-title>
-Basic Graph Algorithms
-<div class=post-subtitle>
-图论相关算法，仅作记录。
-</div><div class=post-meta>
-<time itemprop=datePublished>
-2022-03-03 21:00
-</time>
+<i class=material-icons id=darkModeToggleIcon2>dark_mode</i></button></div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://happierpig.github.io/><div class=single-column-header-title>Pigpen Park</div><div class=single-column-header-subtitle>Happypig :)</div></a></div><div id=content><div id=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://happierpig.github.io/images/Graph/bg.png)><div class=post-title>Basic Graph Algorithms<div class=post-subtitle>图论相关算法，仅作记录。</div><div class=post-meta><time itemprop=datePublished>2022-03-03 21:00</time>
 <i class=material-icons>folder</i>
 <a href=/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6>计算机科学</a>
 &nbsp;
 <i class=material-icons>schedule</i>
 33 min
-28 s.
-<span class=views>
-&nbsp;
+40 s.
+<span class=views>&nbsp;
 <i class="fa fa-eye"></i>
-<span id=busuanzi_container_page_pv>
-<span id=busuanzi_value_page_pv><i class="fa fa-spinner fa-spin"></i></span>
-</span>
-</span>
-</div></div></div><div class=post-body-wrapper>
-<div class=post-body v-pre>
-<h2 id=图的基本知识>图的基本知识</h2><p>见<a href=https://oi-wiki.org/graph/concept/>oi-wiki</a></p><h2 id=图的存储>图的存储</h2><p>选择哪种储存方式主要看主要操作</p><ul>
-<li>遍历出度</li><li>遍历入度</li><li>静态/动态</li><li>查询某个边是否存在</li><li>等待补充</li></ul><h3 id=邻接矩阵>~邻接矩阵</h3><h4 id=实现>实现：</h4><ul>
-<li>用一个二维数组，数组下标表示节点的序号，值表示边权</li><li>可以考虑离散化节点序号</li></ul><h4 id=复杂度>复杂度：</h4><ul>
-<li>
-<p>查询是否存在某条边：O(1)。</p><p>遍历一个点的所有出边：<strong>O(N)</strong>。</p><p>遍历整张图：O(N^2)。// 不连续</p><p>空间复杂度：O(N^2)。</p></li></ul><h4 id=适用>适用：</h4><ul>
-<li>
-<p>邻接矩阵只适用于没有重边（或重边可以忽略）的情况。</p></li><li>
-<p>其最显著的优点是可以 查询一条边是否存在。</p></li><li>
-<p>由于邻接矩阵在稀疏图上<strong>效率</strong>很低（尤其是在点数较多的图上，空间无法承受），所以一般只会在稠密图上使用邻接矩阵。</p></li><li>
-<p>出度、入度都可O(E)的查询</p></li></ul><h3 id=邻接表高空间利用率邻接矩阵>~邻接表:高空间利用率邻接矩阵</h3><h4 id=实现-1>实现：</h4><ul>
-<li>使用一个支持<strong>动态增加元素的数据结构</strong>构成的数组(vector / list)，如 <code>vector&lt;int> adj[n + 1]</code> 来存边，其中 <code>adj[u]</code> 存储的是点u 的所有出边的相关信息（终点、边权等）。</li><li>用链表的话方便删除</li></ul><h4 id=复杂度-1>复杂度：</h4><ul>
-<li>
-<p>查询是否存在u到v的边：O(d(u))（如果事先进行了排序就可以使用 <a href=https://oi-wiki.org/basic/binary/>二分查找</a> 做到O(log(d(u)))）。</p><p>遍历点u的所有出边：O(d(u))。</p><p>遍历整张图：O(n+m)。// 连续</p><p>空间复杂度：O(n+m)。</p></li></ul><h4 id=适用-1>适用：</h4><ul>
-<li>
-<p>存各种图都很适合，除非有特殊需求（如需要快速查询一条边是否存在，且点数较少，可以使用邻接矩阵）。</p></li><li>
-<p>尤其适用于需要对<strong>一个点的所有出边进行排序的场合</strong>。</p></li></ul><h3 id=链式前向星>~链式前向星</h3><p>ps：优点是边是带编号的，有时会非常有用，而且如果 <code>cnt</code> 的初始值为0，存双向边时 <code>i ^ 1</code> 即是 <code>i</code> 的反边（常用于 <a href=https://oi-wiki.org/graph/flow/>网络流</a>）。</p><blockquote>
-<p>奇数 ^ 1 -=1;</p><p>偶数 ^ 1 += 1;</p></blockquote><ul>
-<li>
-<p>代码实现</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>addEdge</span>(<span style=color:#00688b;font-weight:700>int</span> u, <span style=color:#00688b;font-weight:700>int</span> v){
+<span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv><i class="fa fa-spinner fa-spin"></i></span></span></span></div></div></div><div class=post-body-wrapper><div class=post-body v-pre><h2 id=图的基本知识>图的基本知识</h2><p>见<a href=https://oi-wiki.org/graph/concept/>oi-wiki</a></p><h2 id=图的存储>图的存储</h2><p>选择哪种储存方式主要看主要操作</p><ul><li>遍历出度</li><li>遍历入度</li><li>静态/动态</li><li>查询某个边是否存在</li><li>等待补充</li></ul><h3 id=邻接矩阵>~邻接矩阵</h3><h4 id=实现>实现：</h4><ul><li>用一个二维数组，数组下标表示节点的序号，值表示边权</li><li>可以考虑离散化节点序号</li></ul><h4 id=复杂度>复杂度：</h4><ul><li><p>查询是否存在某条边：O(1)。</p><p>遍历一个点的所有出边：<strong>O(N)</strong>。</p><p>遍历整张图：O(N^2)。// 不连续</p><p>空间复杂度：O(N^2)。</p></li></ul><h4 id=适用>适用：</h4><ul><li><p>邻接矩阵只适用于没有重边（或重边可以忽略）的情况。</p></li><li><p>其最显著的优点是可以 查询一条边是否存在。</p></li><li><p>由于邻接矩阵在稀疏图上<strong>效率</strong>很低（尤其是在点数较多的图上，空间无法承受），所以一般只会在稠密图上使用邻接矩阵。</p></li><li><p>出度、入度都可O(E)的查询</p></li></ul><h3 id=邻接表高空间利用率邻接矩阵>~邻接表:高空间利用率邻接矩阵</h3><h4 id=实现-1>实现：</h4><ul><li>使用一个支持<strong>动态增加元素的数据结构</strong>构成的数组(vector / list)，如 <code>vector&lt;int> adj[n + 1]</code> 来存边，其中 <code>adj[u]</code> 存储的是点u 的所有出边的相关信息（终点、边权等）。</li><li>用链表的话方便删除</li></ul><h4 id=复杂度-1>复杂度：</h4><ul><li><p>查询是否存在u到v的边：O(d(u))（如果事先进行了排序就可以使用 <a href=https://oi-wiki.org/basic/binary/>二分查找</a> 做到O(log(d(u)))）。</p><p>遍历点u的所有出边：O(d(u))。</p><p>遍历整张图：O(n+m)。// 连续</p><p>空间复杂度：O(n+m)。</p></li></ul><h4 id=适用-1>适用：</h4><ul><li><p>存各种图都很适合，除非有特殊需求（如需要快速查询一条边是否存在，且点数较少，可以使用邻接矩阵）。</p></li><li><p>尤其适用于需要对<strong>一个点的所有出边进行排序的场合</strong>。</p></li></ul><h3 id=链式前向星>~链式前向星</h3><p>ps：优点是边是带编号的，有时会非常有用，而且如果 <code>cnt</code> 的初始值为0，存双向边时 <code>i ^ 1</code> 即是 <code>i</code> 的反边（常用于 <a href=https://oi-wiki.org/graph/flow/>网络流</a>）。</p><blockquote><p>奇数 ^ 1 -=1;</p><p>偶数 ^ 1 += 1;</p></blockquote><ul><li><p>代码实现</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>addEdge</span>(<span style=color:#00688b;font-weight:700>int</span> u, <span style=color:#00688b;font-weight:700>int</span> v){
 </span></span><span style=display:flex><span>  	to[cnt] = v;
 </span></span><span style=display:flex><span>  	next[cnt] = head[u];
 </span></span><span style=display:flex><span>  	head[u] = cnt++;
@@ -752,13 +34,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>  	<span style=color:#00688b;font-weight:700>int</span> v = to[i];
 </span></span><span style=display:flex><span>  	<span style=color:#228b22>// v 为出边所指向的点。
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>}
-</span></span></code></pre></div></li></ul><h2 id=图的遍历>图的遍历</h2><h3 id=与树的区别>~与树的区别：</h3><ul>
-<li>图可能有回路：记录<strong>标记数组</strong>，防止走循环死路</li><li>图不一定<strong>连通</strong>：从一个节点出发不一定达到所有节点
-<ul>
-<li>每次都从一个没有被访问的节点开始dfs</li><li>然后访问出边到达的没有被访问过的节点</li></ul></li></ul><h3 id=dfs>～DFS：</h3><ul>
-<li>
-<p>DFS 最显著的特征在于其<strong>递归调用自身</strong>。同时与 BFS 类似，DFS 会对其访问过的点打上<strong>访问标记</strong>，在遍历图时跳过已打过标记的点，以确保<strong>每个点仅访问一次</strong>。符合以上两条规则的函数，便是广义上的 DFS。</p></li><li>
-<p>代码实现：</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>dfs</span>(<span style=color:#00688b;font-weight:700>int</span> u) {
+</span></span></code></pre></div></li></ul><h2 id=图的遍历>图的遍历</h2><h3 id=与树的区别>~与树的区别：</h3><ul><li>图可能有回路：记录<strong>标记数组</strong>，防止走循环死路</li><li>图不一定<strong>连通</strong>：从一个节点出发不一定达到所有节点<ul><li>每次都从一个没有被访问的节点开始dfs</li><li>然后访问出边到达的没有被访问过的节点</li></ul></li></ul><h3 id=dfs>～DFS：</h3><ul><li><p>DFS 最显著的特征在于其<strong>递归调用自身</strong>。同时与 BFS 类似，DFS 会对其访问过的点打上<strong>访问标记</strong>，在遍历图时跳过已打过标记的点，以确保<strong>每个点仅访问一次</strong>。符合以上两条规则的函数，便是广义上的 DFS。</p></li><li><p>代码实现：</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>dfs</span>(<span style=color:#00688b;font-weight:700>int</span> u) {
 </span></span><span style=display:flex><span>  vis[u] = <span style=color:#b452cd>1</span>;
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>for</span> (<span style=color:#00688b;font-weight:700>int</span> i = head[u];~i; i = edge[i].nxt) {
 </span></span><span style=display:flex><span>    <span style=color:#8b008b;font-weight:700>if</span> (!vis[edge[i].to]) {
@@ -766,19 +42,13 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>
-<p>DFS 序列是指 DFS 调用过程中访问的节点编号的序列。<strong>每个子树都对应 DFS 序列中的连续一段（一段区间）。</strong>（线段树）</p></li><li>
-<p>在 DFS 过程中，通过记录每个节点从哪个点访问而来，可以建立一个<strong>树结构</strong>，称为 DFS 树。DFS 树是原图的一个生成树。</p><p>DFS树有很多性质，比如可以用来求强连通分量。</p></li><li>
-<p>DFS在使用当中往往外面套了层壳来保证每个点都能被遍历到</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> visit{
+</span></span></code></pre></div></li><li><p>DFS 序列是指 DFS 调用过程中访问的节点编号的序列。<strong>每个子树都对应 DFS 序列中的连续一段（一段区间）。</strong>（线段树）</p></li><li><p>在 DFS 过程中，通过记录每个节点从哪个点访问而来，可以建立一个<strong>树结构</strong>，称为 DFS 树。DFS 树是原图的一个生成树。</p><p>DFS树有很多性质，比如可以用来求强连通分量。</p></li><li><p>DFS在使用当中往往外面套了层壳来保证每个点都能被遍历到</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> visit{
 </span></span><span style=display:flex><span> 		<span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt; n;++i){
 </span></span><span style=display:flex><span>      	<span style=color:#8b008b;font-weight:700>if</span>(vis[i] == <span style=color:#b452cd>1</span>) <span style=color:#8b008b;font-weight:700>continue</span>;
 </span></span><span style=display:flex><span>     		dfs(i);
 </span></span><span style=display:flex><span>    } 
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li></ul><h3 id=bfs>～BFS：</h3><ul>
-<li>
-<p>所谓宽度优先。就是每次都尝试访问同一层的节点。 如果同一层都访问完了，再访问下一层。这样做的结果是，BFS 算法找到的路径是从起点开始的<strong>最短</strong>合法路径。换言之，这条路所包含的边数最小(非边权和最小)。</p></li><li>
-<p>代码实现</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>bfs</span>(<span style=color:#00688b;font-weight:700>int</span> u) {
+</span></span></code></pre></div></li></ul><h3 id=bfs>～BFS：</h3><ul><li><p>所谓宽度优先。就是每次都尝试访问同一层的节点。 如果同一层都访问完了，再访问下一层。这样做的结果是，BFS 算法找到的路径是从起点开始的<strong>最短</strong>合法路径。换言之，这条路所包含的边数最小(非边权和最小)。</p></li><li><p>代码实现</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>bfs</span>(<span style=color:#00688b;font-weight:700>int</span> u) {
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>while</span> (!Q.empty()) Q.pop();
 </span></span><span style=display:flex><span>  Q.push(u);
 </span></span><span style=display:flex><span>  vis[u] = <span style=color:#b452cd>1</span>;<span style=color:#228b22>//标记数组，表示这个点是否已经被搜索过
@@ -806,16 +76,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>for</span> (<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>0</span>; i &lt; res.size(); ++i) printf(<span style=color:#cd5555>&#34;%d&#34;</span>, res[i]);
 </span></span><span style=display:flex><span>  puts(<span style=color:#cd5555>&#34;&#34;</span>);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>
-<p>应用：</p><ul>
-<li>在一个<strong>无权图</strong>上求从起点到其他所有点的<strong>最短路径</strong>。(有权图有其他的算法)</li><li>在O(N+M)时间内求出所有连通块。(我们只需要从每个没有被访问过的节点开始做 BFS，显然每次 BFS 会走完一个连通块）</li><li>如果把一个游戏的动作看做是状态图上的一条边（一个转移），那么 BFS 可以用来找到在游戏中从一个状态到达另一个状态所需要的最小步骤。</li><li>在一个边权为0/1的图上求最短路。(<strong>需要修改入队的过程</strong>，如果某条边权值为 0，且可以减小边的终点到图的起点的距离，那么把边的起点加到<strong>队列首</strong>而不是队列尾）</li><li>在一个有向无权图中找<strong>最小环</strong>。（从每个点开始 BFS，在我们即将抵达一个之前访问过的点开始的时候，就知道遇到了一个环。图的最小环是每次 BFS 得到的最小环的平均值。）</li><li>找到一定在(a,b)最短路上的<strong>边</strong>。分别从 a 和 b 进行 BFS，得到两个 d 数组。之后对每一条边(u,v)，如果da[u]+1+db[v] == da[b]，则说明该边在最短路上</li><li>找到一定在(a,b)最短路上的点。分别从a和b进行 BFS，得到两个d数组。之后对每一个点 v，如果da[v]+db[v] == da[b] ，则说明该点在最短路上。</li></ul></li><li>
-<p>例子：</p><ul>
-<li>三个自由度的bfs. <a href="https://oj.yukisaki.cn/problem?problem_id=1195">oj1195</a></li></ul></li></ul><h3 id=双端队列bfs>～双端队列BFS：</h3><ul>
-<li>
-<p>适用范围：边权值为可能有，也可能没有（由于 BFS 适用于权值为 1 的图，所以一般是 0 or 1），或者能够转化为这种边权值的最短路问题。</p><blockquote>
-<p>例子：例如在走迷宫问题中，你可以花 1 个金币走 5 步，也可以不花金币走 1 步，这就可以用 0-1 BFS 解决。</p></blockquote></li><li>
-<p>实现：一般情况下，我们把(没有权值的边)扩展到的点放到队首，(有权值的边)扩展到的点放到队尾。这样即可保证在整个队列中，像普通 BFS 一样，<strong>越靠近队首，权值越小，且权值零一之间有分隔。</strong></p></li><li>
-<p>代码实现：</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>while</span> (<span style=color:#a61717;background-color:#e3d2d2>队列不为空</span>) {
+</span></span></code></pre></div></li><li><p>应用：</p><ul><li>在一个<strong>无权图</strong>上求从起点到其他所有点的<strong>最短路径</strong>。(有权图有其他的算法)</li><li>在O(N+M)时间内求出所有连通块。(我们只需要从每个没有被访问过的节点开始做 BFS，显然每次 BFS 会走完一个连通块）</li><li>如果把一个游戏的动作看做是状态图上的一条边（一个转移），那么 BFS 可以用来找到在游戏中从一个状态到达另一个状态所需要的最小步骤。</li><li>在一个边权为0/1的图上求最短路。(<strong>需要修改入队的过程</strong>，如果某条边权值为 0，且可以减小边的终点到图的起点的距离，那么把边的起点加到<strong>队列首</strong>而不是队列尾）</li><li>在一个有向无权图中找<strong>最小环</strong>。（从每个点开始 BFS，在我们即将抵达一个之前访问过的点开始的时候，就知道遇到了一个环。图的最小环是每次 BFS 得到的最小环的平均值。）</li><li>找到一定在(a,b)最短路上的<strong>边</strong>。分别从 a 和 b 进行 BFS，得到两个 d 数组。之后对每一条边(u,v)，如果da[u]+1+db[v] == da[b]，则说明该边在最短路上</li><li>找到一定在(a,b)最短路上的点。分别从a和b进行 BFS，得到两个d数组。之后对每一个点 v，如果da[v]+db[v] == da[b] ，则说明该点在最短路上。</li></ul></li><li><p>例子：</p><ul><li>三个自由度的bfs. <a href="https://oj.yukisaki.cn/problem?problem_id=1195">oj1195</a></li></ul></li></ul><h3 id=双端队列bfs>～双端队列BFS：</h3><ul><li><p>适用范围：边权值为可能有，也可能没有（由于 BFS 适用于权值为 1 的图，所以一般是 0 or 1），或者能够转化为这种边权值的最短路问题。</p><blockquote><p>例子：例如在走迷宫问题中，你可以花 1 个金币走 5 步，也可以不花金币走 1 步，这就可以用 0-1 BFS 解决。</p></blockquote></li><li><p>实现：一般情况下，我们把(没有权值的边)扩展到的点放到队首，(有权值的边)扩展到的点放到队尾。这样即可保证在整个队列中，像普通 BFS 一样，<strong>越靠近队首，权值越小，且权值零一之间有分隔。</strong></p></li><li><p>代码实现：</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>while</span> (<span style=color:#a61717;background-color:#e3d2d2>队列不为空</span>) {
 </span></span><span style=display:flex><span>  <span style=color:#00688b;font-weight:700>int</span> u = <span style=color:#a61717;background-color:#e3d2d2>队首</span>;
 </span></span><span style=display:flex><span>  <span style=color:#a61717;background-color:#e3d2d2>弹出队首</span>;
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>for</span> (<span style=color:#a61717;background-color:#e3d2d2>枚举</span> u <span style=color:#a61717;background-color:#e3d2d2>的邻居</span>) {
@@ -826,14 +87,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>      <span style=color:#a61717;background-color:#e3d2d2>添加到队尾</span>;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li></ul><h3 id=优先队列bfs>~优先队列BFS：</h3><p>即是堆优化的Dijkstra算法。</p><h3 id=dfs与bfs的区别>～dfs与bfs的区别：</h3><ul>
-<li>两者除了都能遍历图的连通块以外，用途完全不同，很少有能混用两种算法的情况。</li></ul><h2 id=最小生成树>最小生成树</h2><h3 id=定义>~定义：</h3><ul>
-<li>
-<p>生成树：一个连通无向图的生成<strong>子图</strong>，同时要求是<strong>树</strong>。也即在图的边集中选择n-1条，将所有顶点连通，形成一棵树。</p><blockquote>
-<p>只有连通图才有生成树</p></blockquote></li><li>
-<p>最小生成树为：<strong>边权和最小</strong>的生成树</p></li></ul><h3 id=性质>~性质：</h3><ul>
-<li>MST的最大边权是这个图所有生成树的最大边权中最小的。</li></ul><h3 id=kruskal-算法>~Kruskal 算法</h3><p>算法的基本思想是<strong>从小到大加入边，采用贪心的思想</strong>。</p><h4 id=原理>原理：</h4><p>将边排序（键值从小到大） 贪心</p><blockquote>
-<p>也可以采用优先队列 可能常数更优秀</p></blockquote><p>然后从小到大遍历边(u,v)。当u、v已经被连在一起时，跳过这条边。</p><p>点是否被连在一起采用并查集进行维护。</p><h4 id=代码实现>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>merge_sort</span>(T * data,<span style=color:#00688b;font-weight:700>int</span> l,<span style=color:#00688b;font-weight:700>int</span> r);
+</span></span></code></pre></div></li></ul><h3 id=优先队列bfs>~优先队列BFS：</h3><p>即是堆优化的Dijkstra算法。</p><h3 id=dfs与bfs的区别>～dfs与bfs的区别：</h3><ul><li>两者除了都能遍历图的连通块以外，用途完全不同，很少有能混用两种算法的情况。</li></ul><h2 id=最小生成树>最小生成树</h2><h3 id=定义>~定义：</h3><ul><li><p>生成树：一个连通无向图的生成<strong>子图</strong>，同时要求是<strong>树</strong>。也即在图的边集中选择n-1条，将所有顶点连通，形成一棵树。</p><blockquote><p>只有连通图才有生成树</p></blockquote></li><li><p>最小生成树为：<strong>边权和最小</strong>的生成树</p></li></ul><h3 id=性质>~性质：</h3><ul><li>MST的最大边权是这个图所有生成树的最大边权中最小的。</li></ul><h3 id=kruskal-算法>~Kruskal 算法</h3><p>算法的基本思想是<strong>从小到大加入边，采用贪心的思想</strong>。</p><h4 id=原理>原理：</h4><p>将边排序（键值从小到大） 贪心</p><blockquote><p>也可以采用优先队列 可能常数更优秀</p></blockquote><p>然后从小到大遍历边(u,v)。当u、v已经被连在一起时，跳过这条边。</p><p>点是否被连在一起采用并查集进行维护。</p><h4 id=代码实现>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>merge_sort</span>(T * data,<span style=color:#00688b;font-weight:700>int</span> l,<span style=color:#00688b;font-weight:700>int</span> r);
 </span></span><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>merge</span>(<span style=color:#00688b;font-weight:700>int</span> x,<span style=color:#00688b;font-weight:700>int</span> y);
 </span></span><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>check</span>(<span style=color:#00688b;font-weight:700>int</span> x,<span style=color:#00688b;font-weight:700>int</span> y);
 </span></span><span style=display:flex><span><span style=color:#00688b;font-weight:700>int</span> <span style=color:#008b45>find</span>(<span style=color:#00688b;font-weight:700>int</span> x);
@@ -850,8 +104,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>     		<span style=color:#228b22>//若不能return说明没有最小生成树
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h4 id=判断mst是否唯一>判断MST是否唯一：</h4><p>做两次Kruskal，将第一次被放入最小生成树的边打上标记，第二次优先处理没有打标记的。若能成功，则说明不唯一。</p><h3 id=prim算法>~Prim算法</h3><h4 id=原理-1>原理：</h4><p>每次加点，同样是贪心的思想。加入的点是每次选点时离生成树边权最小的点。</p><blockquote>
-<p>这样选保证了这个点通过这条边加入生成树是最优的 类似于dijkstra</p></blockquote><p><strong>所以要维护每个点离生成树的边权最小值</strong></p><p>最后边权和就是 low_cost[i] 1&lt;=i&lt;=n求和</p><h4 id=代码实现-1>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>prim</span>(){
+</span></span></code></pre></div><h4 id=判断mst是否唯一>判断MST是否唯一：</h4><p>做两次Kruskal，将第一次被放入最小生成树的边打上标记，第二次优先处理没有打标记的。若能成功，则说明不唯一。</p><h3 id=prim算法>~Prim算法</h3><h4 id=原理-1>原理：</h4><p>每次加点，同样是贪心的思想。加入的点是每次选点时离生成树边权最小的点。</p><blockquote><p>这样选保证了这个点通过这条边加入生成树是最优的 类似于dijkstra</p></blockquote><p><strong>所以要维护每个点离生成树的边权最小值</strong></p><p>最后边权和就是 low_cost[i] 1&lt;=i&lt;=n求和</p><h4 id=代码实现-1>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>prim</span>(){
 </span></span><span style=display:flex><span>  	priority_queue&lt;Edge&gt; que;
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>while</span>(!que.empty()) que.pop();
 </span></span><span style=display:flex><span>  	<span style=color:#00688b;font-weight:700>int</span> low_cost[nodeSize]; <span style=color:#228b22>//如果节点到生成树的距离
@@ -874,8 +127,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h3 id=boruvka算法>~Boruvka算法</h3><h2 id=拓扑排序>拓扑排序</h2><p>拓扑排序要解决的问题是给一个图的所有节点排序，使得前面的节点不“依赖于”后面的节点。</p><blockquote>
-<p>因此我们可以说在一个有向无环图中，将图中的顶点以线性方式进行排序，使得对于任何的顶点u到v的有向边(u,v) , 都可以有u在v的前面。</p></blockquote><h3 id=dfs算法>~DFS算法</h3><h4 id=原理-2>原理：</h4><p>DFS过程中记录每个节点的访问时间和回溯时间，<strong>当$u$回溯时间小于$v$时，不存在从$u\rightarrow v$的有向边</strong>。</p><p><em>proof</em>: 反证法，tree edge(显然有$t(v)&lt;t(u)$矛盾)；forward edge(说明$v$在$u$的子树上，$v$先回溯，矛盾)；cross edge(说明$v$先被访问，否则$u,v$会在同一棵子树上，矛盾)；back edge(与大前提DAG矛盾)。</p><p>所以说每个图当中<strong>回溯时间最小</strong>的节点一定是tail(出度为零)，一定是当前图拓扑排序的最后一位，所以回溯时将当前节点压入栈中即可。</p><h4 id=时间复杂度>时间复杂度：</h4><p>O(E+V)</p><h4 id=代码实现-2>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>dfs</span>(<span style=color:#00688b;font-weight:700>int</span> u){
+</span></span></code></pre></div><h3 id=boruvka算法>~Boruvka算法</h3><h2 id=拓扑排序>拓扑排序</h2><p>拓扑排序要解决的问题是给一个图的所有节点排序，使得前面的节点不“依赖于”后面的节点。</p><blockquote><p>因此我们可以说在一个有向无环图中，将图中的顶点以线性方式进行排序，使得对于任何的顶点u到v的有向边(u,v) , 都可以有u在v的前面。</p></blockquote><h3 id=dfs算法>~DFS算法</h3><h4 id=原理-2>原理：</h4><p>DFS过程中记录每个节点的访问时间和回溯时间，<strong>当$u$回溯时间小于$v$时，不存在从$u\rightarrow v$的有向边</strong>。</p><p><em>proof</em>: 反证法，tree edge(显然有$t(v)&lt;t(u)$矛盾)；forward edge(说明$v$在$u$的子树上，$v$先回溯，矛盾)；cross edge(说明$v$先被访问，否则$u,v$会在同一棵子树上，矛盾)；back edge(与大前提DAG矛盾)。</p><p>所以说每个图当中<strong>回溯时间最小</strong>的节点一定是tail(出度为零)，一定是当前图拓扑排序的最后一位，所以回溯时将当前节点压入栈中即可。</p><h4 id=时间复杂度>时间复杂度：</h4><p>O(E+V)</p><h4 id=代码实现-2>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>dfs</span>(<span style=color:#00688b;font-weight:700>int</span> u){
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>if</span>(visit[u]) <span style=color:#8b008b;font-weight:700>return</span>;
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = head[u];~i;i = next[i]){
 </span></span><span style=display:flex><span>     		<span style=color:#00688b;font-weight:700>int</span> v = to[i];
@@ -885,8 +137,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>  	ans.push(u);	<span style=color:#228b22>// 回溯最早的节点压入栈中 最后逆序输出
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>}
-</span></span></code></pre></div><h3 id=kahn算法>~kahn算法</h3><h4 id=原理-3>原理：</h4><p>初始状态下，集合S装着<strong>所有入度为0</strong>的点， L是一个空列表。</p><p>每次从S中取出一个点u（可以随便取）放入L , 然后将u的所有边删除。对于边(u,v)，若将该边删除后点v的入度变为0，则将v放入S中。</p><p>不断重复以上过程，直到集合S为空。检查图中是否存在任何边，如果有，那么这个图一定<strong>有环路(其中节点不会进入集合S中)</strong>，否则返回L ， L中顶点的顺序就是拓扑排序的结果。</p><blockquote>
-<p>当然从出度为零的点开始做也是可以的。</p></blockquote><h4 id=时间复杂度-1>时间复杂度：</h4><p>O(E+V)</p><h4 id=代码实现-3>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>bool</span> <span style=color:#008b45>toposort</span>() {
+</span></span></code></pre></div><h3 id=kahn算法>~kahn算法</h3><h4 id=原理-3>原理：</h4><p>初始状态下，集合S装着<strong>所有入度为0</strong>的点， L是一个空列表。</p><p>每次从S中取出一个点u（可以随便取）放入L , 然后将u的所有边删除。对于边(u,v)，若将该边删除后点v的入度变为0，则将v放入S中。</p><p>不断重复以上过程，直到集合S为空。检查图中是否存在任何边，如果有，那么这个图一定<strong>有环路(其中节点不会进入集合S中)</strong>，否则返回L ， L中顶点的顺序就是拓扑排序的结果。</p><blockquote><p>当然从出度为零的点开始做也是可以的。</p></blockquote><h4 id=时间复杂度-1>时间复杂度：</h4><p>O(E+V)</p><h4 id=代码实现-3>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>bool</span> <span style=color:#008b45>toposort</span>() {
 </span></span><span style=display:flex><span>  	q = <span style=color:#8b008b;font-weight:700>new</span> queue();
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>for</span> (i = <span style=color:#b452cd>0</span>; i &lt; n; i++){
 </span></span><span style=display:flex><span>    		<span style=color:#8b008b;font-weight:700>if</span> (in_deg[i] == <span style=color:#b452cd>0</span>) q.push(i);
@@ -907,21 +158,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>    		<span style=color:#8b008b;font-weight:700>return</span> <span style=color:#658b00>false</span>;
 </span></span><span style=display:flex><span>  	}
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h4 id=字典序tupo排序>字典序tupo排序：</h4><p>将S采用的队列替换为<em><strong>优先队列</strong></em>即可。</p><h4 id=关键路径>关键路径：</h4><p>AOE网络的应用</p><ul>
-<li>
-<p>顶点表示事件，有向边的权值表示某个活动的持续时间，有向边的方向表示活动和事件的<strong>先后次序</strong>。</p><p>进入顶点的所有活动都结束后，顶点表示的事件才可以发生，从该顶点出发的所有活动才可以开始。</p></li><li>
-<p>入度为0：开工事件；出度为0:竣工事件</p></li><li>
-<p>完成整项工程至少需要多少时间：源点到收点的最长路径的长度，称为关键路径</p></li><li>
-<p>算法：</p><ul>
-<li>
-<p>最早发生时间：事件的最早发生时间</p><p>每个直接前驱的最早发生时间加上从该前驱到该顶点的活动时间的<strong>最大者</strong></p></li><li>
-<p>最迟发生时间：不影响整个项目按时完成的前提下，这个事件最晚可以什么时候发生</p><p>每个直接后继的最迟发生时间减去顶点到该直接后继的活动时间的<strong>最小者</strong>就是该顶点的最迟发生时间。</p></li><li>
-<p><strong>最早发生时间和最晚发生时间相同的顶点序列构成关键路径</strong></p></li></ul></li><li>
-<p>具体实现：</p><p>先用拓扑排序得到活动发生的顺序。这样<strong>保证拓扑序</strong></p><p>按拓扑序顺序可得到每个事件的最早发生时间</p><p>逆序可得到每个事件的最迟发生时间</p><p>最后比较即可得到关键事件</p><p>然后按拓扑序if输出</p></li></ul><h4 id=应用>应用：</h4><p>判断有向图是否存在环路</p><blockquote>
-<p>判断无向图是否存在环路：</p><ol>
-<li>
-<p>类似于有向图环路拓扑法：</p><p>将所有度数&lt;=1的节点删除并删除对应边</p><p>将所有度数为1的节点放入队列中开始删除 每次删除后将新的度数为1的点加入队列</p><p>看最后有没有剩下节点</p></li><li>
-<p>DFS/BFS：</p><p>搜索的本质就是形成一棵搜索树</p><p>如果某一个节点被访问了两次说明出现了回边。</p></li></ol></blockquote><h2 id=最短路径问题>最短路径问题</h2><h3 id=输出最短路>~输出最短路</h3><p>开一个 <code>pre</code> 数组，在更新距离的时候记录下来后面的点是如何转移过去的，算法结束前再递归地输出路径即可。</p><h3 id=floyd算法>～Floyd算法</h3><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= n;++i)
+</span></span></code></pre></div><h4 id=字典序tupo排序>字典序tupo排序：</h4><p>将S采用的队列替换为<em><strong>优先队列</strong></em>即可。</p><h4 id=关键路径>关键路径：</h4><p>AOE网络的应用</p><ul><li><p>顶点表示事件，有向边的权值表示某个活动的持续时间，有向边的方向表示活动和事件的<strong>先后次序</strong>。</p><p>进入顶点的所有活动都结束后，顶点表示的事件才可以发生，从该顶点出发的所有活动才可以开始。</p></li><li><p>入度为0：开工事件；出度为0:竣工事件</p></li><li><p>完成整项工程至少需要多少时间：源点到收点的最长路径的长度，称为关键路径</p></li><li><p>算法：</p><ul><li><p>最早发生时间：事件的最早发生时间</p><p>每个直接前驱的最早发生时间加上从该前驱到该顶点的活动时间的<strong>最大者</strong></p></li><li><p>最迟发生时间：不影响整个项目按时完成的前提下，这个事件最晚可以什么时候发生</p><p>每个直接后继的最迟发生时间减去顶点到该直接后继的活动时间的<strong>最小者</strong>就是该顶点的最迟发生时间。</p></li><li><p><strong>最早发生时间和最晚发生时间相同的顶点序列构成关键路径</strong></p></li></ul></li><li><p>具体实现：</p><p>先用拓扑排序得到活动发生的顺序。这样<strong>保证拓扑序</strong></p><p>按拓扑序顺序可得到每个事件的最早发生时间</p><p>逆序可得到每个事件的最迟发生时间</p><p>最后比较即可得到关键事件</p><p>然后按拓扑序if输出</p></li></ul><h4 id=应用>应用：</h4><p>判断有向图是否存在环路</p><blockquote><p>判断无向图是否存在环路：</p><ol><li><p>类似于有向图环路拓扑法：</p><p>将所有度数&lt;=1的节点删除并删除对应边</p><p>将所有度数为1的节点放入队列中开始删除 每次删除后将新的度数为1的点加入队列</p><p>看最后有没有剩下节点</p></li><li><p>DFS/BFS：</p><p>搜索的本质就是形成一棵搜索树</p><p>如果某一个节点被访问了两次说明出现了回边。</p></li></ol></blockquote><h2 id=最短路径问题>最短路径问题</h2><h3 id=输出最短路>~输出最短路</h3><p>开一个 <code>pre</code> 数组，在更新距离的时候记录下来后面的点是如何转移过去的，算法结束前再递归地输出路径即可。</p><h3 id=floyd算法>～Floyd算法</h3><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= n;++i)
 </span></span><span style=display:flex><span>  <span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> j = <span style=color:#b452cd>1</span>;j &lt;= n;++j) f[i][j] = <span style=color:#b452cd>0x7f7f7f7f</span>;
 </span></span><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= edgeSize;++i) f[edge[i].from][edge[i].to] = edge[i].weight;
 </span></span><span style=display:flex><span><span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= n;++i) f[i][i] = <span style=color:#b452cd>0</span>;
@@ -932,9 +169,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h3 id=spfa算法>~SPFA算法</h3><h4 id=原理-4>原理：</h4><blockquote>
-<p>dist[x] 表示节点x到源的当前最短路径</p></blockquote><ul>
-<li>松弛操作: 通过 dist[y] + edge(y,x) 更新dist<input checked disabled type=checkbox> ，因为最短路一定比其他路径要短</li><li>初始化时所有都设置为0x7f7f7f7f(INT_MAX)。从起点开始松弛周围的点，被松弛的点才可能去改变其他点到起点的最短路，所以加入队列。直到被松弛过的队列为空。</li></ul><h4 id=代码实现-4>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>SPFA</span>(<span style=color:#00688b;font-weight:700>int</span> start){
+</span></span></code></pre></div><h3 id=spfa算法>~SPFA算法</h3><blockquote><p>Bellman-Ford 算法的一种实现 可以处理包含负权的图</p></blockquote><h4 id=原理-4>原理：</h4><blockquote><p>dist[x] 表示节点x到源的当前最短路径</p></blockquote><ul><li>松弛操作: 通过 dist[y] + edge(y,x) 更新dist<input checked disabled type=checkbox> ，因为最短路一定比其他路径要短</li><li>初始化时所有都设置为0x7f7f7f7f(INT_MAX)。从起点开始松弛周围的点，<strong>被松弛的点才可能去改变其他点到起点的最短路</strong>，所以加入队列。直到被松弛过的队列为空。</li></ul><h4 id=代码实现-4>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>SPFA</span>(<span style=color:#00688b;font-weight:700>int</span> start){
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= nodeSize;++i) dist[i] = <span style=color:#b452cd>0x7f7f7f7f</span>;
 </span></span><span style=display:flex><span>  	memset(visit,<span style=color:#b452cd>0</span>,<span style=color:#8b008b;font-weight:700>sizeof</span>(visit));
 </span></span><span style=display:flex><span>  	dist[start] = <span style=color:#b452cd>0</span>;
@@ -947,8 +182,8 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>          	<span style=color:#00688b;font-weight:700>int</span> v = edge[i].to;
 </span></span><span style=display:flex><span>          	<span style=color:#8b008b;font-weight:700>if</span>(dist[v] &gt; dist[now] + edge[i].weight){ <span style=color:#228b22>// relax
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>              	dist[v] = dist[now] + edge[i].weight;
-</span></span><span style=display:flex><span>              	<span style=color:#8b008b;font-weight:700>if</span>(!visit[v]){
-</span></span><span style=display:flex><span>                  	que.push(v);
+</span></span><span style=display:flex><span>              	<span style=color:#8b008b;font-weight:700>if</span>(!visit[v]){ <span style=color:#228b22>// 避免重复入队
+</span></span></span><span style=display:flex><span><span style=color:#228b22></span>                  	que.push(v);
 </span></span><span style=display:flex><span>                  	visit[v] = <span style=color:#b452cd>1</span>;
 </span></span><span style=display:flex><span>                }
 </span></span><span style=display:flex><span>            }
@@ -956,10 +191,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>      	visit[now] = <span style=color:#b452cd>0</span>;
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h4 id=复杂度-2>复杂度：</h4><p>虽然在大多数情况下 SPFA 跑得很快，但其最坏情况下的时间复杂度为O(MN)，将其卡到这个复杂度也是不难的</p><h3 id=dijkstra算法>~dijkstra算法</h3><blockquote>
-<p>只适用于<em><strong>非负权图</strong></em>，但是时间复杂度非常优秀。</p></blockquote><h4 id=原理-5>原理：</h4><p>对于一个有向图或无向图，所有边权为正，给定a和b，求a到b的最短路，保证a一定能够到达b。这条最短路是否一定存在呢？答案是肯定的。相反，<strong>最长路就不一定了，由于边权为正，如果遇到有环的时候，可以一直在这个环上走</strong>，因为要找最长的，这样就使得路径越变越长，永无止境，所以对于正权图，在可达的情况下最短路一定存在，最长路则不一定存在。这里先讨论正权图的最短路问题。</p><blockquote>
-<p>经过tarjan缩点后 无环。最长路和最短路都可以用最短路算法求解</p></blockquote><p>最短路满足<strong>最优子结构性质</strong>，是一个<strong>动态规划问</strong>题。</p><blockquote>
-<p>最短路的最优子结构可以描述为：D(s, t) = {Vs &mldr; Vi &mldr; Vj &mldr; Vt}表示s到t的最短路，<strong>其中i和j是这条路径上的两个中间结点</strong>，<strong>那么D(i, j)必定是i到j的最短路</strong>，这个性质是显然的，可以用反证法证明。</p></blockquote><p><strong>基于上面的最优子结构性质，如果存在这样一条最短路D(s, t) = {Vs &mldr; Vi Vt}，其中i和t是最短路上相邻的点，那么D(s, i) = {Vs &mldr; Vi} 必定是s到i的最短路。Dijkstra算法就是基于这样一个性质，通过最短路径长度递增，逐渐生成最短路。</strong></p><p><strong>如果源点到x点的最短路已经求出，并且保存在d[x]，则可以利用x去更新x能够直接到达的点y的最短路。</strong></p><p>当前所有被松弛过的点中dist值最小的即被求出最短路径(不可能再被更新)，然后用这个点再去松弛其他的点。</p><h4 id=代码实现-5>代码实现:</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>struct</span> <span style=color:#008b45;font-weight:700>node</span>{
+</span></span></code></pre></div><h4 id=复杂度-2>复杂度：</h4><p>虽然在大多数情况下 SPFA 跑得很快，但其最坏情况下的时间复杂度为O(MN)，将其卡到这个复杂度也是不难的</p><h3 id=dijkstra算法>~dijkstra算法</h3><blockquote><p>只适用于<em><strong>非负权图</strong></em>，但是时间复杂度优秀。</p><p>非负这个性质给予Dijkstra更好的性质</p></blockquote><h4 id=原理-5>原理：</h4><p>对于一个有向图或无向图，所有边权为正，给定a和b，求a到b的最短路，保证a一定能够到达b。这条最短路是否一定存在呢？答案是肯定的。相反，<strong>最长路就不一定了，由于边权为正，如果遇到有环的时候，可以一直在这个环上走</strong>，因为要找最长的，这样就使得路径越变越长，永无止境，所以对于正权图，在可达的情况下最短路一定存在，最长路则不一定存在。这里先讨论正权图的最短路问题。</p><blockquote><p>经过tarjan缩点后 无环。最长路和最短路都可以用最短路算法求解</p></blockquote><p>最短路满足<strong>最优子结构性质</strong>，是一个<strong>动态规划问</strong>题。</p><blockquote><p>最短路的最优子结构可以描述为：D(s, t) = {Vs &mldr; Vi &mldr; Vj &mldr; Vt}表示s到t的最短路，<strong>其中i和j是这条路径上的两个中间结点</strong>，<strong>那么D(i, j)必定是i到j的最短路</strong>，这个性质是显然的，可以用反证法证明。</p></blockquote><p><strong>基于上面的最优子结构性质，如果存在这样一条最短路D(s, t) = {Vs &mldr; Vi Vt}，其中i和t是最短路上相邻的点，那么D(s, i) = {Vs &mldr; Vi} 必定是s到i的最短路。Dijkstra算法就是基于这样一个性质，通过最短路径长度递增，逐渐生成最短路。</strong></p><p><strong>如果源点到x点的最短路已经求出，并且保存在d[x]，则可以利用x去更新x能够直接到达的点y的最短路。</strong></p><p>当前所有被松弛过的点中dist值最小的即被求出最短路径(不可能再被更新)，然后用这个点再去松弛其他的点。</p><h4 id=代码实现-5>代码实现:</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#8b008b;font-weight:700>struct</span> <span style=color:#008b45;font-weight:700>node</span>{
 </span></span><span style=display:flex><span>  	<span style=color:#00688b;font-weight:700>int</span> index,dist;
 </span></span><span style=display:flex><span>  	<span style=color:#00688b;font-weight:700>bool</span> <span style=color:#8b008b;font-weight:700>operator</span> &lt; (<span style=color:#8b008b;font-weight:700>const</span> node &amp; o) <span style=color:#8b008b;font-weight:700>const</span>{}
 </span></span><span style=display:flex><span>}
@@ -981,23 +213,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>				}
 </span></span><span style=display:flex><span>		}
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=强连通分量>强连通分量</h2><h3 id=定义-1>～定义：</h3><ul>
-<li>
-<p>在有向图G中，如果任意两个不同的顶点相互可达，并且<em>maximal</em>，则称该有向子图是强连通的。</p><blockquote>
-<p>Strong Connect Components</p></blockquote></li><li>
-<p><strong>DAG：有向无环图</strong>(Directed Acyclic Graph)</p><blockquote>
-<p>图存在拓扑排序等价于图是DAG</p></blockquote><ul>
-<li>
-<p>有向无环图中<strong>唯一</strong>出度为0的点,一定可以由任何点出发均可达(<em>由于无环,所以从任何点出发往前走,必然<strong>终止于一个出度为0</strong>的点</em>)</p></li><li>
-<p>有向无环图中所有入度不为0的点，一定可以由某个入度为0的点出发可达。 (由于无环，所以从任何入度不为0的点往回走，必然终止于一个入度为0的点)。</p><blockquote>
-<p>所以入度为零的所有点使得整个图能够被遍历完全</p></blockquote></li></ul></li><li>
-<p>经过强连通分量<strong>缩点</strong>处理后，新图像一定是DAG。可以利用上面的性质。</p></li><li>
-<p>强连通分量完全分隔一个图，没有遗漏也没有重叠。</p></li></ul><h3 id=应用-1>～应用：</h3><p>我们可以将一张图的每个强连通分量都缩成一个点。</p><ul>
-<li>那么重新建图后新图为DAG</li><li>可以进行拓扑排序\最小生成树\最短路径等多种算法</li></ul><h3 id=tarjan算法>～tarjan算法：</h3><h4 id=原理-6>原理：</h4><ul>
-<li>
-<p>做一遍DFS，用<strong>dfn[i]表示编号为i的节点在DFS过程中的访问序号</strong>(也可以叫做开始时间)。在DFS过程中会形成一搜索树。在搜索树上越先遍历到的节点，显然dfn的值就越小。dfn值越小的节点，就称为越“早” 。用low[i]表示从i节点出发DFS过程中i下方节点(开始时间大于dfn[i]，且由i可达的节点)所能到达的最早的节点的开始时间。初始时low[i]=dfn[i]。</p></li><li>
-<p>DFS过程中，碰到哪个节点，就将哪个节点入栈。栈中节点只有在其所属的强连通分量已经全部求出时，才会出栈。</p></li><li>
-<p>如果发现某节点u有边连到栈里的节点v(<em><strong>返祖边</strong></em>)，则更新u的low值为min(low[u],dfn[v]) ，若low[u]被更新为dfn[v],则表明目前发现u可达的最早的节点是v；对于u的子节点v，从v出发进行的DFS结束回到u时，使得 low[u] = min(low[u],low[v])。**因为u可达v, 所以v可达的最早的节点，也是u可达的；**如果一个节点u，从其出发进行的DFS已经全部完成并回到u，而且此时其low值等于dfn值，则说明u可达的所有节点，<strong>都不能到达任何比u早的节点</strong>。因此该节点u就是一个强连通分量在DFS搜索树中的根；此时，显然栈中u上方的节点，都是不能到达比u早的节点的。将栈中节点弹出，一直弹到u(包括u), 弹出的节点就构成了一个强连通分量。</p></li></ul><h4 id=代码实现-6>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>tarjan</span>(<span style=color:#00688b;font-weight:700>int</span> a){
+</span></span></code></pre></div><h2 id=强连通分量>强连通分量</h2><h3 id=定义-1>～定义：</h3><ul><li><p>在有向图G中，如果任意两个不同的顶点相互可达，并且<em>maximal</em>，则称该有向子图是强连通的。</p><blockquote><p>Strong Connect Components</p></blockquote></li><li><p><strong>DAG：有向无环图</strong>(Directed Acyclic Graph)</p><blockquote><p>图存在拓扑排序等价于图是DAG</p></blockquote><ul><li><p>有向无环图中<strong>唯一</strong>出度为0的点,一定可以由任何点出发均可达(<em>由于无环,所以从任何点出发往前走,必然<strong>终止于一个出度为0</strong>的点</em>)</p></li><li><p>有向无环图中所有入度不为0的点，一定可以由某个入度为0的点出发可达。 (由于无环，所以从任何入度不为0的点往回走，必然终止于一个入度为0的点)。</p><blockquote><p>所以入度为零的所有点使得整个图能够被遍历完全</p></blockquote></li></ul></li><li><p>经过强连通分量<strong>缩点</strong>处理后，新图像一定是DAG。可以利用上面的性质。</p></li><li><p>强连通分量完全分隔一个图，没有遗漏也没有重叠。</p></li></ul><h3 id=应用-1>～应用：</h3><p>我们可以将一张图的每个强连通分量都缩成一个点。</p><ul><li>那么重新建图后新图为DAG</li><li>可以进行拓扑排序\最小生成树\最短路径等多种算法</li></ul><h3 id=tarjan算法>～tarjan算法：</h3><h4 id=原理-6>原理：</h4><ul><li><p>做一遍DFS，用<strong>dfn[i]表示编号为i的节点在DFS过程中的访问序号</strong>(也可以叫做开始时间)。在DFS过程中会形成一搜索树。在搜索树上越先遍历到的节点，显然dfn的值就越小。dfn值越小的节点，就称为越“早” 。用low[i]表示从i节点出发DFS过程中i下方节点(开始时间大于dfn[i]，且由i可达的节点)所能到达的最早的节点的开始时间。初始时low[i]=dfn[i]。</p></li><li><p>DFS过程中，碰到哪个节点，就将哪个节点入栈。栈中节点只有在其所属的强连通分量已经全部求出时，才会出栈。</p></li><li><p>如果发现某节点u有边连到栈里的节点v(<em><strong>返祖边</strong></em>)，则更新u的low值为min(low[u],dfn[v]) ，若low[u]被更新为dfn[v],则表明目前发现u可达的最早的节点是v；对于u的子节点v，从v出发进行的DFS结束回到u时，使得 low[u] = min(low[u],low[v])。**因为u可达v, 所以v可达的最早的节点，也是u可达的；**如果一个节点u，从其出发进行的DFS已经全部完成并回到u，而且此时其low值等于dfn值，则说明u可达的所有节点，<strong>都不能到达任何比u早的节点</strong>。因此该节点u就是一个强连通分量在DFS搜索树中的根；此时，显然栈中u上方的节点，都是不能到达比u早的节点的。将栈中节点弹出，一直弹到u(包括u), 弹出的节点就构成了一个强连通分量。</p></li></ul><h4 id=代码实现-6>代码实现：</h4><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>tarjan</span>(<span style=color:#00688b;font-weight:700>int</span> a){
 </span></span><span style=display:flex><span>    dfn[a] = low[a] = ++timeclock;
 </span></span><span style=display:flex><span>    instack[a] = <span style=color:#b452cd>1</span>;
 </span></span><span style=display:flex><span>    stack[++top] = a;
@@ -1034,26 +250,7 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>        addEdge(color[from[i]],color[to[i]],sum[color[to[i]]]);
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h3 id=dfs算法-1>~DFS算法</h3><h4 id=原理-7>原理：</h4><p>利用缩点后的图是DAG的性质，其<em>tail scc</em>当中的点能访问到的点均属于本<em>scc</em>。问题转化为如何快速找到当前图中的一个点使得该点是该图缩点后<em>tail scc</em>当中的一个点。</p><p><strong>Lemma</strong> ： The SCC contains the largest finish time vertex must be the head SCC.</p><p><em>proof:</em> 反证法。假设$u$的回溯时间最大，且存在来自其他scc的$v:v\rightarrow u$。显然，$v$不能比$u$早被访问，否则$u$必然是$v$的dfs子树，回溯时间小于$v$。其次，$v$不能在其他的dfs树当中，否则$v$必然比$u$开始晚，结束也晚。所以说，$u,v$必须在同一棵dfs树上且要先访问$u$，说明存在$u\rightarrow v$ ，则$u,v$属于同一个scc，产生矛盾。</p><p>所以取$G$的反图$G^R$，再dfs遍历找到回溯最晚的点$u$，即可找到$G$当中属于<em>tail scc</em>的一个点$u$。</p><h4 id=伪代码>伪代码：</h4><ol>
-<li>Construct $G^R$ and dfs it. Maintain a sorted list by the finish time.</li><li>DFS $G$ by the descending order of the finish time(Do not start from a visited vertex).</li><li>Each visit forms a SCC.</li></ol><h2 id=欧拉图>欧拉图</h2><h3 id=定义-2>~定义：</h3><ul>
-<li>
-<p>通过图中所有边恰好一次且行遍所有顶点的<strong>通路</strong>称为欧拉通路。</p></li><li>
-<p>通过图中所有边恰好一次且行遍所有顶点的<strong>回路</strong>称为欧拉回路。(要回去)</p></li><li>
-<p>具有欧拉回路的<strong>无向图或有向图</strong>称为欧拉图。</p></li><li>
-<p>具有欧拉通路但不具有欧拉回路的无向图或有向图称为半欧拉图。</p></li></ul><p>非形式化地讲，欧拉图就是从任意一个点开始都可以一笔画完整个图，半欧拉图必须从某个点开始才能一笔画完整个图。</p><h3 id=性质-1>~性质：</h3><ul>
-<li>
-<p>欧拉图中所有顶点的度数都是偶数。</p></li><li>
-<p>若G是欧拉图，则它为若干个<strong>边不重的圈</strong>的并。</p></li><li>
-<p>若G是半欧拉图，则它为若干个<strong>边不重的圈和一条简单路径</strong>的并。</p></li></ul><h3 id=判别>~判别：</h3><ul>
-<li>
-<p>对于无向图 G， G是欧拉图当且仅当G是连通的且G<strong>没有奇度顶点</strong>。</p></li><li>
-<p>对于<strong>无向图</strong> G， G是半欧拉图当且仅当G是连通的且<strong>G中恰有0个或2个奇度顶点(一个起点 一个终点)。</strong></p></li><li>
-<p>对于有向图 G， G是欧拉图当且仅当G的所有顶点属于同一个强连通分量且每个顶点的入度和出度相同。</p></li><li>
-<p>对于有向图 G， G是半欧拉图当且仅当G有n-2个顶点的入度==出度，1个顶点+1(起点)，1个顶点-1(终点)</p></li></ul><h3 id=求欧拉回路>～求欧拉回路：</h3><h4 id=fleury算法--todo>Fleury算法 // todo</h4><p>算法流程为每次选择下一条边的时候<strong>优先选择不是桥的边</strong>。</p><blockquote>
-<p>桥是大小为一的边割集</p></blockquote><p>一个广泛使用但是错误的实现方式是先 Tarjan 预处理桥边，然后再 DFS 避免走桥。但是由于走图过程中<strong>边会被删去</strong>，一些<strong>非桥边会变为桥边</strong>导致错误。最简单的实现方法是每次删除一条边之后暴力跑一遍 Tarjan 找桥，时间复杂度是 O(m(n+m))。复杂的实现方法要用到动态图等，实用价值不高。</p><h4 id=hierholzer算法>Hierholzer算法</h4><ol>
-<li>
-<p>判断是否有欧拉路径或者欧拉回路。当有欧拉路径而无欧拉回路时必须要指定起点 <strong>目的：确保dfs有解</strong></p></li><li>
-<p>递归调用函数</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>hierholzer</span>(<span style=color:#00688b;font-weight:700>int</span> u){
+</span></span></code></pre></div><h3 id=dfs算法-1>~DFS算法</h3><h4 id=原理-7>原理：</h4><p>利用缩点后的图是DAG的性质，其<em>tail scc</em>当中的点能访问到的点均属于本<em>scc</em>。问题转化为如何快速找到当前图中的一个点使得该点是该图缩点后<em>tail scc</em>当中的一个点。</p><p><strong>Lemma</strong> ： The SCC contains the largest finish time vertex must be the head SCC.</p><p><em>proof:</em> 反证法。假设$u$的回溯时间最大，且存在来自其他scc的$v:v\rightarrow u$。显然，$v$不能比$u$早被访问，否则$u$必然是$v$的dfs子树，回溯时间小于$v$。其次，$v$不能在其他的dfs树当中，否则$v$必然比$u$开始晚，结束也晚。所以说，$u,v$必须在同一棵dfs树上且要先访问$u$，说明存在$u\rightarrow v$ ，则$u,v$属于同一个scc，产生矛盾。</p><p>所以取$G$的反图$G^R$，再dfs遍历找到回溯最晚的点$u$，即可找到$G$当中属于<em>tail scc</em>的一个点$u$。</p><h4 id=伪代码>伪代码：</h4><ol><li>Construct $G^R$ and dfs it. Maintain a sorted list by the finish time.</li><li>DFS $G$ by the descending order of the finish time(Do not start from a visited vertex).</li><li>Each visit forms a SCC.</li></ol><h2 id=欧拉图>欧拉图</h2><h3 id=定义-2>~定义：</h3><ul><li><p>通过图中所有边恰好一次且行遍所有顶点的<strong>通路</strong>称为欧拉通路。</p></li><li><p>通过图中所有边恰好一次且行遍所有顶点的<strong>回路</strong>称为欧拉回路。(要回去)</p></li><li><p>具有欧拉回路的<strong>无向图或有向图</strong>称为欧拉图。</p></li><li><p>具有欧拉通路但不具有欧拉回路的无向图或有向图称为半欧拉图。</p></li></ul><p>非形式化地讲，欧拉图就是从任意一个点开始都可以一笔画完整个图，半欧拉图必须从某个点开始才能一笔画完整个图。</p><h3 id=性质-1>~性质：</h3><ul><li><p>欧拉图中所有顶点的度数都是偶数。</p></li><li><p>若G是欧拉图，则它为若干个<strong>边不重的圈</strong>的并。</p></li><li><p>若G是半欧拉图，则它为若干个<strong>边不重的圈和一条简单路径</strong>的并。</p></li></ul><h3 id=判别>~判别：</h3><ul><li><p>对于无向图 G， G是欧拉图当且仅当G是连通的且G<strong>没有奇度顶点</strong>。</p></li><li><p>对于<strong>无向图</strong> G， G是半欧拉图当且仅当G是连通的且<strong>G中恰有0个或2个奇度顶点(一个起点 一个终点)。</strong></p></li><li><p>对于有向图 G， G是欧拉图当且仅当G的所有顶点属于同一个强连通分量且每个顶点的入度和出度相同。</p></li><li><p>对于有向图 G， G是半欧拉图当且仅当G有n-2个顶点的入度==出度，1个顶点+1(起点)，1个顶点-1(终点)</p></li></ul><h3 id=求欧拉回路>～求欧拉回路：</h3><h4 id=fleury算法--todo>Fleury算法 // todo</h4><p>算法流程为每次选择下一条边的时候<strong>优先选择不是桥的边</strong>。</p><blockquote><p>桥是大小为一的边割集</p></blockquote><p>一个广泛使用但是错误的实现方式是先 Tarjan 预处理桥边，然后再 DFS 避免走桥。但是由于走图过程中<strong>边会被删去</strong>，一些<strong>非桥边会变为桥边</strong>导致错误。最简单的实现方法是每次删除一条边之后暴力跑一遍 Tarjan 找桥，时间复杂度是 O(m(n+m))。复杂的实现方法要用到动态图等，实用价值不高。</p><h4 id=hierholzer算法>Hierholzer算法</h4><ol><li><p>判断是否有欧拉路径或者欧拉回路。当有欧拉路径而无欧拉回路时必须要指定起点 <strong>目的：确保dfs有解</strong></p></li><li><p>递归调用函数</p><div class=highlight><pre tabindex=0 style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00688b;font-weight:700>void</span> <span style=color:#008b45>hierholzer</span>(<span style=color:#00688b;font-weight:700>int</span> u){
 </span></span><span style=display:flex><span>  	<span style=color:#8b008b;font-weight:700>for</span>(<span style=color:#00688b;font-weight:700>int</span> i = <span style=color:#b452cd>1</span>;i &lt;= n;++i){
 </span></span><span style=display:flex><span>      	<span style=color:#8b008b;font-weight:700>if</span>(adj[u][i]){<span style=color:#228b22>// 有向图和无向图处理不同
 </span></span></span><span style=display:flex><span><span style=color:#228b22></span>          	adj[u][i]--;
@@ -1063,27 +260,9 @@ Basic Graph Algorithms
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>  	s.push(u);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li></ol><hr width=100% id=EOF>
-<p style=color:#777>最后修改于 2022-03-03</p><i class="fa fa-tags"> </i>
-<a href=/tags/%E7%AE%97%E6%B3%95 style=color:#777>算法</a>
+</span></span></code></pre></div></li></ol><hr width=100% id=EOF><p style=color:#777>最后修改于 2022-03-03</p><i class="fa fa-tags"></i><a href=/tags/%E7%AE%97%E6%B3%95 style=color:#777>算法</a>
 &nbsp;
 <a href=/tags/%E5%9B%BE%E8%AE%BA style=color:#777>图论</a>
-&nbsp;
-</div></div><nav class=post-pagination>
-<a class=newer-posts href=https://happierpig.github.io/posts/sharephotos/>
-下回<br>Share photos with you :)
-</a>
-<a class=older-posts href=https://happierpig.github.io/posts/semantic/>
-上回<br>Semantic Notes
-</a>
-</nav><div class=post-comment-wrapper>
-<h4 align=center><hr>What do you think?<br></h4><script src=https://utteranc.es/client.js repo=happierpig/happierpig.github.io issue-term=title label=Comment theme=github-light crossorigin=anonymous async></script>
-</div></div></div></div></div><div id=single-column-footer>
-Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a>
-<br>
-移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a> <br>
-<br>
-&copy;
-2022 happypig
-</div></div><script src=/js/journal.js></script>
-</body></html>
+&nbsp;</div></div><nav class=post-pagination><a class=newer-posts href=https://happierpig.github.io/posts/sharephotos/>下回<br>Share photos with you :)</a>
+<a class=older-posts href=https://happierpig.github.io/posts/semantic/>上回<br>Semantic Notes</a></nav><div class=post-comment-wrapper><h4 align=center><hr>What do you think?<br></h4><script src=https://utteranc.es/client.js repo=happierpig/happierpig.github.io issue-term=title label=Comment theme=github-light crossorigin=anonymous async></script></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>移植自 <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2022 happypig</div></div><script src=/js/journal.js></script></body></html>

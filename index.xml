@@ -432,13 +432,16 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="spfa算法">~SPFA算法&lt;/h3>
+&lt;blockquote>
+&lt;p>Bellman-Ford 算法的一种实现 可以处理包含负权的图&lt;/p>
+&lt;/blockquote>
 &lt;h4 id="原理-4">原理：&lt;/h4>
 &lt;blockquote>
 &lt;p>dist[x] 表示节点x到源的当前最短路径&lt;/p>
 &lt;/blockquote>
 &lt;ul>
 &lt;li>松弛操作: 通过 dist[y] + edge(y,x) 更新dist&lt;input checked="" disabled="" type="checkbox"> ，因为最短路一定比其他路径要短&lt;/li>
-&lt;li>初始化时所有都设置为0x7f7f7f7f(INT_MAX)。从起点开始松弛周围的点，被松弛的点才可能去改变其他点到起点的最短路，所以加入队列。直到被松弛过的队列为空。&lt;/li>
+&lt;li>初始化时所有都设置为0x7f7f7f7f(INT_MAX)。从起点开始松弛周围的点，&lt;strong>被松弛的点才可能去改变其他点到起点的最短路&lt;/strong>，所以加入队列。直到被松弛过的队列为空。&lt;/li>
 &lt;/ul>
 &lt;h4 id="代码实现-4">代码实现：&lt;/h4>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">SPFA&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> start){
@@ -454,8 +457,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> v = edge[i].to;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(dist[v] &amp;gt; dist[now] + edge[i].weight){ &lt;span style="color:#228b22">// relax
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> dist[v] = dist[now] + edge[i].weight;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(!visit[v]){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> que.push(v);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span>(!visit[v]){ &lt;span style="color:#228b22">// 避免重复入队
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#228b22">&lt;/span> que.push(v);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> visit[v] = &lt;span style="color:#b452cd">1&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -467,7 +470,8 @@
 &lt;p>虽然在大多数情况下 SPFA 跑得很快，但其最坏情况下的时间复杂度为O(MN)，将其卡到这个复杂度也是不难的&lt;/p>
 &lt;h3 id="dijkstra算法">~dijkstra算法&lt;/h3>
 &lt;blockquote>
-&lt;p>只适用于&lt;em>&lt;strong>非负权图&lt;/strong>&lt;/em>，但是时间复杂度非常优秀。&lt;/p>
+&lt;p>只适用于&lt;em>&lt;strong>非负权图&lt;/strong>&lt;/em>，但是时间复杂度优秀。&lt;/p>
+&lt;p>非负这个性质给予Dijkstra更好的性质&lt;/p>
 &lt;/blockquote>
 &lt;h4 id="原理-5">原理：&lt;/h4>
 &lt;p>对于一个有向图或无向图，所有边权为正，给定a和b，求a到b的最短路，保证a一定能够到达b。这条最短路是否一定存在呢？答案是肯定的。相反，&lt;strong>最长路就不一定了，由于边权为正，如果遇到有环的时候，可以一直在这个环上走&lt;/strong>，因为要找最长的，这样就使得路径越变越长，永无止境，所以对于正权图，在可达的情况下最短路一定存在，最长路则不一定存在。这里先讨论正权图的最短路问题。&lt;/p>
