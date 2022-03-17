@@ -229,9 +229,6 @@
 &lt;ul>
 &lt;li>
 &lt;p>生成树：一个连通无向图的生成&lt;strong>子图&lt;/strong>，同时要求是&lt;strong>树&lt;/strong>。也即在图的边集中选择n-1条，将所有顶点连通，形成一棵树。&lt;/p>
-&lt;blockquote>
-&lt;p>只有连通图才有生成树&lt;/p>
-&lt;/blockquote>
 &lt;/li>
 &lt;li>
 &lt;p>最小生成树为：&lt;strong>边权和最小&lt;/strong>的生成树&lt;/p>
@@ -244,12 +241,15 @@
 &lt;h3 id="kruskal-算法">~Kruskal 算法&lt;/h3>
 &lt;p>算法的基本思想是&lt;strong>从小到大加入边，采用贪心的思想&lt;/strong>。&lt;/p>
 &lt;h4 id="原理">原理：&lt;/h4>
-&lt;p>将边排序（键值从小到大） 贪心&lt;/p>
+&lt;p>将边排序（键值从小到大） &lt;strong>贪心&lt;/strong>&lt;/p>
 &lt;blockquote>
-&lt;p>也可以采用优先队列 可能常数更优秀&lt;/p>
+&lt;p>也可以采用堆优化（Fibonacci heap）&lt;/p>
 &lt;/blockquote>
-&lt;p>然后从小到大遍历边(u,v)。当u、v已经被连在一起时，跳过这条边。&lt;/p>
-&lt;p>点是否被连在一起采用并查集进行维护。&lt;/p>
+&lt;p>从小到大遍历边(u,v)，当u、v已经被连在一起时，跳过这条边，避免环。&lt;/p>
+&lt;p>点是否被连在一起采用&lt;strong>并查集&lt;/strong>进行维护。&lt;/p>
+&lt;h4 id="正确性">正确性：&lt;/h4>
+&lt;p>归纳证明：良定义一个&lt;code>Partial MST&lt;/code>，证明能找到一条边，使得&lt;code>P-MST&lt;/code>扩大。&lt;/p>
+&lt;p>能找到一条边：通过反证法证明，假设最短那条边不属于&lt;code>P-MST&lt;/code>，可以替换某些边使得新的&lt;code>ST&lt;/code>的权值只能更小。&lt;/p>
 &lt;h4 id="代码实现">代码实现：&lt;/h4>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">merge_sort&lt;/span>(T * data,&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> l,&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> r);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">merge&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> x,&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> y);
@@ -272,12 +272,14 @@
 &lt;p>做两次Kruskal，将第一次被放入最小生成树的边打上标记，第二次优先处理没有打标记的。若能成功，则说明不唯一。&lt;/p>
 &lt;h3 id="prim算法">~Prim算法&lt;/h3>
 &lt;h4 id="原理-1">原理：&lt;/h4>
-&lt;p>每次加点，同样是贪心的思想。加入的点是每次选点时离生成树边权最小的点。&lt;/p>
-&lt;blockquote>
+&lt;p>每次加点，同样是&lt;strong>贪心&lt;/strong>的思想。加入的点是每次选点时离生成树&lt;strong>边权最小&lt;/strong>的点。&lt;/p>
 &lt;p>这样选保证了这个点通过这条边加入生成树是最优的 类似于dijkstra&lt;/p>
-&lt;/blockquote>
 &lt;p>&lt;strong>所以要维护每个点离生成树的边权最小值&lt;/strong>&lt;/p>
 &lt;p>最后边权和就是 low_cost[i] 1&amp;lt;=i&amp;lt;=n求和&lt;/p>
+&lt;h4 id="正确性证明">正确性证明：&lt;/h4>
+&lt;p>归纳证明：良定义一个&lt;code>Partial MST&lt;/code>，证明能找到一个新的点，使得&lt;code>P-MST&lt;/code>扩大。&lt;/p>
+&lt;p>能找到一条点：通过反证法证明，假设距离最近的那个点不属于&lt;code>P-MST&lt;/code>，可以替换某些边使得新的&lt;code>ST&lt;/code>的权值只能更小，产生矛盾。&lt;/p>
+&lt;p>证明用到的性质是实数的全序 而没有用到非负，所以对于负权值的图同样适用&lt;/p>
 &lt;h4 id="代码实现-1">代码实现：&lt;/h4>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">prim&lt;/span>(){
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> priority_queue&amp;lt;Edge&amp;gt; que;
