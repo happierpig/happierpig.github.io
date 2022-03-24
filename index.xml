@@ -8,7 +8,7 @@
 &lt;p>&lt;img src="https://happierpig.github.io/images/SJTUPhoto/8.jpeg" alt="Example image">&lt;/p>
 &lt;p>&lt;img src="https://happierpig.github.io/images/SJTUPhoto/9.jpeg" alt="Example image">&lt;/p>
 - https://happierpig.github.io/posts/sharephotos/ - 2022 happypig</description></item><item><title>Basic Graph Algorithms</title><link>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</link><pubDate>Thu, 03 Mar 2022 21:00:00 +0800</pubDate><guid>https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</guid><description>Pigpen Park https://happierpig.github.io/posts/%E5%9B%BE%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/ -&lt;h2 id="图的基本知识">图的基本知识&lt;/h2>
-&lt;p>见&lt;a href="https://oi-wiki.org/graph/concept/">oi-wiki&lt;/a>&lt;/p>
+&lt;p>Reference : &lt;a href="https://oi-wiki.org/graph/concept/">oi-wiki&lt;/a>&lt;/p>
 &lt;h2 id="图的存储">图的存储&lt;/h2>
 &lt;p>选择哪种储存方式主要看主要操作&lt;/p>
 &lt;ul>
@@ -470,6 +470,12 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="复杂度-2">复杂度：&lt;/h4>
 &lt;p>虽然在大多数情况下 SPFA 跑得很快，但其最坏情况下的时间复杂度为O(MN)，将其卡到这个复杂度也是不难的&lt;/p>
+&lt;h4 id="判断负环">判断负环：&lt;/h4>
+&lt;p>可以通过$Bellman-Ford$判断图中是否有负环，如果经过$|V|-1$轮松弛还未停止的话。&lt;/p>
+&lt;p>通过$SPFA$判断负环的方法是检查最短路是否包含超过了$|V|$的节点。&lt;/p>
+&lt;blockquote>
+&lt;p>注：若要判断整个图中是否有，以$S$点为源点跑 Bellman-Ford 算法时，如果没有给出存在负环的结果，只能说明从$S$点出发不能抵达一个负环，而不能说明图上不存在负环。因此如果需要判断整个图上是否存在负环，最严谨的做法是建立一个超级源点，向图上每个节点连一条权值为$0$的边，然后以超级源点为起点执行 Bellman-Ford 算法。from oi-wiki&lt;/p>
+&lt;/blockquote>
 &lt;h3 id="dijkstra算法">~dijkstra算法&lt;/h3>
 &lt;blockquote>
 &lt;p>只适用于&lt;em>&lt;strong>非负权图&lt;/strong>&lt;/em>，但是时间复杂度优秀。&lt;/p>
