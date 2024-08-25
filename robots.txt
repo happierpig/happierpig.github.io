@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://happierpig.github.io//sitemap.xml
